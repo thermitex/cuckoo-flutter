@@ -21,10 +21,16 @@ dependencies:
   flutter_svg: ^2.0.10+1
   infinite_scroll_pagination: ^4.0.0
   flutter_slidable: ^3.1.0
+  url_launcher: ^6.2.6
+  uni_links: ^0.5.1
+  fluttertoast: ^8.2.5
+  dio: ^5.4.2
+  json_annotation: ^4.8.1
   flutter:
     sdk: flutter
 
 dev_dependencies:
+  json_model: ^1.0.0
   json_serializable: ^6.7.1
   flutter_test:
     sdk: flutter
@@ -32,3 +38,15 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+  - family: Montserrat
+    fonts:
+      - asset: fonts/Montserrat-Regular.ttf
+      - asset: fonts/Montserrat-Medium.ttf
+        weight: 500
+      - asset: fonts/Montserrat-SemiBold.ttf
+        weight: 600
+      - asset: fonts/Montserrat-Bold.ttf
+        weight: 700
+      - asset: fonts/Montserrat-ExtraBold.ttf
+        weight: 800
