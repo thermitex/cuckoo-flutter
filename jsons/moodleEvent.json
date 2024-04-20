@@ -1,0 +1,20 @@
+{
+    "id": 2600458,
+    "name": "Event Name",
+    "description": "desc",
+    "format?": 1,
+    "courseid?": 102008,
+    "categoryid?": null,
+    "groupid?": null,
+    "userid?": 32167,
+    "repeatid?": null,
+    "modulename?": "turnitintooltwo",
+    "instance?": 49333,
+    "eventtype": "due",
+    "timestart": 1714579140,
+    "timeduration?": 0,
+    "visible?": 1,
+    "sequence?": 1,
+    "timemodified?": 1712819692,
+    "subscriptionid?": null
+}

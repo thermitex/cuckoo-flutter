@@ -1,4 +1,4 @@
-import 'package:cuckoo/src/common/extensions/build_context.dart';
+import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:flutter/material.dart';
 

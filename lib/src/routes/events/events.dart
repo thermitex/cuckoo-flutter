@@ -1,4 +1,4 @@
-import 'package:cuckoo/src/common/extensions/build_context.dart';
+import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +36,7 @@ class EventsPage extends StatelessWidget {
 
   /// Action routine for opening "more" panel.
   void _openMorePanel() {
-    Moodle.fetchCourses();
+    Moodle.logout();
   }
 
   @override

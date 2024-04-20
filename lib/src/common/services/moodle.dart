@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,12 +19,22 @@ class MoodleStorageKeys {
   static const privatetoken = 'moodle_privatetoken';
   static const siteInfo = 'moodle_site_info';
   static const courses = 'moodle_courses';
+  static const events = 'moodle_events';
 }
 
 /// Moodle function names.
 class MoodleFunctions {
   static const getSiteInfo = 'core_webservice_get_site_info';
   static const getEnrolledCourses = 'core_enrol_get_users_courses';
+  static const callExternal = 'tool_mobile_call_external_functions';
+  static const getCalendarEvents = 'core_calendar_get_calendar_events';
+}
+
+/// Types of Moodle events.
+class MoodleEventTypes {
+  static const due = 'due';
+  static const user = 'user';
+  static const custom = 'custom';
 }
 
 /// Subrequest in a moodle function request.
@@ -45,7 +56,7 @@ class MoodleFunctionSubrequest {
   Map<String, String> bodyParamsWithIndex(int index) {
     return {
       'requests[$index][function]': functionName,
-      'requests[$index][arguments]': (params ?? {}).toString(),
+      'requests[$index][arguments]': jsonEncode(params ?? {}),
       'requests[$index][settingfilter]': filter ? "1" : "0",
       'requests[$index][settingfileurl]': fileUrl ? "1" : "0"
     };
@@ -75,6 +86,22 @@ class MoodleFunctionResponse {
 
   /// Get error message if any.
   String? get errMessage => data?['message'];
+
+  /// Get subresponse data at specific index.
+  T? subResponseData<T>(int index, {bool requireJSONDecode = true}) {
+    if (data is! Map<String, dynamic>) return null;
+    final responses = data['responses'];
+    if (responses is! List) return null;
+    var subData = responses[index]['data'];
+    if (requireJSONDecode) {
+      try {
+        subData = jsonDecode(subData);
+      } catch (e) {
+        return null;
+      }
+    }
+    return subData as T;
+  }
 }
 
 /// The class for all Moodle services used in Cuckoo.
@@ -109,6 +136,12 @@ class Moodle {
 
   /// Enrolled courses of current Moodle user.
   List<MoodleCourse> _courses = [];
+
+  /// Mapping of courseId -> MoodleCourse for faster access through ID.
+  Map<num, MoodleCourse> _courseMap = {};
+
+  /// Events of current Moodle user.
+  List<MoodleEvent> _events = [];
 
   /// Timestamp where events are last updated.
   /// Not preserved in storage.
@@ -149,14 +182,14 @@ class Moodle {
     final moodle = Moodle();
     WidgetsFlutterBinding.ensureInitialized();
     moodle._prefs = await SharedPreferences.getInstance();
-    await moodle._loadFromStorage();
+    await moodle._load();
 
     // If the user already logged in, get site info in the background again
     // to take any updates into consideration.
     if (isUserLoggedIn) {
-      var response = await callFunction(MoodleFunctions.getSiteInfo);
+      final response = await callFunction(MoodleFunctions.getSiteInfo);
       if (!response.fail) moodle._siteInfo = MoodleSiteInfo.fromJson(response.data!);
-      moodle._saveToStorage();
+      moodle._save();
     }
   }
 
@@ -166,11 +199,16 @@ class Moodle {
     final moodle = Moodle();
     moodle._wstoken = null;
     moodle._privatetoken = null;
+    moodle._courses = [];
+    moodle._events = [];
+    moodle._eventsLastUpdated = null;
     // Clear storage
     for (String key in [
       MoodleStorageKeys.wstoken,
       MoodleStorageKeys.privatetoken,
-      MoodleStorageKeys.siteInfo
+      MoodleStorageKeys.siteInfo,
+      MoodleStorageKeys.courses,
+      MoodleStorageKeys.events,
     ]) {
       await moodle._prefs.remove(key);
     }
@@ -207,9 +245,10 @@ class Moodle {
   /// the organization. Upon successful auth, a pair of tokens, [wstoken] and
   /// [privatetoken] will be returned through deep link. 
   /// 
-  /// This method DOES NOT check if a user has logged in. It will prompt another
-  /// authentication process and overwrite [wstoken] if successful.
+  /// This method will check if a user has logged in. It will not prompt another
+  /// authentication process if there is already a logged-in user.
   static Future<bool> startAuth() async {
+    if (isUserLoggedIn) return false;
     final authUrl = Moodle()._buildLaunchUrl();
     return await launchUrl(authUrl, mode: LaunchMode.externalApplication);
   }
@@ -231,6 +270,7 @@ class Moodle {
     {bool acceptIncompleteAuth = false}
   ) async {
     final moodle = Moodle();
+    if (isUserLoggedIn) return MoodleAuthStatus.ignore;
     try {
       if (!tokenString.startsWith('token')) return MoodleAuthStatus.ignore;
       // Eliminates formatter
@@ -238,7 +278,7 @@ class Moodle {
       // Decode from base64
       tokenString = utf8.decode(base64.decode(tokenString));
       // Split
-      var tokens = tokenString.split(':::');
+      final tokens = tokenString.split(':::');
       String? privatetoken;
       if (tokens.length < 2) {
         // The authentication result is malformed. Discard.
@@ -247,7 +287,7 @@ class Moodle {
         // Includes private token
         privatetoken = tokens.last;
       }
-      var wstoken = tokens[1];
+      final wstoken = tokens[1];
 
       // Check if token has changed.
       // There is no point in updating everything again if tokens are the same.
@@ -261,15 +301,18 @@ class Moodle {
       moodle._privatetoken = privatetoken;
       
       // Obtain site info
-      var response = await callFunction(MoodleFunctions.getSiteInfo);
+      final response = await callFunction(MoodleFunctions.getSiteInfo);
       if (response.fail) throw Exception();
       moodle._siteInfo = MoodleSiteInfo.fromJson(response.data!);
 
       // Obtain course info first, before fetching events
       await fetchCourses(saveNow: false);
+      
+      // Then fetch events
+      await fetchEvents(saveNow: false, force: true);
 
       // Save things down
-      moodle._saveToStorage();
+      moodle._save();
     } catch (e) {
       moodle._wstoken = null;
       moodle._privatetoken = null;
@@ -289,7 +332,7 @@ class Moodle {
   static Future<bool> fetchCourses({bool saveNow = true}) async {
     final moodle = Moodle();
     if (!isUserLoggedIn) return false;
-    var response = await callFunction(
+    final response = await callFunction(
       MoodleFunctions.getEnrolledCourses,
       params: {
         'userid': moodle._userId,
@@ -303,8 +346,69 @@ class Moodle {
     } catch (e) {
       return false;
     }
-    if (saveNow) moodle._saveToStorage();
+    moodle._generateCourseMap();
+    if (saveNow) moodle._save();
     return true;
+  }
+
+  // ------------Event Interfaces------------
+
+  /// Fetch events of the logged in user.
+  static Future<bool> fetchEvents({
+    bool saveNow = true,
+    bool force = false,
+    int minSecsBetweenFetches = 7200,
+  }) async {
+    final moodle = Moodle();
+    if (!isUserLoggedIn) return false;
+    // Check if fetches are too close
+    if (!force && moodle._eventsLastUpdated != null) {
+      final diff = DateTime.now().difference(moodle._eventsLastUpdated!);
+      if (diff.inSeconds < minSecsBetweenFetches) return true;
+    }
+    // Obtain current timestamp
+    final timeStart = DateTime.now().secondEpoch;
+    final response = await callFunction(
+      MoodleFunctions.callExternal,
+      subrequests: [
+        MoodleFunctionSubrequest(
+          MoodleFunctions.getCalendarEvents,
+          params: {
+            'options': {
+              "userevents": "1",
+              "siteevents": "1",
+              "timestart": "$timeStart",
+              "timeend": "0"  // No time end
+            },
+            'events': {
+              'courseids': moodle._allCourseIds()
+            }
+          }
+        ),
+      ]
+    );
+    final data = response.subResponseData<Map>(0);
+    if (data == null) return false;
+    try {
+      final events = (data['events'] as List)
+        .map((e) => MoodleEvent.fromJson(e)).toList();
+      moodle._mergeEvents(events);
+    } catch (e) {
+      return false;
+    }
+    moodle._eventsLastUpdated = DateTime.now();
+    if (saveNow) moodle._save();
+    return true;
+  }
+
+  /// Get the course info associated with the event.
+  static MoodleCourse? courseForEvent(MoodleEvent event) {
+    final moodle = Moodle();
+    final courseId = event.courseid;
+    if (courseId != null) {
+      return moodle._courseMap[courseId];
+    }
+    return null;
   }
 
   // ------------Private Utilities------------
@@ -312,13 +416,13 @@ class Moodle {
   // ------------Internal Storage Utilities------------
 
   /// Load saved token and others from storage.
-  Future<void> _loadFromStorage() async {
+  Future<void> _load() async {
     if (_wstoken != null) return;
     try {
       // Tokens and site info
       _wstoken = _prefs.getString(MoodleStorageKeys.wstoken);
       _privatetoken = _prefs.getString(MoodleStorageKeys.privatetoken);
-      var siteInfo = _prefs.getString(MoodleStorageKeys.siteInfo);
+      final siteInfo = _prefs.getString(MoodleStorageKeys.siteInfo);
       if (siteInfo != null) {
         _siteInfo = MoodleSiteInfo.fromJson(jsonDecode(siteInfo));
       } else if (_wstoken != null) {
@@ -326,21 +430,29 @@ class Moodle {
         throw Exception();
       }
       // Courses
-      var courses = _prefs.getStringList(MoodleStorageKeys.courses);
+      final courses = _prefs.getStringList(MoodleStorageKeys.courses);
       if (courses != null) {
         _courses = courses.map((course) => 
           MoodleCourse.fromJson(jsonDecode(course))).toList();
+      }
+      _generateCourseMap();
+      // Events
+      final events = _prefs.getStringList(MoodleStorageKeys.events);
+      if (events != null) {
+        _events = events.map((event) => 
+          MoodleEvent.fromJson(jsonDecode(event))).toList();
       }
     } catch (e) {
       // Reset upon error.
       _wstoken = null;
       _privatetoken = null;
       _courses = [];
+      _events = [];
     }
   }
 
   /// Save current token and others to storage.
-  Future<void> _saveToStorage() async {
+  Future<void> _save() async {
     if (_wstoken == null) return;
     // Tokens and site info
     _prefs.setString(MoodleStorageKeys.wstoken, _wstoken!);
@@ -352,6 +464,11 @@ class Moodle {
     _prefs.setStringList(
       MoodleStorageKeys.courses,
       _courses.map((course) => jsonEncode(course.toJson())).toList()
+    );
+    // Events
+    _prefs.setStringList(
+      MoodleStorageKeys.events,
+      _events.map((event) => jsonEncode(event.toJson())).toList()
     );
   }
 
@@ -425,8 +542,9 @@ class Moodle {
     // Convert to string
     var bodyComponents = <String>[];
     bodyParams.forEach((key, value) {
+      final valStr = value is Map ? jsonEncode(value) : value.toString();
       bodyComponents.add(
-        '${Uri.encodeComponent(key)}=${Uri.encodeComponent(value.toString())}'
+        '${Uri.encodeComponent(key)}=${Uri.encodeComponent(valStr)}'
       );
     });
     return bodyComponents.join('&');
@@ -442,8 +560,8 @@ class Moodle {
     String lang = 'en_us'
   }) {
     // Build URL and body
-    var url = _buildMoodleFunctionUrl(functionName);
-    var body = _buildMoodleFunctionBody(
+    final url = _buildMoodleFunctionUrl(functionName);
+    final body = _buildMoodleFunctionBody(
       functionName,
       subrequests: subrequests,
       params: params,
@@ -475,6 +593,24 @@ class Moodle {
     return _courses.map(
       (course) => course.id.toString()
     ).toList();
+  }
+
+  /// Generate course map for faster random access.
+  void _generateCourseMap() {
+    _courseMap = {};
+    for (final course in _courses) {
+      _courseMap[course.id] = course;
+    }
+  }
+
+  // ------------Event Utilities------------
+
+  /// Merge the new events with the current events.
+  /// The custom events should remain in the list.
+  void _mergeEvents(List<MoodleEvent> others) {
+    // First delete all non-local events
+    _events.removeWhere((event) => event.eventtype != MoodleEventTypes.custom);
+    _events.addAll(others);
   }
   
   // Singleton configurations

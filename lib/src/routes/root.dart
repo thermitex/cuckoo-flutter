@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cuckoo/src/common/extensions/build_context.dart';
+import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/routes/events/events.dart';
 import 'package:cuckoo/src/routes/courses/courses.dart';
