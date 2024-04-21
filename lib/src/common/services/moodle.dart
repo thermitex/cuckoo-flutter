@@ -3,106 +3,17 @@ import 'dart:convert';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/global.dart';
 import 'package:cuckoo/src/models/index.dart';
+import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dio/dio.dart';
 
+part 'moodle_extra.dart';
+part 'moodle_managers.dart';
+
 /// Domain name of HKU Moodle.
 const String kHKUMoodleDomain = 'moodle.hku.hk';
-
-/// Status of Moodle authentication.
-enum MoodleAuthStatus { ignore, incomplete, fail, success }
-
-/// Moodle storage keys.
-class MoodleStorageKeys {
-  static const wstoken = 'moodle_wstoken';
-  static const privatetoken = 'moodle_privatetoken';
-  static const siteInfo = 'moodle_site_info';
-  static const courses = 'moodle_courses';
-  static const events = 'moodle_events';
-}
-
-/// Moodle function names.
-class MoodleFunctions {
-  static const getSiteInfo = 'core_webservice_get_site_info';
-  static const getEnrolledCourses = 'core_enrol_get_users_courses';
-  static const callExternal = 'tool_mobile_call_external_functions';
-  static const getCalendarEvents = 'core_calendar_get_calendar_events';
-}
-
-/// Types of Moodle events.
-class MoodleEventTypes {
-  static const due = 'due';
-  static const user = 'user';
-  static const custom = 'custom';
-}
-
-/// Subrequest in a moodle function request.
-/// However, in most cases, there is no need to use subrequests.
-class MoodleFunctionSubrequest {
-  MoodleFunctionSubrequest(
-    this.functionName, {
-    this.params,
-    this.filter = true,
-    this.fileUrl = true,
-});
-  
-  final String functionName;
-  final Map<String, dynamic>? params;
-  final bool filter;
-  final bool fileUrl;
-
-  /// Convert to string given the subrequest index.
-  Map<String, String> bodyParamsWithIndex(int index) {
-    return {
-      'requests[$index][function]': functionName,
-      'requests[$index][arguments]': jsonEncode(params ?? {}),
-      'requests[$index][settingfilter]': filter ? "1" : "0",
-      'requests[$index][settingfileurl]': fileUrl ? "1" : "0"
-    };
-  }
-}
-
-/// Moodle function call reponse wrapper.
-class MoodleFunctionResponse {
-  MoodleFunctionResponse(this.response)
-  : data = response.data;
-
-  /// Raw Dio response.
-  final Response response;
-
-  /// Data shortcut.
-  final dynamic data;
-
-  /// If the Moodle function has failed.
-  bool get fail {
-    bool errStatus = (response.statusCode ?? 500) != 200;
-    bool exceptionExists = data is Map && data?['exception'] == 'moodle_exception';
-    return errStatus && exceptionExists;
-  }
-
-  /// Get error code if any.
-  String? get errCode => data?['errorcode'];
-
-  /// Get error message if any.
-  String? get errMessage => data?['message'];
-
-  /// Get subresponse data at specific index.
-  T? subResponseData<T>(int index, {bool requireJSONDecode = true}) {
-    if (data is! Map<String, dynamic>) return null;
-    final responses = data['responses'];
-    if (responses is! List) return null;
-    var subData = responses[index]['data'];
-    if (requireJSONDecode) {
-      try {
-        subData = jsonDecode(subData);
-      } catch (e) {
-        return null;
-      }
-    }
-    return subData as T;
-  }
-}
 
 /// The class for all Moodle services used in Cuckoo.
 /// 
@@ -114,6 +25,15 @@ class MoodleFunctionResponse {
 class Moodle {
 
   // Instance variables
+
+  /// Login status manager.
+  late MoodleLoginStatusManager loginStatusManager;
+
+  /// Course manager.
+  late MoodleCourseManager courseManager;
+
+  /// Event manager.
+  late MoodleEventManager eventManager;
 
   /// Web service tokens used in calling Moodle service.
   String? _wstoken;
@@ -133,19 +53,6 @@ class Moodle {
 
   /// Shared preference instance.
   late SharedPreferences _prefs;
-
-  /// Enrolled courses of current Moodle user.
-  List<MoodleCourse> _courses = [];
-
-  /// Mapping of courseId -> MoodleCourse for faster access through ID.
-  Map<num, MoodleCourse> _courseMap = {};
-
-  /// Events of current Moodle user.
-  List<MoodleEvent> _events = [];
-
-  /// Timestamp where events are last updated.
-  /// Not preserved in storage.
-  DateTime? _eventsLastUpdated;
 
   // Static interfaces
 
@@ -178,9 +85,18 @@ class Moodle {
   static String get profilePicUrl => Moodle()._siteInfo.userpictureurl;
 
   /// Initialize Moodle service module.
+  /// 
+  /// Keep this method synchronous.
   static void init() {
     final moodle = Moodle();
     moodle._prefs = Global.prefs;
+
+    // Init notifiers
+    moodle.loginStatusManager = MoodleLoginStatusManager();
+    moodle.courseManager = MoodleCourseManager();
+    moodle.eventManager = MoodleEventManager();
+
+    // Load from storage
     moodle._load();
 
     // If the user already logged in, get site info in the background again
@@ -194,11 +110,13 @@ class Moodle {
   static Future<void> logout() async {
     if (!isUserLoggedIn) return;
     final moodle = Moodle();
+    moodle.loginStatusManager.status = false;
     moodle._wstoken = null;
     moodle._privatetoken = null;
-    moodle._courses = [];
-    moodle._events = [];
-    moodle._eventsLastUpdated = null;
+    moodle.courseManager._clearAllCourses();
+    moodle.eventManager
+      .._clearEventsExceptCustom()
+      .._eventsLastUpdated = null;
     // Clear storage
     for (String key in [
       MoodleStorageKeys.wstoken,
@@ -316,6 +234,8 @@ class Moodle {
       moodle._privatetoken = null;
       return MoodleAuthStatus.fail;
     }
+    // Set login status to notify listeners
+    moodle.loginStatusManager.status = true;
     return MoodleAuthStatus.success;
   }
 
@@ -339,12 +259,11 @@ class Moodle {
     );
     if (response.fail) return false;
     try {
-      moodle._courses = (response.data as List)
+      moodle.courseManager.courses = (response.data as List)
         .map((e) => MoodleCourse.fromJson(e)).toList();
     } catch (e) {
       return false;
     }
-    moodle._generateCourseMap();
     if (saveNow) moodle._save();
     return true;
   }
@@ -360,8 +279,9 @@ class Moodle {
     final moodle = Moodle();
     if (!isUserLoggedIn) return false;
     // Check if fetches are too close
-    if (!force && moodle._eventsLastUpdated != null) {
-      final diff = DateTime.now().difference(moodle._eventsLastUpdated!);
+    if (!force && moodle.eventManager._eventsLastUpdated != null) {
+      final diff = DateTime.now()
+        .difference(moodle.eventManager._eventsLastUpdated!);
       if (diff.inSeconds < minSecsBetweenFetches) return true;
     }
     // Obtain current timestamp
@@ -379,7 +299,7 @@ class Moodle {
               "timeend": "0"  // No time end
             },
             'events': {
-              'courseids': moodle._allCourseIds()
+              'courseids': moodle.courseManager._allCourseIds()
             }
           }
         ),
@@ -390,21 +310,23 @@ class Moodle {
     try {
       final events = (data['events'] as List)
         .map((e) => MoodleEvent.fromJson(e)).toList();
-      moodle._mergeEvents(events);
+      moodle.eventManager._mergeEvents(events);
     } catch (e) {
       return false;
     }
-    moodle._eventsLastUpdated = DateTime.now();
+    moodle.eventManager._eventsLastUpdated = DateTime.now();
     if (saveNow) moodle._save();
     return true;
   }
 
   /// Get the course info associated with the event.
+  /// 
+  /// Recommend to use the shortcut `event.course` instead.
   static MoodleCourse? courseForEvent(MoodleEvent event) {
     final moodle = Moodle();
     final courseId = event.courseid;
     if (courseId != null) {
-      return moodle._courseMap[courseId];
+      return moodle.courseManager._courseMap[courseId];
     }
     return null;
   }
@@ -430,23 +352,23 @@ class Moodle {
       // Courses
       final courses = _prefs.getStringList(MoodleStorageKeys.courses);
       if (courses != null) {
-        _courses = courses.map((course) => 
+        courseManager._courses = courses.map((course) => 
           MoodleCourse.fromJson(jsonDecode(course))).toList();
       }
-      _generateCourseMap();
       // Events
       final events = _prefs.getStringList(MoodleStorageKeys.events);
       if (events != null) {
-        _events = events.map((event) => 
+        eventManager._events = events.map((event) => 
           MoodleEvent.fromJson(jsonDecode(event))).toList();
       }
     } catch (e) {
       // Reset upon error.
       _wstoken = null;
       _privatetoken = null;
-      _courses = [];
-      _events = [];
+      courseManager._courses = [];
+      eventManager._events = [];
     }
+    loginStatusManager._loggedIn = _wstoken != null;
   }
 
   /// Save current token and others to storage.
@@ -461,12 +383,12 @@ class Moodle {
     // Courses
     _prefs.setStringList(
       MoodleStorageKeys.courses,
-      _courses.map((course) => jsonEncode(course.toJson())).toList()
+      courseManager.courses.map((course) => jsonEncode(course.toJson())).toList()
     );
     // Events
     _prefs.setStringList(
       MoodleStorageKeys.events,
-      _events.map((event) => jsonEncode(event.toJson())).toList()
+      eventManager.events.map((event) => jsonEncode(event.toJson())).toList()
     );
   }
 
@@ -598,33 +520,6 @@ class Moodle {
     }
     _siteInfo = MoodleSiteInfo.fromJson(response.data!);
     if (saveNow) _save();
-  }
-  
-  // ------------Course Utilities------------
-
-  /// Obtain a list containing IDs of all courses.
-  List<String> _allCourseIds() {
-    return _courses.map(
-      (course) => course.id.toString()
-    ).toList();
-  }
-
-  /// Generate course map for faster random access.
-  void _generateCourseMap() {
-    _courseMap = {};
-    for (final course in _courses) {
-      _courseMap[course.id] = course;
-    }
-  }
-
-  // ------------Event Utilities------------
-
-  /// Merge the new events with the current events.
-  /// The custom events should remain in the list.
-  void _mergeEvents(List<MoodleEvent> others) {
-    // First delete all non-local events
-    _events.removeWhere((event) => event.eventtype != MoodleEventTypes.custom);
-    _events.addAll(others);
   }
   
   // Singleton configurations

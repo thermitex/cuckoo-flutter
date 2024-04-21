@@ -1,5 +1,7 @@
+import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:flutter/material.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
+import 'package:provider/provider.dart';
 
 extension BuildContextExtensions on BuildContext {
   /// Check if dark mode is currently enabled.
@@ -18,12 +20,23 @@ extension BuildContextExtensions on BuildContext {
   ColorScheme get colorScheme => theme.colorScheme;
 
   /// Get Shipshape specific theme.
-  CuckooThemeExtension get cuckooTheme => Theme.of(this).extension<CuckooThemeExtension>()!;
+  CuckooThemeExtension get cuckooTheme => 
+    Theme.of(this).extension<CuckooThemeExtension>()!;
 
   /// Shortcut for getting navigator.
   NavigatorState get navigator => Navigator.of(this);
 
-  /// Shortcut for obtaining root scaffold;
-  ScaffoldState get rootScaffold => findRootAncestorStateOfType<ScaffoldState>()!;
+  /// Shortcut for obtaining root scaffold.
+  ScaffoldState get rootScaffold => 
+    findRootAncestorStateOfType<ScaffoldState>()!;
 
+  /// Moodle login status manager.
+  MoodleLoginStatusManager get loginStatusManager => 
+    watch<MoodleLoginStatusManager>();
+
+  /// Moodle courses manager.
+  MoodleCourseManager get courseManager => watch<MoodleCourseManager>();
+    
+  /// Moodle events manager.
+  MoodleEventManager get eventManager => watch<MoodleEventManager>();
 }

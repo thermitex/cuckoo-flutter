@@ -13,8 +13,6 @@ class EventsPage extends StatefulWidget {
 }
 
 class _EventsPageState extends State<EventsPage> {
-  bool userHasLoggedIn = Moodle.isUserLoggedIn;
-
   /// Build app bar action items.
   List<CuckooAppBarActionItem> _appBarActionItems() {
     return <CuckooAppBarActionItem>[
@@ -87,7 +85,7 @@ class _EventsPageState extends State<EventsPage> {
 
   /// Build the event page according to the current state.
   Widget _buildEventPage() {
-    if (userHasLoggedIn) {
+    if (context.loginStatusManager.isUserLoggedIn) {
       return _eventMainView();
     }
     return _loginRequiredView();

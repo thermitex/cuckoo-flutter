@@ -16,5 +16,6 @@
     "visible?": 1,
     "sequence?": 1,
     "timemodified?": 1712819692,
-    "subscriptionid?": null
+    "subscriptionid?": null,
+    "completed?": true
 }

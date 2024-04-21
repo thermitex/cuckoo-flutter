@@ -24,7 +24,8 @@ MoodleEvent _$MoodleEventFromJson(Map<String, dynamic> json) => MoodleEvent()
   ..visible = json['visible'] as num?
   ..sequence = json['sequence'] as num?
   ..timemodified = json['timemodified'] as num?
-  ..subscriptionid = json['subscriptionid'] as String?;
+  ..subscriptionid = json['subscriptionid'] as String?
+  ..completed = json['completed'] as bool?;
 
 Map<String, dynamic> _$MoodleEventToJson(MoodleEvent instance) =>
     <String, dynamic>{
@@ -46,4 +47,5 @@ Map<String, dynamic> _$MoodleEventToJson(MoodleEvent instance) =>
       'sequence': instance.sequence,
       'timemodified': instance.timemodified,
       'subscriptionid': instance.subscriptionid,
+      'completed': instance.completed,
     };
