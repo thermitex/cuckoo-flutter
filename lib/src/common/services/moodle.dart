@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:cuckoo/src/common/extensions/extensions.dart';
+import 'package:cuckoo/src/common/services/global.dart';
 import 'package:cuckoo/src/models/index.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dio/dio.dart';
@@ -178,18 +178,15 @@ class Moodle {
   static String get profilePicUrl => Moodle()._siteInfo.userpictureurl;
 
   /// Initialize Moodle service module.
-  static Future<void> init() async {
+  static void init() {
     final moodle = Moodle();
-    WidgetsFlutterBinding.ensureInitialized();
-    moodle._prefs = await SharedPreferences.getInstance();
-    await moodle._load();
+    moodle._prefs = Global.prefs;
+    moodle._load();
 
     // If the user already logged in, get site info in the background again
     // to take any updates into consideration.
     if (isUserLoggedIn) {
-      final response = await callFunction(MoodleFunctions.getSiteInfo);
-      if (!response.fail) moodle._siteInfo = MoodleSiteInfo.fromJson(response.data!);
-      moodle._save();
+      moodle._fetchSiteInfo();
     }
   }
 
@@ -301,9 +298,10 @@ class Moodle {
       moodle._privatetoken = privatetoken;
       
       // Obtain site info
-      final response = await callFunction(MoodleFunctions.getSiteInfo);
-      if (response.fail) throw Exception();
-      moodle._siteInfo = MoodleSiteInfo.fromJson(response.data!);
+      await moodle._fetchSiteInfo(
+        ignoreFail: false,
+        saveNow: false
+      );
 
       // Obtain course info first, before fetching events
       await fetchCourses(saveNow: false);
@@ -416,7 +414,7 @@ class Moodle {
   // ------------Internal Storage Utilities------------
 
   /// Load saved token and others from storage.
-  Future<void> _load() async {
+  void _load() {
     if (_wstoken != null) return;
     try {
       // Tokens and site info
@@ -586,6 +584,22 @@ class Moodle {
     ).then((response) => MoodleFunctionResponse(response));
   }
 
+  // ------------Site info Utilities------------
+
+  /// Fetch site info.
+  Future<void> _fetchSiteInfo({
+    bool ignoreFail = true,
+    bool saveNow = true,
+  }) async {
+    final response = await callFunction(MoodleFunctions.getSiteInfo);
+    if (response.fail) {
+      if (!ignoreFail) throw Exception();
+      return;
+    }
+    _siteInfo = MoodleSiteInfo.fromJson(response.data!);
+    if (saveNow) _save();
+  }
+  
   // ------------Course Utilities------------
 
   /// Obtain a list containing IDs of all courses.

@@ -1,13 +1,22 @@
 import 'package:cuckoo/src/common/extensions/extensions.dart';
+import 'package:cuckoo/src/common/services/constant.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
-class EventsPage extends StatelessWidget {
+class EventsPage extends StatefulWidget {
   const EventsPage({super.key});
 
+  @override
+  State<EventsPage> createState() => _EventsPageState();
+}
+
+class _EventsPageState extends State<EventsPage> {
+  bool userHasLoggedIn = Moodle.isUserLoggedIn;
+
   /// Build app bar action items.
-  List<CuckooAppBarActionItem> _appBarActionItems(BuildContext context) {
+  List<CuckooAppBarActionItem> _appBarActionItems() {
     return <CuckooAppBarActionItem>[
       CuckooAppBarActionItem(
         icon: const Icon(
@@ -31,7 +40,7 @@ class EventsPage extends StatelessWidget {
 
   /// Action routine for opening reminder page.
   void _openReminderPage() {
-    Moodle.startAuth();
+
   }
 
   /// Action routine for opening "more" panel.
@@ -39,15 +48,62 @@ class EventsPage extends StatelessWidget {
     Moodle.logout();
   }
 
+  /// Show a view to prompt user for logging in.
+  Widget _loginRequiredView() {
+    return Padding(
+      padding: const EdgeInsets.all(50.0),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 500.0),
+          child: CuckooFullPageView(
+            SvgPicture.asset(
+              'images/illus/page_intro.svg',
+              width: 300,
+              height: 300,
+            ),
+            darkModeImage: SvgPicture.asset(
+              'images/illus/dark/page_intro.svg',
+              width: 300,
+              height: 300,
+            ),
+            message: Constants.kEventsRequireLoginPrompt,
+            buttons: [
+              CuckooButton(
+                text: Constants.kLoginMoodleButton,
+                action: () => Moodle.startAuth(),
+              )
+            ],
+            bottomOffset: 65.0,
+          ),
+        )
+      ),
+    );
+  }
+
+  /// The main view to show event list.
+  Widget _eventMainView() {
+    return const Placeholder();
+  }
+
+  /// Build the event page according to the current state.
+  Widget _buildEventPage() {
+    if (userHasLoggedIn) {
+      return _eventMainView();
+    }
+    return _loginRequiredView();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.cuckooTheme.primaryBackground,
       appBar: CuckooLargeAppBar(
-        title: 'Events',
-        actionItems: _appBarActionItems(context),
+        title: Constants.kEventsTitle,
+        actionItems: _appBarActionItems(),
       ),
-      body: const Placeholder(),
+      body: SafeArea(
+        child: _buildEventPage()
+      ),
     );
   }
 }

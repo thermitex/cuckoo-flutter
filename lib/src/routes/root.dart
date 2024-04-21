@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cuckoo/src/common/extensions/extensions.dart';
+import 'package:cuckoo/src/common/services/constant.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/routes/events/events.dart';
 import 'package:cuckoo/src/routes/courses/courses.dart';
@@ -31,9 +32,6 @@ class RootState extends State<Root> {
   /// Subscription for listening to incoming deep links.
   StreamSubscription? _linkSub;
 
-  /// UI states on Root.
-  bool _showFullScreenActivityIndicator = false;
-
   /// It will handle app links while the app is already started - be it in the
   /// foreground or in the background.
   void _handleIncomingLinks() {
@@ -41,9 +39,11 @@ class RootState extends State<Root> {
       if (!mounted) return;
       if (link != null) {
         var tokenString = link.split('//').last;
-        setState(() => _showFullScreenActivityIndicator = true);
+        CuckooFullScreenIndicator(context).startLoading(
+          message: Constants.kLoginMoodleLoading
+        );
         Moodle.handleAuthResult(tokenString).then((status) {
-          setState(() => _showFullScreenActivityIndicator = false);
+          CuckooFullScreenIndicator(context).stopLoading();
         });
       }
     });
@@ -92,7 +92,6 @@ class RootState extends State<Root> {
 
   @override
   void initState() {
-    Moodle.init();
     _handleIncomingLinks();
     super.initState();
   }

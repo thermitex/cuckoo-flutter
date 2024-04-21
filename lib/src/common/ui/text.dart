@@ -8,7 +8,7 @@ class TextStylePresets {
   static const String _titleFontFamily = 'Montserrat';
 
   /// Font family name for body texts and normal titles.
-  // static const String _bodyFontFamily = 'Inter';
+  static const String _bodyFontFamily = 'Inter';
 
   // Easier constructors:
   /// Text style for titles.
@@ -23,11 +23,9 @@ class TextStylePresets {
   /// Text style for body.
   static TextStyle body({double size = 14, FontWeight weight = FontWeight.normal}) {
     return TextStyle(
-      // fontFamily: _bodyFontFamily,
+      fontFamily: _bodyFontFamily,
       fontSize: size,
       fontWeight: weight,
-      // height: 1.15,
-      // letterSpacing: -0.03
     );
   }
 

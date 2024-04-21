@@ -17,7 +17,7 @@ enum CuckooButtonSize {
 }
 
 /// A standard button widget used in Cuckoo.
-class CuckooButton extends StatelessWidget {
+class CuckooButton extends StatefulWidget {
   const CuckooButton({
     super.key,
     this.style = CuckooButtonStyle.primary,
@@ -63,76 +63,86 @@ class CuckooButton extends StatelessWidget {
   /// Action of the button.
   final Function? action;
 
+  @override
+  State<CuckooButton> createState() => _CuckooButtonState();
+}
+
+class _CuckooButtonState extends State<CuckooButton> {
+  double overlayOpacity = 0.0;
+
   /// Get icon size.
   double get _buttonIconSize => {
     CuckooButtonSize.medium: 22.0,
-  }[sizeVariant] ?? 22.0;
+  }[widget.sizeVariant] ?? 22.0;
 
   /// Get icon size.
   double get _buttonTextSize => {
     CuckooButtonSize.medium: 14.0,
-  }[sizeVariant] ?? 14.0;
+  }[widget.sizeVariant] ?? 14.0;
 
   /// Border radius according to size variant.
   BorderRadiusGeometry get _buttonBorderRadius {
-    var radius = borderRadius;
+    var radius = widget.borderRadius;
     radius ??= {
       CuckooButtonSize.medium: 15.0,
-    }[sizeVariant];
+    }[widget.sizeVariant];
     return BorderRadius.circular(radius ?? 15.0);
   }
 
   /// Build button height.
   double get _buttonHeight {
-    var height = this.height;
+    var height = widget.height;
     height ??= {
       CuckooButtonSize.medium: 50.0,
-    }[sizeVariant];
+    }[widget.sizeVariant];
     return height ?? 50.0;
   }
 
   /// Build background color.
-  Color _buttonBackgroundColor(BuildContext context) {
-    var bgColor = backgroundColor;
+  Color _buttonBackgroundColor() {
+    var bgColor = widget.backgroundColor;
     bgColor ??= {
       CuckooButtonStyle.primary: ColorPresets.primary,
       CuckooButtonStyle.secondary: context.cuckooTheme.secondaryBackground,
       CuckooButtonStyle.danger: ColorPresets.negativePrimary,
-    }[style];
+    }[widget.style];
     return bgColor ?? ColorPresets.primary;
   }
 
   /// Build button text color.
-  Color _buttonTextColor(BuildContext context) {
-    var textColor = this.textColor;
+  Color _buttonTextColor() {
+    var textColor = widget.textColor;
     textColor ??= {
       CuckooButtonStyle.primary: Colors.white,
       CuckooButtonStyle.secondary: context.cuckooTheme.primaryText,
       CuckooButtonStyle.danger: Colors.white,
-    }[style];
+    }[widget.style];
     return textColor ?? Colors.white;
   }
 
   /// Build row children.
-  List<Widget> _buildRowChildren(BuildContext context) {
+  List<Widget> _buildRowChildren() {
     var children = <Widget>[];
-    if (icon != null) {
+    if (widget.icon != null) {
       // Add Icon to children
       var iconWidget = Icon(
-        icon!,
+        widget.icon!,
         size: _buttonIconSize,
+        color: _buttonTextColor(),
       );
       children.add(iconWidget);
-      if (text != null) {
+      if (widget.text != null) {
         // Add space between icon and text
-        children.add(const SizedBox(width: 5.0,));
+        children.add(const SizedBox(width: 8.0));
       }
     }
-    if (text != null) {
+    if (widget.text != null) {
       var textWidget = Text(
-        text!,
+        widget.text!,
         style: TextStylePresets.body(size: _buttonTextSize).copyWith(
-          color: _buttonTextColor(context)
+          fontWeight: widget.style == CuckooButtonStyle.secondary ? 
+            FontWeight.normal : FontWeight.w600,
+          color: _buttonTextColor(),
         ),
       );
       children.add(textWidget);
@@ -140,17 +150,50 @@ class CuckooButton extends StatelessWidget {
     return children;
   }
 
+  /// Highlight button with overlay.
+  void _highlightButton() {
+    setState(() {
+      overlayOpacity = 0.1;
+    });
+  }
+
+  /// Unhighlight button by clearing overlay.
+  void _unhighlightButton() {
+    setState(() {
+      overlayOpacity = 0.0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: _buttonHeight,
-      decoration: BoxDecoration(
+    return GestureDetector(
+      onTap: () {
+        if (widget.action != null) widget.action!();
+      },
+      onTapDown: (details) => _highlightButton(),
+      onTapUp: (details) => _unhighlightButton(),
+      onTapCancel: () => _unhighlightButton(),
+      child: ClipRRect(
         borderRadius: _buttonBorderRadius,
-        color: _buttonBackgroundColor(context),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: _buildRowChildren(context),
+        child: Container(
+          height: _buttonHeight,
+          color: _buttonBackgroundColor(),
+          child: Stack(
+            children: [
+              SizedBox.expand(
+                child: Container(
+                  color: Colors.black.withOpacity(overlayOpacity)
+                ),
+              ),
+              SizedBox.expand(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: _buildRowChildren(),
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:cuckoo/src/common/extensions/extensions.dart';
+import 'package:cuckoo/src/common/services/constant.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,7 @@ class CoursesPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: context.cuckooTheme.primaryBackground,
       appBar: CuckooLargeAppBar(
-        title: 'Courses',
+        title: Constants.kCoursesTitle,
       ),
       body: const Placeholder(),
     );

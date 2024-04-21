@@ -6,3 +6,5 @@ export 'color.dart';
 export 'themes.dart';
 export 'appbar.dart';
 export 'button.dart';
+export 'full_page.dart';
+export 'loading.dart';
