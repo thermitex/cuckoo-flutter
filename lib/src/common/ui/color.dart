@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 /// A series of text style presets to be used conveniently.
 class ColorPresets {
-
   // ******* Universal *******
 
   static const Color primary = Color.fromARGB(255, 88, 108, 245);
@@ -25,11 +24,13 @@ class ColorPresets {
 
   // Secondary
   static const Color lightSecondaryText = Color.fromARGB(153, 60, 60, 67);
-  static const Color lightSecondaryBackground = Color.fromARGB(255, 242, 242, 247);
+  static const Color lightSecondaryBackground =
+      Color.fromARGB(255, 242, 242, 247);
 
   // Tertiary
   static const Color lightTertiaryText = Color.fromARGB(77, 60, 60, 67);
-  static const Color lightTertiaryBackground = Color.fromARGB(255, 226, 226, 231);
+  static const Color lightTertiaryBackground =
+      Color.fromARGB(255, 226, 226, 231);
 
   // Quaternary
   static const Color lightQuaternaryText = Color.fromARGB(46, 60, 60, 67);
@@ -58,5 +59,4 @@ class ColorPresets {
 
   // Others
   static const Color darkSeparator = Color.fromARGB(153, 84, 84, 88);
-
 }

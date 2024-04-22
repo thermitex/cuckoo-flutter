@@ -5,19 +5,20 @@ import 'text.dart';
 const double kCuckooLargeAppBarHeight = 58.0;
 
 /// Paddings for the large app bar.
-const EdgeInsetsGeometry kCuckooLargeAppBarPadding = EdgeInsets.fromLTRB(18, 8, 18, 8);
+const EdgeInsetsGeometry kCuckooLargeAppBarPadding =
+    EdgeInsets.fromLTRB(18, 8, 18, 8);
 
 /// Spaces between action items on app bar.
 const double kSpaceBetweenActionItems = 12.0;
 
 /// A large app bar that is used at the root hierarchy.
-/// 
+///
 /// Similar to iOS's NavigationBar's large title, except that the large title
 /// will not shrink in CuckooLargeAppBar. Action items are added directly to
 /// the right of the large title.
 class CuckooLargeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CuckooLargeAppBar({
-    super.key, 
+    super.key,
     required this.title,
     this.appBarHeight = kCuckooLargeAppBarHeight,
     this.spaceBetweenActionItems = kSpaceBetweenActionItems,
@@ -47,14 +48,15 @@ class CuckooLargeAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Get row children in a list.
   List<Widget> _buildRowChildren() {
     var children = <Widget>[
-      _titleWidget(),   // Title
-      const Spacer(),   // Space until right action items
+      _titleWidget(), // Title
+      const Spacer(), // Space until right action items
     ];
 
     if (actionItems != null) {
       for (int i = 0; i < actionItems!.length; i++) {
         var actionItem = actionItems![i];
-        assert(actionItem.position == ActionItemPosition.right, "Left action item cannot be added to large app bars");
+        assert(actionItem.position == ActionItemPosition.right,
+            "Left action item cannot be added to large app bars");
         children.add(CuckooAppBarActionWidget(item: actionItem));
         if (i < actionItems!.length - 1) {
           // Space between items
@@ -77,19 +79,16 @@ class CuckooLargeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
-  
+
   @override
   Size get preferredSize => const Size.fromHeight(kCuckooLargeAppBarHeight);
 }
 
 /// Widget based on an app bar action item.
-/// 
+///
 /// Intended to use internally. Try not to use/call it in any external files.
 class CuckooAppBarActionWidget extends StatelessWidget {
-  const CuckooAppBarActionWidget({
-    super.key, 
-    required this.item
-  });
+  const CuckooAppBarActionWidget({super.key, required this.item});
 
   final CuckooAppBarActionItem item;
 
@@ -102,15 +101,14 @@ class CuckooAppBarActionWidget extends StatelessWidget {
         }
       },
       child: Container(
-        decoration: BoxDecoration(
-          color: item.backgroundColor,
-          shape: BoxShape.circle,
-        ),
-        padding: item.backgroundPadding,
-        child: Center(
-          child: item.icon,
-        )
-      ),
+          decoration: BoxDecoration(
+            color: item.backgroundColor,
+            shape: BoxShape.circle,
+          ),
+          padding: item.backgroundPadding,
+          child: Center(
+            child: item.icon,
+          )),
     );
   }
 }
@@ -121,13 +119,12 @@ enum ActionItemPosition { left, right }
 
 /// Class for an action item to be added on app bars.
 class CuckooAppBarActionItem {
-  const CuckooAppBarActionItem({
-    required this.icon,
-    this.position = ActionItemPosition.right,
-    this.backgroundColor = Colors.transparent,
-    this.backgroundPadding = EdgeInsets.zero,
-    this.onPressed
-  });
+  const CuckooAppBarActionItem(
+      {required this.icon,
+      this.position = ActionItemPosition.right,
+      this.backgroundColor = Colors.transparent,
+      this.backgroundPadding = EdgeInsets.zero,
+      this.onPressed});
 
   /// Position of the action item.
   final ActionItemPosition position;

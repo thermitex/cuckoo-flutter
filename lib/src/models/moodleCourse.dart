@@ -33,7 +33,8 @@ class MoodleCourse {
   bool? showactivitydates;
   bool? showcompletionconditions;
   num? timemodified;
-  
-  factory MoodleCourse.fromJson(Map<String,dynamic> json) => _$MoodleCourseFromJson(json);
+
+  factory MoodleCourse.fromJson(Map<String, dynamic> json) =>
+      _$MoodleCourseFromJson(json);
   Map<String, dynamic> toJson() => _$MoodleCourseToJson(this);
 }

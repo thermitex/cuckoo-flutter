@@ -7,14 +7,12 @@ import 'src/app.dart';
 /// Entry point of Cuckoo App.
 /// Do not modify this file.
 void main() {
-  Global.init().then((_) => runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => Moodle().loginStatusManager),
-        ChangeNotifierProvider(create: (_) => Moodle().courseManager),
-        ChangeNotifierProvider(create: (_) => Moodle().eventManager),
-      ],
-      child: const CuckooApp(),
-    )
-  ));
+  Global.init().then((_) => runApp(MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => Moodle().loginStatusManager),
+          ChangeNotifierProvider(create: (_) => Moodle().courseManager),
+          ChangeNotifierProvider(create: (_) => Moodle().eventManager),
+        ],
+        child: const CuckooApp(),
+      )));
 }

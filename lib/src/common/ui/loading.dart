@@ -8,9 +8,7 @@ class CuckooFullScreenIndicator {
   late final BuildContext context;
 
   /// Start fullscreen loading indicator.
-  Future<void> startLoading({
-    String? message
-  }) async {
+  Future<void> startLoading({String? message}) async {
     var children = <Widget>[
       const CircularProgressIndicator(
         color: ColorPresets.primary,
@@ -18,11 +16,8 @@ class CuckooFullScreenIndicator {
     ];
     if (message != null) {
       children
-      ..add(const SizedBox(height: 23.0))
-      ..add(Text(
-        message,
-        style: TextStylePresets.body(size: 13)
-      ));
+        ..add(const SizedBox(height: 23.0))
+        ..add(Text(message, style: TextStylePresets.body(size: 13)));
     }
 
     return await showDialog<void>(
@@ -49,5 +44,4 @@ class CuckooFullScreenIndicator {
   Future<void> stopLoading() async {
     Navigator.of(context, rootNavigator: true).pop();
   }
-
 }

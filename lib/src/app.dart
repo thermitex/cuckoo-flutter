@@ -4,7 +4,7 @@ import 'common/ui/ui.dart';
 import 'routes/root.dart';
 
 /// Cuckoo App definition.
-/// 
+///
 /// Initialize tha app with the default light and dark color scheme, and
 /// set Root widget as the app's home widget.
 class CuckooApp extends StatelessWidget {

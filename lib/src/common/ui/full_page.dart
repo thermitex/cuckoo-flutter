@@ -6,9 +6,9 @@ import 'ui.dart';
 class CuckooFullPageView extends StatelessWidget {
   const CuckooFullPageView(
     this.image, {
-    super.key, 
+    super.key,
     this.darkModeImage,
-    this.message, 
+    this.message,
     this.buttons,
     this.bottomOffset,
   });
@@ -38,8 +38,8 @@ class CuckooFullPageView extends StatelessWidget {
     var children = [_imageToUse(context)];
     if (message != null) {
       children
-      ..add(const SizedBox(height: 7.0))
-      ..add(Text(
+        ..add(const SizedBox(height: 7.0))
+        ..add(Text(
           message!,
           style: TextStylePresets.body(),
           textAlign: TextAlign.center,
@@ -49,8 +49,8 @@ class CuckooFullPageView extends StatelessWidget {
       children.add(const SizedBox(height: 14.0));
       for (final button in buttons!) {
         children
-        ..add(const SizedBox(height: 12.0))
-        ..add(button);
+          ..add(const SizedBox(height: 12.0))
+          ..add(button);
       }
     }
     if (bottomOffset != null) {

@@ -3,34 +3,33 @@ import 'package:cuckoo/src/common/ui/ui.dart';
 
 /// Shipshape custom themes.
 class CuckooTheme {
-
   // Light color scheme
   static const ColorScheme _lightColorScheme = ColorScheme(
-    brightness: Brightness.light, 
-    primary: ColorPresets.primary, 
-    onPrimary: ColorPresets.white, 
-    secondary: ColorPresets.secondary, 
-    onSecondary: ColorPresets.white, 
-    error: ColorPresets.negativePrimary, 
-    onError: ColorPresets.white, 
-    background: ColorPresets.lightPrimaryBackground, 
-    onBackground: ColorPresets.black, 
-    surface: ColorPresets.primary, 
+    brightness: Brightness.light,
+    primary: ColorPresets.primary,
+    onPrimary: ColorPresets.white,
+    secondary: ColorPresets.secondary,
+    onSecondary: ColorPresets.white,
+    error: ColorPresets.negativePrimary,
+    onError: ColorPresets.white,
+    background: ColorPresets.lightPrimaryBackground,
+    onBackground: ColorPresets.black,
+    surface: ColorPresets.primary,
     onSurface: ColorPresets.white,
   );
 
   // Dark color scheme
   static const ColorScheme _darkColorScheme = ColorScheme(
-    brightness: Brightness.dark, 
-    primary: ColorPresets.primary, 
-    onPrimary: ColorPresets.white, 
-    secondary: ColorPresets.secondary, 
-    onSecondary: ColorPresets.black, 
-    error: ColorPresets.negativePrimary, 
-    onError: ColorPresets.white, 
-    background: ColorPresets.darkPrimaryBackground, 
-    onBackground: ColorPresets.white, 
-    surface: ColorPresets.primary, 
+    brightness: Brightness.dark,
+    primary: ColorPresets.primary,
+    onPrimary: ColorPresets.white,
+    secondary: ColorPresets.secondary,
+    onSecondary: ColorPresets.black,
+    error: ColorPresets.negativePrimary,
+    onError: ColorPresets.white,
+    background: ColorPresets.darkPrimaryBackground,
+    onBackground: ColorPresets.white,
+    surface: ColorPresets.primary,
     onSurface: ColorPresets.white,
   );
 
@@ -74,7 +73,6 @@ class CuckooTheme {
       CuckooThemeExtension.fromBrightness(brightness: Brightness.dark),
     ],
   );
-
 }
 
 /// Custom theme extension with multiple color support.
@@ -92,19 +90,42 @@ class CuckooThemeExtension extends ThemeExtension<CuckooThemeExtension> {
   final Color tertiaryBackground;
   final Color popUpBackground;
 
-  const CuckooThemeExtension.fromBrightness({Brightness brightness = Brightness.light})
-    : primaryText = brightness == Brightness.light ? ColorPresets.lightPrimaryText : ColorPresets.darkPrimaryText,
-      primaryInverseText = brightness == Brightness.light ? ColorPresets.lightPrimaryInverseText : ColorPresets.darkPrimaryInverseText,
-      secondaryText = brightness == Brightness.light ? ColorPresets.lightSecondaryText : ColorPresets.darkSecondaryText,
-      tertiaryText = brightness == Brightness.light ? ColorPresets.lightTertiaryText : ColorPresets.darkTertiaryText,
-      quaternaryText = brightness == Brightness.light ? ColorPresets.lightQuaternaryText : ColorPresets.darkQuaternaryText,
-      separator = brightness == Brightness.light ? ColorPresets.lightSeparator : ColorPresets.darkSeparator,
-      primaryBackground = brightness == Brightness.light ? ColorPresets.lightPrimaryBackground : ColorPresets.darkPrimaryBackground,
-      primaryInverseBackground = brightness == Brightness.light ? ColorPresets.lightPrimaryInverseBackground : ColorPresets.darkPrimaryInverseBackground,
-      secondaryBackground = brightness == Brightness.light ? ColorPresets.lightSecondaryBackground : ColorPresets.darkSecondaryBackground,
-      popUpBackground = brightness == Brightness.light ? ColorPresets.lightPrimaryBackground : ColorPresets.darkSecondaryBackground,
-      tertiaryBackground = brightness == Brightness.light ? ColorPresets.lightTertiaryBackground : ColorPresets.darkTertiaryBackground;
-  
+  const CuckooThemeExtension.fromBrightness(
+      {Brightness brightness = Brightness.light})
+      : primaryText = brightness == Brightness.light
+            ? ColorPresets.lightPrimaryText
+            : ColorPresets.darkPrimaryText,
+        primaryInverseText = brightness == Brightness.light
+            ? ColorPresets.lightPrimaryInverseText
+            : ColorPresets.darkPrimaryInverseText,
+        secondaryText = brightness == Brightness.light
+            ? ColorPresets.lightSecondaryText
+            : ColorPresets.darkSecondaryText,
+        tertiaryText = brightness == Brightness.light
+            ? ColorPresets.lightTertiaryText
+            : ColorPresets.darkTertiaryText,
+        quaternaryText = brightness == Brightness.light
+            ? ColorPresets.lightQuaternaryText
+            : ColorPresets.darkQuaternaryText,
+        separator = brightness == Brightness.light
+            ? ColorPresets.lightSeparator
+            : ColorPresets.darkSeparator,
+        primaryBackground = brightness == Brightness.light
+            ? ColorPresets.lightPrimaryBackground
+            : ColorPresets.darkPrimaryBackground,
+        primaryInverseBackground = brightness == Brightness.light
+            ? ColorPresets.lightPrimaryInverseBackground
+            : ColorPresets.darkPrimaryInverseBackground,
+        secondaryBackground = brightness == Brightness.light
+            ? ColorPresets.lightSecondaryBackground
+            : ColorPresets.darkSecondaryBackground,
+        popUpBackground = brightness == Brightness.light
+            ? ColorPresets.lightPrimaryBackground
+            : ColorPresets.darkSecondaryBackground,
+        tertiaryBackground = brightness == Brightness.light
+            ? ColorPresets.lightTertiaryBackground
+            : ColorPresets.darkTertiaryBackground;
+
   const CuckooThemeExtension({
     this.primaryText = ColorPresets.lightPrimaryText,
     this.primaryInverseText = ColorPresets.lightPrimaryInverseText,
@@ -123,26 +144,42 @@ class CuckooThemeExtension extends ThemeExtension<CuckooThemeExtension> {
   ThemeExtension<CuckooThemeExtension> copyWith() {
     throw UnimplementedError();
   }
-  
+
   @override
-  ThemeExtension<CuckooThemeExtension> lerp(covariant ThemeExtension<CuckooThemeExtension>? other, double t) {
+  ThemeExtension<CuckooThemeExtension> lerp(
+      covariant ThemeExtension<CuckooThemeExtension>? other, double t) {
     if (other is! CuckooThemeExtension) {
       return this;
     }
 
     return CuckooThemeExtension(
-      primaryText: Color.lerp(primaryText, other.primaryText, t) ?? Colors.white,
-      primaryInverseText: Color.lerp(primaryInverseText, other.primaryInverseText, t) ?? Colors.white,
-      secondaryText: Color.lerp(secondaryText, other.secondaryText, t) ?? Colors.white,
-      tertiaryText: Color.lerp(tertiaryText, other.tertiaryText, t) ?? Colors.white,
-      quaternaryText: Color.lerp(quaternaryText, other.quaternaryText, t) ?? Colors.white,
+      primaryText:
+          Color.lerp(primaryText, other.primaryText, t) ?? Colors.white,
+      primaryInverseText:
+          Color.lerp(primaryInverseText, other.primaryInverseText, t) ??
+              Colors.white,
+      secondaryText:
+          Color.lerp(secondaryText, other.secondaryText, t) ?? Colors.white,
+      tertiaryText:
+          Color.lerp(tertiaryText, other.tertiaryText, t) ?? Colors.white,
+      quaternaryText:
+          Color.lerp(quaternaryText, other.quaternaryText, t) ?? Colors.white,
       separator: Color.lerp(separator, other.separator, t) ?? Colors.white,
-      primaryBackground: Color.lerp(primaryBackground, other.primaryBackground, t) ?? Colors.white,
-      primaryInverseBackground: Color.lerp(primaryInverseBackground, other.primaryInverseBackground, t) ?? Colors.white,
-      secondaryBackground: Color.lerp(secondaryBackground, other.secondaryBackground, t) ?? Colors.white,
-      tertiaryBackground: Color.lerp(tertiaryBackground, other.tertiaryBackground, t) ?? Colors.white,
-      popUpBackground: Color.lerp(tertiaryBackground, other.tertiaryBackground, t) ?? Colors.white,
+      primaryBackground:
+          Color.lerp(primaryBackground, other.primaryBackground, t) ??
+              Colors.white,
+      primaryInverseBackground: Color.lerp(
+              primaryInverseBackground, other.primaryInverseBackground, t) ??
+          Colors.white,
+      secondaryBackground:
+          Color.lerp(secondaryBackground, other.secondaryBackground, t) ??
+              Colors.white,
+      tertiaryBackground:
+          Color.lerp(tertiaryBackground, other.tertiaryBackground, t) ??
+              Colors.white,
+      popUpBackground:
+          Color.lerp(tertiaryBackground, other.tertiaryBackground, t) ??
+              Colors.white,
     );
   }
-  
 }

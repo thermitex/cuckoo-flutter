@@ -20,23 +20,23 @@ extension BuildContextExtensions on BuildContext {
   ColorScheme get colorScheme => theme.colorScheme;
 
   /// Get Shipshape specific theme.
-  CuckooThemeExtension get cuckooTheme => 
-    Theme.of(this).extension<CuckooThemeExtension>()!;
+  CuckooThemeExtension get cuckooTheme =>
+      Theme.of(this).extension<CuckooThemeExtension>()!;
 
   /// Shortcut for getting navigator.
   NavigatorState get navigator => Navigator.of(this);
 
   /// Shortcut for obtaining root scaffold.
-  ScaffoldState get rootScaffold => 
-    findRootAncestorStateOfType<ScaffoldState>()!;
+  ScaffoldState get rootScaffold =>
+      findRootAncestorStateOfType<ScaffoldState>()!;
 
   /// Moodle login status manager.
-  MoodleLoginStatusManager get loginStatusManager => 
-    watch<MoodleLoginStatusManager>();
+  MoodleLoginStatusManager get loginStatusManager =>
+      watch<MoodleLoginStatusManager>();
 
   /// Moodle courses manager.
   MoodleCourseManager get courseManager => watch<MoodleCourseManager>();
-    
+
   /// Moodle events manager.
   MoodleEventManager get eventManager => watch<MoodleEventManager>();
 }

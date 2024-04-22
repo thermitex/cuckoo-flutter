@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// The common global app service.
-/// 
+///
 /// Global service initializes all the service modules included in the services
 /// directory. It is initialized before the app is actually run, making sure
 /// all the service modules are up before the first widget gets built.

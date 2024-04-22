@@ -4,30 +4,26 @@ import 'package:flutter/material.dart';
 
 /// Style of a `CuckooButton`.
 enum CuckooButtonStyle {
-  primary,      // Primary actions
-  secondary,    // Secondary actions
-  danger,       // Dangerous actions
+  primary, // Primary actions
+  secondary, // Secondary actions
+  danger, // Dangerous actions
 }
 
 /// Size of a `CuckooButton`.
-enum CuckooButtonSize {
-  small,
-  medium,
-  large
-}
+enum CuckooButtonSize { small, medium, large }
 
 /// A standard button widget used in Cuckoo.
 class CuckooButton extends StatefulWidget {
   const CuckooButton({
     super.key,
     this.style = CuckooButtonStyle.primary,
-    this.sizeVariant = CuckooButtonSize.medium, 
+    this.sizeVariant = CuckooButtonSize.medium,
     this.text,
     this.icon,
     this.action,
-    this.borderRadius, 
-    this.backgroundColor, 
-    this.textColor, 
+    this.borderRadius,
+    this.backgroundColor,
+    this.textColor,
     this.height,
   });
 
@@ -71,14 +67,18 @@ class _CuckooButtonState extends State<CuckooButton> {
   double overlayOpacity = 0.0;
 
   /// Get icon size.
-  double get _buttonIconSize => {
-    CuckooButtonSize.medium: 22.0,
-  }[widget.sizeVariant] ?? 22.0;
+  double get _buttonIconSize =>
+      {
+        CuckooButtonSize.medium: 22.0,
+      }[widget.sizeVariant] ??
+      22.0;
 
   /// Get icon size.
-  double get _buttonTextSize => {
-    CuckooButtonSize.medium: 14.0,
-  }[widget.sizeVariant] ?? 14.0;
+  double get _buttonTextSize =>
+      {
+        CuckooButtonSize.medium: 14.0,
+      }[widget.sizeVariant] ??
+      14.0;
 
   /// Border radius according to size variant.
   BorderRadiusGeometry get _buttonBorderRadius {
@@ -140,8 +140,9 @@ class _CuckooButtonState extends State<CuckooButton> {
       var textWidget = Text(
         widget.text!,
         style: TextStylePresets.body(size: _buttonTextSize).copyWith(
-          fontWeight: widget.style == CuckooButtonStyle.secondary ? 
-            FontWeight.normal : FontWeight.w600,
+          fontWeight: widget.style == CuckooButtonStyle.secondary
+              ? FontWeight.normal
+              : FontWeight.w600,
           color: _buttonTextColor(),
         ),
       );
@@ -181,9 +182,8 @@ class _CuckooButtonState extends State<CuckooButton> {
           child: Stack(
             children: [
               SizedBox.expand(
-                child: Container(
-                  color: Colors.black.withOpacity(overlayOpacity)
-                ),
+                child:
+                    Container(color: Colors.black.withOpacity(overlayOpacity)),
               ),
               SizedBox.expand(
                 child: Row(

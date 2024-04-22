@@ -8,7 +8,8 @@ class MoodleSiteFunction {
 
   late String name;
   late String version;
-  
-  factory MoodleSiteFunction.fromJson(Map<String,dynamic> json) => _$MoodleSiteFunctionFromJson(json);
+
+  factory MoodleSiteFunction.fromJson(Map<String, dynamic> json) =>
+      _$MoodleSiteFunctionFromJson(json);
   Map<String, dynamic> toJson() => _$MoodleSiteFunctionToJson(this);
 }

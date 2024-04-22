@@ -40,8 +40,8 @@ class MoodleFunctionSubrequest {
     this.params,
     this.filter = true,
     this.fileUrl = true,
-});
-  
+  });
+
   final String functionName;
   final Map<String, dynamic>? params;
   final bool filter;
@@ -60,8 +60,7 @@ class MoodleFunctionSubrequest {
 
 /// Moodle function call reponse wrapper.
 class MoodleFunctionResponse {
-  MoodleFunctionResponse(this.response)
-  : data = response.data;
+  MoodleFunctionResponse(this.response) : data = response.data;
 
   /// Raw Dio response.
   final Response response;
@@ -72,7 +71,8 @@ class MoodleFunctionResponse {
   /// If the Moodle function has failed.
   bool get fail {
     bool errStatus = (response.statusCode ?? 500) != 200;
-    bool exceptionExists = data is Map && data?['exception'] == 'moodle_exception';
+    bool exceptionExists =
+        data is Map && data?['exception'] == 'moodle_exception';
     return errStatus && exceptionExists;
   }
 

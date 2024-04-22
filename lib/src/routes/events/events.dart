@@ -17,29 +17,25 @@ class _EventsPageState extends State<EventsPage> {
   List<CuckooAppBarActionItem> _appBarActionItems() {
     return <CuckooAppBarActionItem>[
       CuckooAppBarActionItem(
-        icon: const Icon(
-          Icons.more_horiz_rounded,
-          color: ColorPresets.primary,
-        ),
-        onPressed: () => _openMorePanel()
-      ),
+          icon: const Icon(
+            Icons.more_horiz_rounded,
+            color: ColorPresets.primary,
+          ),
+          onPressed: () => _openMorePanel()),
       CuckooAppBarActionItem(
-        icon: const Icon(
-          Icons.notifications_rounded,
-          color: ColorPresets.primary,
-          size: 20,
-        ),
-        backgroundColor: context.cuckooTheme.secondaryBackground,
-        backgroundPadding: const EdgeInsets.all(5.0),
-        onPressed: () => _openReminderPage()
-      ),
+          icon: const Icon(
+            Icons.notifications_rounded,
+            color: ColorPresets.primary,
+            size: 20,
+          ),
+          backgroundColor: context.cuckooTheme.secondaryBackground,
+          backgroundPadding: const EdgeInsets.all(5.0),
+          onPressed: () => _openReminderPage()),
     ];
   }
 
   /// Action routine for opening reminder page.
-  void _openReminderPage() {
-
-  }
+  void _openReminderPage() {}
 
   /// Action routine for opening "more" panel.
   void _openMorePanel() {
@@ -51,30 +47,29 @@ class _EventsPageState extends State<EventsPage> {
     return Padding(
       padding: const EdgeInsets.all(50.0),
       child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 500.0),
-          child: CuckooFullPageView(
-            SvgPicture.asset(
-              'images/illus/page_intro.svg',
-              width: 300,
-              height: 300,
-            ),
-            darkModeImage: SvgPicture.asset(
-              'images/illus/dark/page_intro.svg',
-              width: 300,
-              height: 300,
-            ),
-            message: Constants.kEventsRequireLoginPrompt,
-            buttons: [
-              CuckooButton(
-                text: Constants.kLoginMoodleButton,
-                action: () => Moodle.startAuth(),
-              )
-            ],
-            bottomOffset: 65.0,
+          child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 500.0),
+        child: CuckooFullPageView(
+          SvgPicture.asset(
+            'images/illus/page_intro.svg',
+            width: 300,
+            height: 300,
           ),
-        )
-      ),
+          darkModeImage: SvgPicture.asset(
+            'images/illus/dark/page_intro.svg',
+            width: 300,
+            height: 300,
+          ),
+          message: Constants.kEventsRequireLoginPrompt,
+          buttons: [
+            CuckooButton(
+              text: Constants.kLoginMoodleButton,
+              action: () => Moodle.startAuth(),
+            )
+          ],
+          bottomOffset: 65.0,
+        ),
+      )),
     );
   }
 
@@ -99,9 +94,7 @@ class _EventsPageState extends State<EventsPage> {
         title: Constants.kEventsTitle,
         actionItems: _appBarActionItems(),
       ),
-      body: SafeArea(
-        child: _buildEventPage()
-      ),
+      body: SafeArea(child: _buildEventPage()),
     );
   }
 }

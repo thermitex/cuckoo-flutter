@@ -33,7 +33,8 @@ class MoodleSiteInfo {
   late bool userissiteadmin;
   late String theme;
   late num limitconcurrentlogins;
-  
-  factory MoodleSiteInfo.fromJson(Map<String,dynamic> json) => _$MoodleSiteInfoFromJson(json);
+
+  factory MoodleSiteInfo.fromJson(Map<String, dynamic> json) =>
+      _$MoodleSiteInfoFromJson(json);
   Map<String, dynamic> toJson() => _$MoodleSiteInfoToJson(this);
 }

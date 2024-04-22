@@ -1,7 +1,7 @@
 part of 'moodle.dart';
 
 /// Manager for Moodle login status.
-/// 
+///
 /// Use context.watch to subscribe the login status and get the status through
 /// `isUserLoggedIn` getter.
 class MoodleLoginStatusManager with ChangeNotifier {
@@ -16,7 +16,7 @@ class MoodleLoginStatusManager with ChangeNotifier {
 
   // ----------------------Context Watch Interfaces End----------------------
 
-  /// This will be maintained by `Moodle` class only. Do not call it 
+  /// This will be maintained by `Moodle` class only. Do not call it
   /// elsewhere.
   set status(bool status) {
     if (_loggedIn != status) {
@@ -27,7 +27,7 @@ class MoodleLoginStatusManager with ChangeNotifier {
 }
 
 /// Manager for Moodle courses.
-/// 
+///
 /// Use context.watch to subscribe the courses add the get the courses through
 /// defined interfaces.
 class MoodleCourseManager with ChangeNotifier {
@@ -42,14 +42,14 @@ class MoodleCourseManager with ChangeNotifier {
   // outside `moodle.dart` using `context.eventManager`.
 
   /// Enrolled courses of current Moodle user.
-  /// 
+  ///
   /// Most likely this method doesn't need to be called. Use other interfaces
   /// which are more convenient instead.
   List<MoodleCourse> get courses => _courses;
 
   // ----------------------Context Watch Interfaces End----------------------
 
-  /// This will be maintained by `Moodle` class ONLY. DO NOT manually set the 
+  /// This will be maintained by `Moodle` class ONLY. DO NOT manually set the
   /// courses elsewhere. Any custom rules go to `Moodle` class.
   set courses(List<MoodleCourse> courses) {
     _courses = courses;
@@ -58,19 +58,17 @@ class MoodleCourseManager with ChangeNotifier {
   }
 
   /// Remove all courses without notification.
-  /// 
+  ///
   /// For `Moodle` use ONLY. DO NOT call it elsewhere.
   void _clearAllCourses() {
     _courses = [];
   }
 
   /// Obtain a list containing IDs of all courses.
-  /// 
+  ///
   /// For `Moodle` use ONLY. DO NOT call it elsewhere.
   List<String> _allCourseIds() {
-    return _courses.map(
-      (course) => course.id.toString()
-    ).toList();
+    return _courses.map((course) => course.id.toString()).toList();
   }
 
   /// Generate course map for faster random access.
@@ -83,7 +81,7 @@ class MoodleCourseManager with ChangeNotifier {
 }
 
 /// Manager for Moodle events.
-/// 
+///
 /// Use context.watch to subscribe the events add the get the events through
 /// defined interfaces.
 class MoodleEventManager with ChangeNotifier {
@@ -101,27 +99,29 @@ class MoodleEventManager with ChangeNotifier {
   // outside `moodle.dart` using `context.eventManager`.
 
   /// Unsorted events of current Moodle user.
-  /// 
+  ///
   /// Most likely this method doesn't need to be called. Use other interfaces
   /// which are more convenient instead.
   List<MoodleEvent> get events => _events;
 
   /// Grouped events given a grouping type.
-  /// 
+  ///
   /// If the events are grouped by course, they are first sorted by course in
   /// alphabetical order, then by time.
   GroupedMoodleEvents groupedEvents({
     MoodleEventGroupingType groupBy = MoodleEventGroupingType.byTime,
   }) {
-    if (_groupedEventsCache[groupBy] != null) return _groupedEventsCache[groupBy]!;
+    if (_groupedEventsCache[groupBy] != null) {
+      return _groupedEventsCache[groupBy]!;
+    }
     var sortedEvents = _events.toList();
     GroupedMoodleEvents events = {};
 
     // Define sort rules
     int compareTime(MoodleEvent a, MoodleEvent b) =>
-      b.timestart.compareTo(a.timestart);
+        b.timestart.compareTo(a.timestart);
     int compareCourseId(MoodleEvent a, MoodleEvent b) =>
-      (a.course?.fullname ?? 'z').compareTo(b.course?.fullname ?? 'z');
+        (a.course?.fullname ?? 'z').compareTo(b.course?.fullname ?? 'z');
     final compareCourse = compareCourseId.then(compareTime);
 
     if (groupBy == MoodleEventGroupingType.byTime) {
@@ -136,6 +136,7 @@ class MoodleEventManager with ChangeNotifier {
         }
         return Constants.kEventAfterOneMonthGroupName;
       }
+
       if (sortedEvents.isNotEmpty) {
         for (final event in sortedEvents) {
           final category = getCategory(event.remainingTime);
@@ -175,7 +176,7 @@ class MoodleEventManager with ChangeNotifier {
   /// Not preserved in storage.
   DateTime? _eventsLastUpdated;
 
-  /// This will be maintained by `Moodle` class ONLY. DO NOT manually set the 
+  /// This will be maintained by `Moodle` class ONLY. DO NOT manually set the
   /// events elsewhere. Any custom rules go to `Moodle` class.
   set events(List<MoodleEvent> events) {
     _events = events;
@@ -183,7 +184,7 @@ class MoodleEventManager with ChangeNotifier {
   }
 
   /// Clear events except for custom events.
-  /// 
+  ///
   /// For `Moodle` use ONLY. DO NOT call it elsewhere.
   void _clearEventsExceptCustom() {
     _events.removeWhere((event) => event.eventtype != MoodleEventTypes.custom);
@@ -192,12 +193,12 @@ class MoodleEventManager with ChangeNotifier {
 
   /// Merge the new events with the current events.
   /// The custom events should remain in the list.
-  /// 
+  ///
   /// For `Moodle` use ONLY. DO NOT call it elsewhere.
   void _mergeEvents(List<MoodleEvent> others) {
-    var mergedEvents = _events.where(
-      (event) => event.eventtype == MoodleEventTypes.custom
-    ).toList();
+    var mergedEvents = _events
+        .where((event) => event.eventtype == MoodleEventTypes.custom)
+        .toList();
     for (var event in others) {
       final existingEvent = _eventMap[event.id];
       if (existingEvent != null) {

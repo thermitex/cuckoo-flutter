@@ -25,7 +25,8 @@ class MoodleEvent {
   num? timemodified;
   String? subscriptionid;
   bool? completed;
-  
-  factory MoodleEvent.fromJson(Map<String,dynamic> json) => _$MoodleEventFromJson(json);
+
+  factory MoodleEvent.fromJson(Map<String, dynamic> json) =>
+      _$MoodleEventFromJson(json);
   Map<String, dynamic> toJson() => _$MoodleEventToJson(this);
 }
