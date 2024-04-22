@@ -52,6 +52,19 @@ class MoodleCourseManager with ChangeNotifier {
   /// This will be maintained by `Moodle` class ONLY. DO NOT manually set the
   /// courses elsewhere. Any custom rules go to `Moodle` class.
   set courses(List<MoodleCourse> courses) {
+    if (courses.length < _courses.length - 5 ||
+        courses.isEmpty && _courses.isNotEmpty) {
+      // That doesn't quite make sense, could be an error
+      // Reject change
+      return;
+    }
+    // Check existing course map for consistent coloring
+    for (final course in courses) {
+      final existingCourse = _courseMap[course.id];
+      if (existingCourse != null) {
+        course.colorHex = existingCourse.colorHex;
+      }
+    }
     _courses = courses;
     _generateCourseMap();
     notifyListeners();
@@ -76,6 +89,11 @@ class MoodleCourseManager with ChangeNotifier {
     _courseMap = {};
     for (final course in _courses) {
       _courseMap[course.id] = course;
+      // Assign a new color if a course does not have one
+      if (ColorRegistry().colorForCourse(course) == null &&
+          course.colorHex == null) {
+        ColorRegistry().assignColorForCourse(course);
+      }
     }
   }
 }
@@ -119,7 +137,7 @@ class MoodleEventManager with ChangeNotifier {
 
     // Define sort rules
     int compareTime(MoodleEvent a, MoodleEvent b) =>
-        b.timestart.compareTo(a.timestart);
+        a.timestart.compareTo(b.timestart);
     int compareCourseId(MoodleEvent a, MoodleEvent b) =>
         (a.course?.fullname ?? 'z').compareTo(b.course?.fullname ?? 'z');
     final compareCourse = compareCourseId.then(compareTime);

@@ -29,6 +29,8 @@ dependencies:
   flutter:
     sdk: flutter
   collection: ^1.18.0
+  sticky_headers: ^0.3.0+2
+  intl: ^0.19.0
 
 dev_dependencies:
   json_model: ^1.0.0

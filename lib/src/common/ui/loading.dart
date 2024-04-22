@@ -27,7 +27,7 @@ class CuckooFullScreenIndicator {
         return SimpleDialog(
           elevation: 0.0,
           contentPadding: const EdgeInsets.fromLTRB(0, 45, 0, 40),
-          backgroundColor: context.cuckooTheme.primaryBackground,
+          backgroundColor: context.cuckooTheme.popUpBackground,
           children: <Widget>[
             Center(
               child: Column(

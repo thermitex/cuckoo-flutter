@@ -1,7 +1,8 @@
 import 'package:cuckoo/src/common/extensions/extensions.dart';
-import 'package:cuckoo/src/common/services/constant.dart';
+import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
+import 'package:cuckoo/src/routes/events/events_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -73,15 +74,10 @@ class _EventsPageState extends State<EventsPage> {
     );
   }
 
-  /// The main view to show event list.
-  Widget _eventMainView() {
-    return const Placeholder();
-  }
-
   /// Build the event page according to the current state.
   Widget _buildEventPage() {
     if (context.loginStatusManager.isUserLoggedIn) {
-      return _eventMainView();
+      return const MoodleEventListView();
     }
     return _loginRequiredView();
   }

@@ -29,4 +29,10 @@ class TextStylePresets {
       fontWeight: weight,
     );
   }
+
+  /// Tigher style for body.
+  static TextStyle tightBody(
+      {double size = 14, FontWeight weight = FontWeight.normal}) {
+    return body(size: size, weight: weight).copyWith(letterSpacing: 0);
+  }
 }

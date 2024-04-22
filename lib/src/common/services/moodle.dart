@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:cuckoo/src/common/extensions/extensions.dart';
-import 'package:cuckoo/src/common/services/constant.dart';
+import 'package:cuckoo/src/common/services/color_registry.dart';
+import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/global.dart';
+import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
@@ -99,10 +101,10 @@ class Moodle {
     // Load from storage
     moodle._load();
 
-    // If the user already logged in, get site info in the background again
-    // to take any updates into consideration.
+    // If the user already logged in, start fetching in background.
     if (isUserLoggedIn) {
       moodle._fetchSiteInfo();
+      fetchEvents();
     }
   }
 
@@ -117,6 +119,8 @@ class Moodle {
     moodle.eventManager
       .._clearEventsExceptCustom()
       .._eventsLastUpdated = null;
+    // Reset color registry
+    ColorRegistry().resetAllMappings();
     // Clear storage
     for (String key in [
       MoodleStorageKeys.wstoken,
@@ -266,6 +270,7 @@ class Moodle {
     int minSecsBetweenFetches = 7200,
   }) async {
     final moodle = Moodle();
+
     if (!isUserLoggedIn) return false;
     // Check if fetches are too close
     if (!force && moodle.eventManager._eventsLastUpdated != null) {
@@ -352,6 +357,8 @@ class Moodle {
       courseManager._courses = [];
       eventManager._events = [];
     }
+    courseManager._generateCourseMap();
+    eventManager._generateEventMap();
     loginStatusManager._loggedIn = _wstoken != null;
   }
 

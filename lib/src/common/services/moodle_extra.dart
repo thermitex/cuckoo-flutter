@@ -32,6 +32,9 @@ class MoodleEventTypes {
   static const custom = 'custom';
 }
 
+/// Status of a Moodle manager.
+enum MoodleManagerStatus { idle, updating, error }
+
 /// Subrequest in a moodle function request.
 /// However, in most cases, there is no need to use subrequests.
 class MoodleFunctionSubrequest {
@@ -106,10 +109,19 @@ extension MoodleEventExtension on MoodleEvent {
 
   /// Remaining seconds for Moodle event.
   num get remainingTime => timestart - DateTime.now().secondEpoch;
+
+  /// Event associated color.
+  Color? get color => course?.color;
 }
 
 /// Shortcuts for Moodle course.
 extension MoodleCourseExtension on MoodleCourse {
   /// Standard ABCDXXXX course code.
   String get courseCode => fullname.split(' ').first;
+
+  /// Course assigned color.
+  Color get color =>
+      HexColor.fromHex(colorHex) ??
+      ColorRegistry().colorForCourse(this) ??
+      ColorPresets.primary;
 }
