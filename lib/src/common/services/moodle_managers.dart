@@ -94,7 +94,7 @@ class MoodleEventManager with ChangeNotifier {
   Map<num, MoodleEvent> _eventMap = {};
 
   /// Cache for holding sorted events.
-  Map<MoodleEventSortingType, List<MoodleEvent>> _sortedEventsCache = {};
+  Map<MoodleEventGroupingType, GroupedMoodleEvents> _groupedEventsCache = {};
 
   // ---------------------Context Watch Interfaces Start---------------------
   // ONLY use the methods below when you are interacting with the manager
@@ -106,31 +106,66 @@ class MoodleEventManager with ChangeNotifier {
   /// which are more convenient instead.
   List<MoodleEvent> get events => _events;
 
-  /// Sorted events given a sorting type.
+  /// Grouped events given a grouping type.
   /// 
-  /// If the events are sorted by course, they are first sorted by course in
+  /// If the events are grouped by course, they are first sorted by course in
   /// alphabetical order, then by time.
-  List<MoodleEvent> sortedEvents({
-    MoodleEventSortingType sortBy = MoodleEventSortingType.byTime
+  GroupedMoodleEvents groupedEvents({
+    MoodleEventGroupingType groupBy = MoodleEventGroupingType.byTime,
   }) {
-    if (_sortedEventsCache[sortBy] != null) return _sortedEventsCache[sortBy]!;
-    var events = _events.toList();
+    if (_groupedEventsCache[groupBy] != null) return _groupedEventsCache[groupBy]!;
+    var sortedEvents = _events.toList();
+    GroupedMoodleEvents events = {};
 
+    // Define sort rules
     int compareTime(MoodleEvent a, MoodleEvent b) =>
       b.timestart.compareTo(a.timestart);
     int compareCourseId(MoodleEvent a, MoodleEvent b) =>
-      (a.course?.shortname ?? 'z').compareTo(b.course?.shortname ?? 'z');
+      (a.course?.fullname ?? 'z').compareTo(b.course?.fullname ?? 'z');
     final compareCourse = compareCourseId.then(compareTime);
 
-    if (sortBy == MoodleEventSortingType.byTime) {
+    if (groupBy == MoodleEventGroupingType.byTime) {
       // Sort by time
-      events.sort(compareTime);
-    } else if (sortBy == MoodleEventSortingType.byCourse) {
+      sortedEvents.sort(compareTime);
+      // Then do grouping
+      String getCategory(num remainingEpoch) {
+        if (remainingEpoch < 7 * 86400) {
+          return Constants.kEventInOneWeekGroupName;
+        } else if (remainingEpoch < 30 * 86400) {
+          return Constants.kEventInOneMonthGroupName;
+        }
+        return Constants.kEventAfterOneMonthGroupName;
+      }
+      if (sortedEvents.isNotEmpty) {
+        for (final event in sortedEvents) {
+          final category = getCategory(event.remainingTime);
+          if (events[category] == null) {
+            events[category] = [event];
+          } else {
+            events[category]!.add(event);
+          }
+        }
+      }
+    } else if (groupBy == MoodleEventGroupingType.byCourse) {
       // Sort by course, then by time
-      events.sort(compareCourse);
+      sortedEvents.sort(compareCourse);
+      // Then do grouping
+      if (sortedEvents.isNotEmpty) {
+        for (final event in sortedEvents) {
+          final code = event.course?.courseCode ?? 'OTHERS';
+          if (events[code] == null) {
+            events[code] = [event];
+          } else {
+            events[code]!.add(event);
+          }
+        }
+      }
+    } else {
+      throw Exception('Grouping type not recognized.');
     }
 
-    _sortedEventsCache[sortBy] = events;
+    // Caching
+    _groupedEventsCache[groupBy] = events;
     return events;
   }
 
@@ -177,7 +212,7 @@ class MoodleEventManager with ChangeNotifier {
   /// Event has been updated.
   void _eventsUpdated({bool notify = true}) {
     _generateEventMap();
-    _sortedEventsCache = {};
+    _groupedEventsCache = {};
     if (notify) notifyListeners();
   }
 

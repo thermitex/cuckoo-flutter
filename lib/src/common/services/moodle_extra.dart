@@ -1,10 +1,12 @@
 part of 'moodle.dart';
 
+typedef GroupedMoodleEvents = Map<String, List<MoodleEvent>>;
+
 /// Status of Moodle authentication.
 enum MoodleAuthStatus { ignore, incomplete, fail, success }
 
 /// Moodle events sorting type.
-enum MoodleEventSortingType { byTime, byCourse }
+enum MoodleEventGroupingType { byTime, byCourse }
 
 /// Moodle storage keys.
 class MoodleStorageKeys {
@@ -101,4 +103,13 @@ class MoodleFunctionResponse {
 extension MoodleEventExtension on MoodleEvent {
   /// Course for Moodle event.
   MoodleCourse? get course => Moodle.courseForEvent(this);
+
+  /// Remaining seconds for Moodle event.
+  num get remainingTime => timestart - DateTime.now().secondEpoch;
+}
+
+/// Shortcuts for Moodle course.
+extension MoodleCourseExtension on MoodleCourse {
+  /// Standard ABCDXXXX course code.
+  String get courseCode => fullname.split(' ').first;
 }
