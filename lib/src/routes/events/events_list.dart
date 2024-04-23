@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 
 // Layout constants
 const kGapBetweenEvents = 7.0;
-const kEventHeaderHeight = 35.0;
+const kEventHeaderHeight = 33.0;
 const kEventTileHeight = 60.0;
 const kGapBetweenSections = 5.0;
 const kSidePaddings = 18.0;
@@ -58,8 +58,7 @@ class _MoodleEventListViewState extends State<MoodleEventListView> {
         child: Text(
           events.keys.elementAt(index),
           style: TextStylePresets.body(size: 10.5).copyWith(
-            fontWeight:
-                FontWeight.lerp(FontWeight.w600, FontWeight.bold, stuckAmount),
+            fontWeight: FontWeight.w600,
             color: Color.lerp(context.cuckooTheme.secondaryText,
                 ColorPresets.primary, stuckAmount),
           ),
@@ -110,8 +109,8 @@ class MoodleEventListTile extends StatelessWidget {
     children.add(Text(event.name,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: TextStylePresets.tightBody(size: 15).copyWith(
-          fontWeight: FontWeight.w500,
+        style: TextStylePresets.body(size: 15).copyWith(
+          fontWeight: FontWeight.normal,
           color: context.cuckooTheme.primaryText,
         )));
     return Expanded(
@@ -145,18 +144,25 @@ class MoodleEventListTile extends StatelessWidget {
       }
     }
 
-    return Container(
-      width: 70.0,
-      color: context.cuckooTheme.tertiaryBackground,
-      child: Center(
-          child: Text(
-        deadlineDisplay(DeadlineDisplayStyle.daysRemainingAndTime),
-        textAlign: TextAlign.center,
-        style: TextStylePresets.tightBody(size: 10.5).copyWith(
-            fontWeight: FontWeight.bold,
-            color: context.cuckooTheme.primaryText,
-            height: 1.3),
-      )),
+    return GestureDetector(
+      onTap: () => Settings().switchChoice(
+          SettingsKey.deadlineDisplay, DeadlineDisplayStyle.values.length,
+          defaultChoice: DeadlineDisplayStyle.daysRemainingAndTime.index),
+      child: Container(
+        width: 70.0,
+        color: context.cuckooTheme.tertiaryBackground,
+        child: Center(
+            child: Text(
+          deadlineDisplay(DeadlineDisplayStyle.values[context.settings
+                  .getValueForKey<int>(SettingsKey.deadlineDisplay) ??
+              DeadlineDisplayStyle.daysRemainingAndTime.index]),
+          textAlign: TextAlign.center,
+          style: TextStylePresets.body(size: 11).copyWith(
+              fontWeight: FontWeight.w600,
+              color: context.cuckooTheme.primaryText,
+              height: 1.3),
+        )),
+      ),
     );
   }
 

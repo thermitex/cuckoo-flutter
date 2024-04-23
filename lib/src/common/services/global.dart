@@ -1,5 +1,6 @@
 import 'package:cuckoo/src/common/services/color_registry.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
+import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,6 +22,7 @@ class Global {
     prefs = await SharedPreferences.getInstance();
 
     // Init service modules.
+    Settings.init();
     ColorRegistry.init();
     Moodle.init();
   }

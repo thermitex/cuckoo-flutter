@@ -16,7 +16,8 @@ class EventsPage extends StatefulWidget {
 class _EventsPageState extends State<EventsPage> {
   /// Build app bar action items.
   List<CuckooAppBarActionItem> _appBarActionItems() {
-    return <CuckooAppBarActionItem>[
+    var updateStatus = context.eventManager.status;
+    var actionItems = <CuckooAppBarActionItem>[
       CuckooAppBarActionItem(
           icon: const Icon(
             Icons.more_horiz_rounded,
@@ -33,10 +34,40 @@ class _EventsPageState extends State<EventsPage> {
           backgroundPadding: const EdgeInsets.all(5.0),
           onPressed: () => _openReminderPage()),
     ];
+    if (updateStatus == MoodleManagerStatus.updating) {
+      // Show a loading indicator
+      actionItems.insert(
+          0,
+          CuckooAppBarActionItem(
+            icon: SizedBox(
+              height: 20,
+              width: 20,
+              child: Center(
+                  child: CircularProgressIndicator(
+                color: context.cuckooTheme.tertiaryBackground,
+                strokeWidth: 3.0,
+              )),
+            ),
+            backgroundPadding: const EdgeInsets.all(5.0),
+          ));
+    } else if (updateStatus == MoodleManagerStatus.error) {
+      actionItems.insert(
+          0,
+          CuckooAppBarActionItem(
+              icon: const Icon(
+                Icons.warning_rounded,
+                color: ColorPresets.negativePrimary,
+              ),
+              onPressed: () => _showErrorDetails()));
+    }
+    return actionItems;
   }
 
   /// Action routine for opening reminder page.
   void _openReminderPage() {}
+
+  /// Action routine for error.
+  void _showErrorDetails() {}
 
   /// Action routine for opening "more" panel.
   void _openMorePanel() {

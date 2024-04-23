@@ -63,20 +63,24 @@ class MoodleFunctionSubrequest {
 
 /// Moodle function call reponse wrapper.
 class MoodleFunctionResponse {
-  MoodleFunctionResponse(this.response) : data = response.data;
+  MoodleFunctionResponse(this.response) : data = response?.data;
+
+  MoodleFunctionResponse.error()
+      : response = null,
+        data = null;
 
   /// Raw Dio response.
-  final Response response;
+  final Response? response;
 
   /// Data shortcut.
   final dynamic data;
 
   /// If the Moodle function has failed.
   bool get fail {
-    bool errStatus = (response.statusCode ?? 500) != 200;
+    bool errStatus = (response?.statusCode ?? 500) != 200;
     bool exceptionExists =
         data is Map && data?['exception'] == 'moodle_exception';
-    return errStatus && exceptionExists;
+    return errStatus || exceptionExists;
   }
 
   /// Get error code if any.

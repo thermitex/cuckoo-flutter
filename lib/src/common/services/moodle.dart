@@ -278,6 +278,7 @@ class Moodle {
           DateTime.now().difference(moodle.eventManager._eventsLastUpdated!);
       if (diff.inSeconds < minSecsBetweenFetches) return true;
     }
+    moodle.eventManager.status = MoodleManagerStatus.updating;
     // Obtain current timestamp
     final timeStart = DateTime.now().secondEpoch;
     final response =
@@ -293,16 +294,21 @@ class Moodle {
       }),
     ]);
     final data = response.subResponseData<Map>(0);
-    if (data == null) return false;
+    if (data == null) {
+      moodle.eventManager.status = MoodleManagerStatus.error;
+      return false;
+    }
     try {
       final events =
           (data['events'] as List).map((e) => MoodleEvent.fromJson(e)).toList();
       moodle.eventManager._mergeEvents(events);
     } catch (e) {
+      moodle.eventManager.status = MoodleManagerStatus.error;
       return false;
     }
     moodle.eventManager._eventsLastUpdated = DateTime.now();
     if (saveNow) moodle._save();
+    moodle.eventManager.status = MoodleManagerStatus.idle;
     return true;
   }
 
@@ -482,7 +488,8 @@ class Moodle {
               'origin': 'moodleappfs://localhost',
               'user-agent': 'MoodleMobile 4.3.0 (43001)',
             }))
-        .then((response) => MoodleFunctionResponse(response));
+        .then((response) => MoodleFunctionResponse(response),
+            onError: (e) => MoodleFunctionResponse.error());
   }
 
   // ------------Site info Utilities------------

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 /// A series of text style presets to be used conveniently.
@@ -7,6 +9,7 @@ class TextStylePresets {
   static const String _titleFontFamily = 'Montserrat';
 
   /// Font family name for body texts and normal titles.
+  /// Only applicable to Android.
   static const String _bodyFontFamily = 'Inter';
 
   // Easier constructors:
@@ -24,15 +27,10 @@ class TextStylePresets {
   static TextStyle body(
       {double size = 14, FontWeight weight = FontWeight.normal}) {
     return TextStyle(
-      fontFamily: _bodyFontFamily,
+      fontFamily: Platform.isAndroid ? _bodyFontFamily : null,
       fontSize: size,
       fontWeight: weight,
+      letterSpacing: Platform.isIOS ? 0 : null,
     );
-  }
-
-  /// Tigher style for body.
-  static TextStyle tightBody(
-      {double size = 14, FontWeight weight = FontWeight.normal}) {
-    return body(size: size, weight: weight).copyWith(letterSpacing: 0);
   }
 }

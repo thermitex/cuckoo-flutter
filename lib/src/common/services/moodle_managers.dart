@@ -106,6 +106,9 @@ class MoodleEventManager with ChangeNotifier {
   /// Where the events are stored in memory.
   List<MoodleEvent> _events = [];
 
+  /// Current manager status.
+  MoodleManagerStatus _status = MoodleManagerStatus.idle;
+
   /// Mapping of eventId -> MoodleEvent for faster access through ID.
   Map<num, MoodleEvent> _eventMap = {};
 
@@ -121,6 +124,11 @@ class MoodleEventManager with ChangeNotifier {
   /// Most likely this method doesn't need to be called. Use other interfaces
   /// which are more convenient instead.
   List<MoodleEvent> get events => _events;
+
+  /// Get the current status of the event manager.
+  ///
+  /// Used for showing loading indicator / error on the page.
+  MoodleManagerStatus get status => _status;
 
   /// Grouped events given a grouping type.
   ///
@@ -201,6 +209,13 @@ class MoodleEventManager with ChangeNotifier {
     _eventsUpdated();
   }
 
+  /// This will be maintained by `Moodle` class ONLY. DO NOT manually set the
+  /// events elsewhere. Any custom rules go to `Moodle` class.
+  set status(MoodleManagerStatus status) {
+    _status = status;
+    notifyListeners();
+  }
+
   /// Clear events except for custom events.
   ///
   /// For `Moodle` use ONLY. DO NOT call it elsewhere.
@@ -221,6 +236,11 @@ class MoodleEventManager with ChangeNotifier {
       final existingEvent = _eventMap[event.id];
       if (existingEvent != null) {
         event.completed = existingEvent.completed;
+      }
+      // Crop event name
+      if (event.eventtype == MoodleEventTypes.due &&
+          event.name.endsWith('is due')) {
+        event.name = event.name.replaceAll('is due', '').trim();
       }
       mergedEvents.add(event);
     }

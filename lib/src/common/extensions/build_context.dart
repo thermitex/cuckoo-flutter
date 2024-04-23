@@ -1,4 +1,5 @@
 import 'package:cuckoo/src/common/services/moodle.dart';
+import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:provider/provider.dart';
@@ -39,4 +40,7 @@ extension BuildContextExtensions on BuildContext {
 
   /// Moodle events manager.
   MoodleEventManager get eventManager => watch<MoodleEventManager>();
+
+  /// Settings notifier.
+  Settings get settings => watch<Settings>();
 }
