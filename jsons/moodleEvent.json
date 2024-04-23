@@ -17,5 +17,9 @@
     "sequence?": 1,
     "timemodified?": 1712819692,
     "subscriptionid?": null,
-    "completed?": true
+    "completed?": true,
+    "cmid?": 123456,
+    "hascompletion?": true,
+    "state?": 0,
+    "url?": ""
 }

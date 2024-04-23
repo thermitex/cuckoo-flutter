@@ -10,4 +10,7 @@ class Constants {
   static const kEventInOneWeekGroupName = 'WITHIN A WEEK';
   static const kEventInOneMonthGroupName = 'WITHIN A MONTH';
   static const kEventAfterOneMonthGroupName = 'AFTER A MONTH';
+  static const kMarkAsCompleted = 'Mark as Completed';
+  static const kUnmarkAsCompleted = 'Unmark as Completed';
+  static const kViewActivity = 'Check Event on Moodle';
 }

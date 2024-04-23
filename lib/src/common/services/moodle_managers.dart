@@ -228,24 +228,29 @@ class MoodleEventManager with ChangeNotifier {
   /// The custom events should remain in the list.
   ///
   /// For `Moodle` use ONLY. DO NOT call it elsewhere.
-  void _mergeEvents(List<MoodleEvent> others) {
+  void _mergeEvents(List<MoodleEvent> others, {bool notify = true}) {
     var mergedEvents = _events
         .where((event) => event.eventtype == MoodleEventTypes.custom)
         .toList();
     for (var event in others) {
       final existingEvent = _eventMap[event.id];
       if (existingEvent != null) {
-        event.completed = existingEvent.completed;
+        event
+        ..completed = existingEvent.completed
+        ..cmid = existingEvent.cmid
+        ..url = existingEvent.url;
       }
       // Crop event name
       if (event.eventtype == MoodleEventTypes.due &&
           event.name.endsWith('is due')) {
         event.name = event.name.replaceAll('is due', '').trim();
       }
+      // Deal with strange chars
+      event.name = event.name.replaceAll('&amp;', '&');
       mergedEvents.add(event);
     }
     _events = mergedEvents;
-    _eventsUpdated();
+    _eventsUpdated(notify: notify);
   }
 
   /// Event has been updated.
@@ -253,6 +258,11 @@ class MoodleEventManager with ChangeNotifier {
     _generateEventMap();
     _groupedEventsCache = {};
     if (notify) notifyListeners();
+  }
+
+  /// Manually notify.
+  void _notifyManually() {
+    notifyListeners();
   }
 
   /// Generate event map for faster random access.

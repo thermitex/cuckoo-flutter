@@ -301,11 +301,13 @@ class Moodle {
     try {
       final events =
           (data['events'] as List).map((e) => MoodleEvent.fromJson(e)).toList();
-      moodle.eventManager._mergeEvents(events);
+      moodle.eventManager._mergeEvents(events, notify: false);
     } catch (e) {
       moodle.eventManager.status = MoodleManagerStatus.error;
       return false;
     }
+    await moodle._fetchEventDetailsAndCompletionStatus();
+    moodle.eventManager._notifyManually();
     moodle.eventManager._eventsLastUpdated = DateTime.now();
     if (saveNow) moodle._save();
     moodle.eventManager.status = MoodleManagerStatus.idle;
@@ -490,6 +492,83 @@ class Moodle {
             }))
         .then((response) => MoodleFunctionResponse(response),
             onError: (e) => MoodleFunctionResponse.error());
+  }
+
+  // ------------Event Utilities------------
+  
+  /// Fetches the event details, including course module ID (cmid) and url, and
+  /// syhcronizes the completion statuses of the events with Moodle.
+  /// 
+  /// The event results returned by `MoodleFunctions.getCalendarEvents`
+  /// are not complete - [cmid] and [url] are not returned in the result, but we
+  /// need them to map the completion status and visit event details on external
+  /// browser. So this function does two things:
+  /// 
+  /// 1. Request to get more details for the events that do not currently have
+  /// a url or cmid, and save it once the info is obtained;
+  /// 2. Request to get the completion status of all activities of the courses
+  /// that currently have at least one outstanding event, and map the status to
+  /// the current existing events through [instance] or [cmid].
+  /// 
+  /// As the requests do not depend on each other, they are fired in parallel in
+  /// order to minimize loading time. This process could take significant amount
+  /// of time if the user has many outstanding events and is the first fetch 
+  /// attempt, but the time needed becomes much better starting from the second 
+  /// fetch attempt.
+  Future<void> _fetchEventDetailsAndCompletionStatus() async {
+    // Maintain a list of requests to be fired at once
+    var requests = <Future<MoodleFunctionResponse>>[];
+    // Fetch event details
+    // First check url fields of all events
+    final eventsToCheck =
+        eventManager._events.where((event) => event.url == null);
+    // Add to request list
+    for (final event in eventsToCheck) {
+      requests.add(_callMoodleFunction(MoodleFunctions.getEventById,
+          params: {'eventid': event.id}));
+    }
+    // Fetch completion status
+    // Gather courses with outstanding events
+    final coursesToCheck =
+        eventManager._events.map((event) => event.course).toSet();
+    // Add to request list
+    for (final course in coursesToCheck) {
+      if (course != null) {
+        requests.add(_callMoodleFunction(MoodleFunctions.getCompletionStatus,
+            params: {'userid': _userId, 'courseid': course.id}));
+      }
+    }
+    // Fire all requests and listen to reponses
+    await Future.wait(requests).then((responses) {
+      for (final response in responses) {
+        if (!response.fail && response.data != null) {
+          // Response will be a map anyways
+          final data = response.data as Map;
+          if (data['event'] != null) {
+            // Handle event details
+            final eventDetail = data['event'] as Map;
+            final eventToUpdate = eventManager._eventMap[eventDetail['id']];
+            if (eventToUpdate != null) {
+              eventToUpdate.cmid = eventDetail['instance'];
+              eventToUpdate.url = eventDetail['url'];
+            }
+          } else if (data['statuses'] != null) {
+            // Handle completion status
+            for (final Map activity in data['statuses'] as List) {
+              for (final event in eventManager._events) {
+                if (event.cmid == activity['cmid'] ||
+                    event.cmid == null &&
+                        event.instance == activity['instance']) {
+                  // Sync completion
+                  event.hascompletion = activity['hascompletion'];
+                  event.state = activity['state'];
+                }
+              }
+            }
+          }
+        }
+      }
+    });
   }
 
   // ------------Site info Utilities------------

@@ -23,6 +23,9 @@ class MoodleFunctions {
   static const getEnrolledCourses = 'core_enrol_get_users_courses';
   static const callExternal = 'tool_mobile_call_external_functions';
   static const getCalendarEvents = 'core_calendar_get_calendar_events';
+  static const getEventById = 'core_calendar_get_calendar_event_by_id';
+  static const getCompletionStatus =
+      'core_completion_get_activities_completion_status';
 }
 
 /// Types of Moodle events.
@@ -113,6 +116,10 @@ extension MoodleEventExtension on MoodleEvent {
 
   /// Remaining seconds for Moodle event.
   num get remainingTime => timestart - DateTime.now().secondEpoch;
+
+  /// If the event is marked as completed.
+  bool get isCompleted =>
+      completed ?? (state == null ? null : state! >= 1) ?? false;
 
   /// Event associated color.
   Color? get color => course?.color;

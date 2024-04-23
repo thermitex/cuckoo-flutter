@@ -42,5 +42,10 @@ extension BuildContextExtensions on BuildContext {
   MoodleEventManager get eventManager => watch<MoodleEventManager>();
 
   /// Settings notifier.
+  @Deprecated('Use settingsValue')
   Settings get settings => watch<Settings>();
+
+  /// Watch a specific settings key.
+  T? settingsValue<T>(String key) =>
+      select<Settings, T?>((settings) => settings.get<T>(key));
 }

@@ -2,14 +2,6 @@ import 'package:cuckoo/src/common/services/global.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Display stye of deadlines on the events page.
-enum DeadlineDisplayStyle {
-  date,
-  dateAndTime,
-  daysRemaining,
-  daysRemainingAndTime,
-}
-
 class SettingsKey {
   static const String deadlineDisplay = 'settings_deadline_display';
 }
@@ -34,7 +26,12 @@ class Settings with ChangeNotifier {
   // ------------Common interfaces------------
 
   /// Get value for a settings key.
-  T? getValueForKey<T>(String key) {
+  ///
+  /// To subscribe to a key change of `Settings`, use `context.settingsValue`.
+  /// It is a handy shortcut to watch a specific key of the Settings service.
+  /// NEVER watch the entire Settings, as it will generate unnecessary extra
+  /// rebuilds, which can be costly.
+  T? get<T>(String key) {
     T? cached = _cache[key] as T?;
     if (cached == null) {
       T? stored = _prefs.get(key) as T?;
@@ -45,7 +42,7 @@ class Settings with ChangeNotifier {
   }
 
   /// Set value for a settings key.
-  Future<bool> setValueForKey<T>(String key, T value, {bool notify = true}) {
+  Future<bool> set<T>(String key, T value, {bool notify = true}) {
     if ([bool, int, double, String].contains(T)) {
       // Save to cache first
       _cache[key] = value;
@@ -58,17 +55,17 @@ class Settings with ChangeNotifier {
   /// Switch between choices.
   Future<bool> switchChoice(String key, int numChoices,
       {int defaultChoice = 0, bool notify = true}) {
-    var choice = getValueForKey<int>(key) ?? defaultChoice;
+    var choice = get<int>(key) ?? defaultChoice;
     choice = (choice + 1) % numChoices;
-    return setValueForKey<int>(key, choice, notify: notify);
+    return set<int>(key, choice, notify: notify);
   }
 
   /// Toggle boolean values.
   Future<bool> toggleValue(String key,
       {bool defaultValue = false, bool notify = true}) {
-    var value = getValueForKey<bool>(key) ?? defaultValue;
+    var value = get<bool>(key) ?? defaultValue;
     value = !value;
-    return setValueForKey<bool>(key, value, notify: notify);
+    return set<bool>(key, value, notify: notify);
   }
 
   // ------------Private Utilities------------
