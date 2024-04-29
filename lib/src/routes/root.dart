@@ -24,13 +24,16 @@ class Root extends StatefulWidget {
   State<Root> createState() => RootState();
 }
 
-class RootState extends State<Root> {
+class RootState extends State<Root> with WidgetsBindingObserver {
   /// A controller to be used later in PersistentTabView.
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
 
   /// Subscription for listening to incoming deep links.
   StreamSubscription? _linkSub;
+
+  /// Last state of the app.
+  late AppLifecycleState _lastState;
 
   /// It will handle app links while the app is already started - be it in the
   /// foreground or in the background.
@@ -92,7 +95,24 @@ class RootState extends State<Root> {
   @override
   void initState() {
     _handleIncomingLinks();
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed &&
+        _lastState != AppLifecycleState.resumed) {
+      // Back to the foreground, try to issue a non-force fetch for events
+      Moodle.fetchEvents();
+      // Update locally first before results come back
+      // Some courses may apparently be expired, doesn't quite make sense to
+      // wait for the event fetch (which will take some time) before removing
+      // them or re-calculating deadlines.
+      Moodle().eventManager.rebuildNow();
+    }
+    _lastState = state;
+    super.didChangeAppLifecycleState(state);
   }
 
   @override
@@ -135,6 +155,7 @@ class RootState extends State<Root> {
   @override
   void dispose() {
     _linkSub?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 }

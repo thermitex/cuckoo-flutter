@@ -130,6 +130,12 @@ class MoodleEventManager with ChangeNotifier {
   /// Used for showing loading indicator / error on the page.
   MoodleManagerStatus get status => _status;
 
+  /// Notify all event subscribers to rebuold their views.
+  ///
+  /// Used for asking the views to call `groupedEvents` once in order to sync
+  /// any possible updates.
+  void rebuildNow() => _notifyManually();
+
   /// Grouped events given a grouping type.
   ///
   /// If the events are grouped by course, they are first sorted by course in
@@ -165,6 +171,7 @@ class MoodleEventManager with ChangeNotifier {
 
       if (sortedEvents.isNotEmpty) {
         for (final event in sortedEvents) {
+          if (event.expired) continue;
           final category = getCategory(event.remainingTime);
           if (events[category] == null) {
             events[category] = [event];
@@ -179,6 +186,7 @@ class MoodleEventManager with ChangeNotifier {
       // Then do grouping
       if (sortedEvents.isNotEmpty) {
         for (final event in sortedEvents) {
+          if (event.expired) continue;
           final code = event.course?.courseCode ?? 'OTHERS';
           if (events[code] == null) {
             events[code] = [event];
@@ -230,15 +238,17 @@ class MoodleEventManager with ChangeNotifier {
   /// For `Moodle` use ONLY. DO NOT call it elsewhere.
   void _mergeEvents(List<MoodleEvent> others, {bool notify = true}) {
     var mergedEvents = _events
-        .where((event) => event.eventtype == MoodleEventTypes.custom)
+        .where((event) =>
+            event.eventtype == MoodleEventTypes.custom && !event.expired)
         .toList();
     for (var event in others) {
+      // if (event.expired) continue;
       final existingEvent = _eventMap[event.id];
       if (existingEvent != null) {
         event
-        ..completed = existingEvent.completed
-        ..cmid = existingEvent.cmid
-        ..url = existingEvent.url;
+          ..completed = existingEvent.completed
+          ..cmid = existingEvent.cmid
+          ..url = existingEvent.url;
       }
       // Crop event name
       if (event.eventtype == MoodleEventTypes.due &&

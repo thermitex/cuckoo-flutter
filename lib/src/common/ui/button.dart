@@ -130,6 +130,7 @@ class _CuckooButtonState extends State<CuckooButton> {
         widget.icon!,
         size: _buttonIconSize,
         color: _buttonTextColor(),
+        weight: widget.style == CuckooButtonStyle.secondary ? 400 : 600,
       );
       children.add(iconWidget);
       if (widget.text != null) {

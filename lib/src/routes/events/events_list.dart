@@ -121,18 +121,19 @@ class MoodleEventListTile extends StatelessWidget {
     if (event.course != null) {
       children.add(Text(event.course!.courseCode,
           style: TextStylePresets.body(size: 10.5).copyWith(
-              fontWeight: FontWeight.bold,
-              color: _eventTintColor(context))));
+              fontWeight: FontWeight.bold, color: _eventTintColor(context))));
     }
     children.add(Text(event.name,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style:
-            TextStylePresets.body(size: 15, weight: FontWeight.normal).copyWith(
-          color: event.isCompleted ? context.cuckooTheme.tertiaryText : context.cuckooTheme.primaryText,
-          decoration: event.isCompleted ? TextDecoration.lineThrough : null,
-          decorationColor: context.cuckooTheme.tertiaryText
-        )));
+        style: TextStylePresets.body(size: 15, weight: FontWeight.normal)
+            .copyWith(
+                color: event.isCompleted
+                    ? context.cuckooTheme.tertiaryText
+                    : context.cuckooTheme.primaryText,
+                decoration:
+                    event.isCompleted ? TextDecoration.lineThrough : null,
+                decorationColor: context.cuckooTheme.tertiaryText)));
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -144,8 +145,7 @@ class MoodleEventListTile extends StatelessWidget {
 
   Widget _eventDeadline(BuildContext context) {
     String deadlineDisplay(DeadlineDisplayStyle style) {
-      DateTime eventTime =
-          DateTime.fromMillisecondsSinceEpoch(event.timestart.toInt() * 1000);
+      DateTime eventTime = event.time;
       final date = DateFormat.MMMd().format(eventTime);
       final time = DateFormat.Hm().format(eventTime);
       final daysRemaining = (event.remainingTime / 86400).floor().clamp(0, 999);
@@ -179,7 +179,9 @@ class MoodleEventListTile extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStylePresets.body(size: 11).copyWith(
               fontWeight: FontWeight.w600,
-              color: event.isCompleted ? context.cuckooTheme.tertiaryText : context.cuckooTheme.primaryText,
+              color: event.isCompleted
+                  ? context.cuckooTheme.tertiaryText
+                  : context.cuckooTheme.primaryText,
               height: 1.3),
         )),
       ),

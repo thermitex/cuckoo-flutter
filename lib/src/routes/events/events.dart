@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
+import 'package:cuckoo/src/common/ui/error_panel.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/routes/events/events_list.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class EventsPage extends StatefulWidget {
   const EventsPage({super.key});
@@ -14,6 +19,9 @@ class EventsPage extends StatefulWidget {
 }
 
 class _EventsPageState extends State<EventsPage> {
+  /// Rebuild events at midnight to show potential date changes.
+  Timer? rebuildTimer;
+
   /// Build app bar action items.
   List<CuckooAppBarActionItem> _appBarActionItems() {
     var updateStatus = context.eventManager.status;
@@ -67,7 +75,51 @@ class _EventsPageState extends State<EventsPage> {
   void _openReminderPage() {}
 
   /// Action routine for error.
-  void _showErrorDetails() {}
+  void _showErrorDetails() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult.contains(ConnectivityResult.none) && mounted) {
+      // No internet connection
+      ErrorPanel(
+        title: Constants.kNoConnectivityErr,
+        description: Constants.kNoConnectivityErrDesc,
+        buttons: [
+          CuckooButton(
+            text: Constants.kTryAgain,
+            icon: Symbols.refresh_rounded,
+            action: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              Moodle.fetchEvents(force: true);
+            },
+          )
+        ],
+      ).show(context);
+    } else if (mounted) {
+      // Invalid session / connected but no internet
+      ErrorPanel(
+        title: Constants.kSessionInvalidErr,
+        description: Constants.kSessionInvalidErrDesc,
+        buttons: [
+          CuckooButton(
+            text: Constants.kLoginMoodleButton,
+            icon: Symbols.login_rounded,
+            action: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              Moodle.startAuth(force: true);
+            },
+          ),
+          CuckooButton(
+            text: Constants.kTryAgain,
+            icon: Symbols.refresh_rounded,
+            style: CuckooButtonStyle.secondary,
+            action: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              Moodle.fetchEvents(force: true);
+            },
+          )
+        ],
+      ).show(context);
+    }
+  }
 
   /// Action routine for opening "more" panel.
   void _openMorePanel() {
@@ -111,6 +163,20 @@ class _EventsPageState extends State<EventsPage> {
       return const MoodleEventListView();
     }
     return _loginRequiredView();
+  }
+
+  @override
+  void initState() {
+    // Set up rebuild timer
+    final now = DateTime.now();
+    final secsTillMidnight =
+        (60 - now.second) + (59 - now.minute) * 60 + (23 - now.hour) * 3600;
+    Future.delayed(Duration(seconds: secsTillMidnight), () {
+      Moodle().eventManager.rebuildNow();
+      rebuildTimer = Timer.periodic(const Duration(days: 1),
+          (timer) => Moodle().eventManager.rebuildNow());
+    });
+    super.initState();
   }
 
   @override

@@ -44,6 +44,9 @@ class Moodle {
   /// Moodle domain.
   String _domain = kHKUMoodleDomain;
 
+  /// Auto login key.
+  String? _autoLoginKey;
+
   /// User ID of the Moodle user.
   String get _userId => _siteInfo.userid.toString();
 
@@ -105,6 +108,7 @@ class Moodle {
     if (isUserLoggedIn) {
       moodle._fetchSiteInfo();
       fetchEvents();
+      moodle._updateAutoLoginKey();
     }
   }
 
@@ -161,9 +165,10 @@ class Moodle {
   /// [privatetoken] will be returned through deep link.
   ///
   /// This method will check if a user has logged in. It will not prompt another
-  /// authentication process if there is already a logged-in user.
-  static Future<bool> startAuth() async {
-    if (isUserLoggedIn) return false;
+  /// authentication process if there is already a logged-in user unless `force`
+  /// is set to true.
+  static Future<bool> startAuth({bool force = false}) async {
+    if (!force && isUserLoggedIn) return false;
     final authUrl = Moodle()._buildLaunchUrl();
     return await launchUrl(authUrl, mode: LaunchMode.externalApplication);
   }
@@ -183,11 +188,13 @@ class Moodle {
   static Future<MoodleAuthStatus> handleAuthResult(String tokenString,
       {bool acceptIncompleteAuth = false}) async {
     final moodle = Moodle();
-    if (isUserLoggedIn) return MoodleAuthStatus.ignore;
     try {
       if (!tokenString.startsWith('token')) return MoodleAuthStatus.ignore;
       // Eliminates formatter
-      tokenString = tokenString.split('token=').last;
+      tokenString = tokenString.split('token=').last.trim();
+      if (tokenString.length > 180 && tokenString.endsWith('#')) {
+        tokenString = tokenString.substring(0, tokenString.length - 1);
+      }
       // Decode from base64
       tokenString = utf8.decode(base64.decode(tokenString));
       // Split
@@ -213,8 +220,11 @@ class Moodle {
       moodle._wstoken = wstoken;
       moodle._privatetoken = privatetoken;
 
-      // Obtain site info
-      await moodle._fetchSiteInfo(ignoreFail: false, saveNow: false);
+      // Obtain site info and auto login key
+      await Future.wait([
+        moodle._fetchSiteInfo(ignoreFail: false, saveNow: false),
+        moodle._updateAutoLoginKey(saveNow: false)
+      ]);
 
       // Obtain course info first, before fetching events
       await fetchCourses(saveNow: false);
@@ -326,6 +336,36 @@ class Moodle {
     return null;
   }
 
+  // ------------Moodle Web Interfaces------------
+
+  /// Open Moodle URL in an external browser with user auto logged in.
+  ///
+  /// Returns false if [privatetoken] is missing, or failed obtaining
+  /// [autoLoginKey] to perform the login.
+  static Future<bool> openMoodleUrl(String? url) async {
+    final moodle = Moodle();
+    if (!isUserLoggedIn || url == null) return false;
+    // First check if auto login key exists
+    if (moodle._autoLoginKey == null) {
+      final updated = await moodle._updateAutoLoginKey();
+      if (!updated) return false;
+    }
+    // Construct url
+    Uri finalUrl = moodle._buildMoodleUrl(
+        entryPoint: 'admin/tool/mobile/autologin.php',
+        params: {
+          'userid': moodle._userId,
+          'key': moodle._autoLoginKey!,
+          'urltogo': url
+        });
+    final ret = await launchUrl(finalUrl, mode: LaunchMode.externalApplication);
+    // Generate another key after delay
+    // The two requests have to be sent with at least 360 seconds in between
+    Future.delayed(const Duration(seconds: 361))
+        .then((_) => moodle._updateAutoLoginKey());
+    return ret;
+  }
+
   // ------------Private Utilities------------
 
   // ------------Internal Storage Utilities------------
@@ -337,6 +377,7 @@ class Moodle {
       // Tokens and site info
       _wstoken = _prefs.getString(MoodleStorageKeys.wstoken);
       _privatetoken = _prefs.getString(MoodleStorageKeys.privatetoken);
+      _autoLoginKey = _prefs.getString(MoodleStorageKeys.autoLoginKey);
       final siteInfo = _prefs.getString(MoodleStorageKeys.siteInfo);
       if (siteInfo != null) {
         _siteInfo = MoodleSiteInfo.fromJson(jsonDecode(siteInfo));
@@ -379,6 +420,9 @@ class Moodle {
         MoodleStorageKeys.siteInfo, jsonEncode(_siteInfo.toJson()));
     if (_privatetoken != null) {
       _prefs.setString(MoodleStorageKeys.privatetoken, _privatetoken!);
+    }
+    if (_autoLoginKey != null) {
+      _prefs.setString(MoodleStorageKeys.autoLoginKey, _autoLoginKey!);
     }
     // Courses
     _prefs.setStringList(
@@ -495,25 +539,25 @@ class Moodle {
   }
 
   // ------------Event Utilities------------
-  
+
   /// Fetches the event details, including course module ID (cmid) and url, and
   /// syhcronizes the completion statuses of the events with Moodle.
-  /// 
+  ///
   /// The event results returned by `MoodleFunctions.getCalendarEvents`
   /// are not complete - [cmid] and [url] are not returned in the result, but we
   /// need them to map the completion status and visit event details on external
   /// browser. So this function does two things:
-  /// 
+  ///
   /// 1. Request to get more details for the events that do not currently have
   /// a url or cmid, and save it once the info is obtained;
   /// 2. Request to get the completion status of all activities of the courses
   /// that currently have at least one outstanding event, and map the status to
   /// the current existing events through [instance] or [cmid].
-  /// 
+  ///
   /// As the requests do not depend on each other, they are fired in parallel in
   /// order to minimize loading time. This process could take significant amount
-  /// of time if the user has many outstanding events and is the first fetch 
-  /// attempt, but the time needed becomes much better starting from the second 
+  /// of time if the user has many outstanding events and is the first fetch
+  /// attempt, but the time needed becomes much better starting from the second
   /// fetch attempt.
   Future<void> _fetchEventDetailsAndCompletionStatus() async {
     // Maintain a list of requests to be fired at once
@@ -585,6 +629,21 @@ class Moodle {
     }
     _siteInfo = MoodleSiteInfo.fromJson(response.data!);
     if (saveNow) _save();
+  }
+
+  // ------------Auto login Utilities------------
+
+  /// Update the auto login key of Moodle.
+  Future<bool> _updateAutoLoginKey({bool saveNow = true}) async {
+    if (_privatetoken == null) return false;
+    final response = await _callMoodleFunction(MoodleFunctions.getAutoLoginKey,
+        params: {'privatetoken': _privatetoken});
+    if (!response.fail && response.data != null) {
+      _autoLoginKey = response.data['key'];
+      if (saveNow) _save();
+      return true;
+    }
+    return false;
   }
 
   // Singleton configurations
