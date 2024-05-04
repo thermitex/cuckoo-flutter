@@ -8,3 +8,5 @@ export 'appbar.dart';
 export 'button.dart';
 export 'full_page.dart';
 export 'loading.dart';
+export 'error_panel.dart';
+export 'toast.dart';

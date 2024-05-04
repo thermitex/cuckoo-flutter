@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'common/ui/ui.dart';
 import 'routes/root.dart';
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 /// Cuckoo App definition.
 ///
@@ -12,21 +14,13 @@ class CuckooApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return MaterialApp(
+      builder: FToastBuilder(),
       theme: CuckooTheme.light,
       darkTheme: CuckooTheme.dark,
       themeMode: ThemeMode.system,
-      routerConfig: goRouter,
+      home: const Root(),
+      navigatorKey: navigatorKey,
     );
   }
 }
-
-/// Router of Cuckoo app.
-final goRouter = GoRouter(
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const Root(),
-    ),
-  ],
-);

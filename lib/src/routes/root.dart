@@ -42,10 +42,10 @@ class RootState extends State<Root> with WidgetsBindingObserver {
       if (!mounted) return;
       if (link != null) {
         var tokenString = link.split('//').last;
-        CuckooFullScreenIndicator(context)
+        CuckooFullScreenIndicator()
             .startLoading(message: Constants.kLoginMoodleLoading);
         Moodle.handleAuthResult(tokenString).then((status) {
-          CuckooFullScreenIndicator(context).stopLoading();
+          CuckooFullScreenIndicator().stopLoading();
         });
       }
     });

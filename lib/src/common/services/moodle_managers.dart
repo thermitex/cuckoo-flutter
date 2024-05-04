@@ -171,7 +171,7 @@ class MoodleEventManager with ChangeNotifier {
 
       if (sortedEvents.isNotEmpty) {
         for (final event in sortedEvents) {
-          if (event.expired) continue;
+          if (event.expired && !kDebugMode) continue;
           final category = getCategory(event.remainingTime);
           if (events[category] == null) {
             events[category] = [event];
@@ -186,7 +186,7 @@ class MoodleEventManager with ChangeNotifier {
       // Then do grouping
       if (sortedEvents.isNotEmpty) {
         for (final event in sortedEvents) {
-          if (event.expired) continue;
+          if (event.expired && !kDebugMode) continue;
           final code = event.course?.courseCode ?? 'OTHERS';
           if (events[code] == null) {
             events[code] = [event];
@@ -242,7 +242,7 @@ class MoodleEventManager with ChangeNotifier {
             event.eventtype == MoodleEventTypes.custom && !event.expired)
         .toList();
     for (var event in others) {
-      // if (event.expired) continue;
+      if (event.expired && !kDebugMode) continue;
       final existingEvent = _eventMap[event.id];
       if (existingEvent != null) {
         event

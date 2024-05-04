@@ -105,11 +105,21 @@ class EventDetailView extends StatelessWidget {
         child: ShaderMask(
       shaderCallback: (Rect bounds) {
         return const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.purple, Colors.transparent, Colors.transparent, Colors.purple],
-              stops: [0.0, 0.05, 0.92, 1.0], // 10% purple, 80% transparent, 10% purple
-            ).createShader(bounds);
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.purple,
+            Colors.transparent,
+            Colors.transparent,
+            Colors.purple
+          ],
+          stops: [
+            0.0,
+            0.05,
+            0.92,
+            1.0
+          ], // 10% purple, 80% transparent, 10% purple
+        ).createShader(bounds);
       },
       blendMode: BlendMode.dstOut,
       child: SingleChildScrollView(
@@ -133,6 +143,7 @@ class EventDetailView extends StatelessWidget {
           icon: event.isCompleted
               ? Symbols.remove_done_rounded
               : Symbols.check_rounded,
+          action: () => _toggleEventCompletion(context),
         ),
         const SizedBox(height: 10.0),
         CuckooButton(
@@ -143,6 +154,25 @@ class EventDetailView extends StatelessWidget {
         )
       ],
     );
+  }
+
+  void _toggleEventCompletion(BuildContext context) {
+    // Close event details first
+    Navigator.of(context, rootNavigator: true).pop();
+    // Set completion
+    bool cachedCompletion = event.isCompleted;
+    event.completionMark = !cachedCompletion;
+    // Show toast
+    CuckooToast(
+        cachedCompletion
+            ? Constants.kUnmarkCompleteToast
+            : Constants.kMarkCompleteToast,
+        icon: Icon(
+          cachedCompletion
+              ? Icons.unpublished_rounded
+              : Icons.check_circle_rounded,
+          color: ColorPresets.positivePrimary,
+        )).show(delayInMillisec: 250, haptic: true);
   }
 
   @override

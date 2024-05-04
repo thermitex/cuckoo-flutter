@@ -24,4 +24,7 @@ class Constants {
   static const kTryAgain = 'Try Again';
   static const kEventDetailDueItem = 'DUE IN';
   static const kEventDetailDetailItem = 'DESCRIPTION';
+  static const kMarkCompleteToast = 'Event Marked as Completed';
+  static const kUnmarkCompleteToast = 'Event Unmarked as Completed';
+  static const kMoodleUrlOpenLoading = 'Launching Moodle website...';
 }

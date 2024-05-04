@@ -6,6 +6,7 @@ import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/global.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -223,7 +224,7 @@ class Moodle {
       // Obtain site info and auto login key
       await Future.wait([
         moodle._fetchSiteInfo(ignoreFail: false, saveNow: false),
-        moodle._updateAutoLoginKey(saveNow: false)
+        moodle._updateAutoLoginKey()
       ]);
 
       // Obtain course info first, before fetching events
@@ -290,7 +291,12 @@ class Moodle {
     }
     moodle.eventManager.status = MoodleManagerStatus.updating;
     // Obtain current timestamp
-    final timeStart = DateTime.now().secondEpoch;
+    var timeStart = DateTime.now().secondEpoch;
+    if (kDebugMode) {
+      // Go back 200 days for ease of debugging
+      timeStart =
+          DateTime.now().subtract(const Duration(days: 200)).secondEpoch;
+    }
     final response =
         await callFunction(MoodleFunctions.callExternal, subrequests: [
       MoodleFunctionSubrequest(MoodleFunctions.getCalendarEvents, params: {
@@ -324,6 +330,41 @@ class Moodle {
     return true;
   }
 
+  /// Sync completion status of the events to Moodle.
+  ///
+  /// This function will only work if the sync feature is turned on in Settings.
+  /// When an event is marked/unmarked as completed, this function will post
+  /// the update to Moodle as well. For the events do not have a Moodle 
+  /// completion status (e.g. not associated with course, custom events), the
+  /// completion mark will remain unchanged.
+  static Future<void> syncEventCompletion() {
+    final moodle = Moodle();
+    List<Future> requests = [];
+    for (final event in moodle.eventManager._events) {
+      // Check if event is eligible for syncing
+      if (event.completed != null &&
+          (event.hascompletion ?? false) &&
+          event.cmid != null) {
+        requests.add(callFunction(MoodleFunctions.callExternal, subrequests: [
+          MoodleFunctionSubrequest(MoodleFunctions.updateCompletionStatus,
+              params: {'cmid': event.cmid!, 'completed': event.completed})
+        ]).then((response) {
+          if (!response.fail) {
+            // Reset mark flag
+            // Possible situation here: completed flag is reset after the first
+            // request completed but before the second request completed, so
+            // second request may see a null completed flag after completion.
+            // Leave it unhandled for now - default completed to false if null.
+            // Integerity will be maintained once fetched from Moodle.
+            event.state = (event.completed ?? false) ? 1 : 0;
+            event.completed = null;
+          }
+        }));
+      }
+    }
+    return Future.wait(requests).then((_) => moodle._save());
+  }
+
   /// Get the course info associated with the event.
   ///
   /// Recommend to use the shortcut `event.course` instead.
@@ -347,7 +388,10 @@ class Moodle {
     if (!isUserLoggedIn || url == null) return false;
     // First check if auto login key exists
     if (moodle._autoLoginKey == null) {
+      CuckooFullScreenIndicator()
+          .startLoading(message: Constants.kMoodleUrlOpenLoading);
       final updated = await moodle._updateAutoLoginKey();
+      CuckooFullScreenIndicator().stopLoading();
       if (!updated) return false;
     }
     // Construct url
@@ -358,12 +402,7 @@ class Moodle {
           'key': moodle._autoLoginKey!,
           'urltogo': url
         });
-    final ret = await launchUrl(finalUrl, mode: LaunchMode.externalApplication);
-    // Generate another key after delay
-    // The two requests have to be sent with at least 360 seconds in between
-    Future.delayed(const Duration(seconds: 361))
-        .then((_) => moodle._updateAutoLoginKey());
-    return ret;
+    return await launchUrl(finalUrl, mode: LaunchMode.externalApplication);
   }
 
   // ------------Private Utilities------------
@@ -377,7 +416,6 @@ class Moodle {
       // Tokens and site info
       _wstoken = _prefs.getString(MoodleStorageKeys.wstoken);
       _privatetoken = _prefs.getString(MoodleStorageKeys.privatetoken);
-      _autoLoginKey = _prefs.getString(MoodleStorageKeys.autoLoginKey);
       final siteInfo = _prefs.getString(MoodleStorageKeys.siteInfo);
       if (siteInfo != null) {
         _siteInfo = MoodleSiteInfo.fromJson(jsonDecode(siteInfo));
@@ -420,9 +458,6 @@ class Moodle {
         MoodleStorageKeys.siteInfo, jsonEncode(_siteInfo.toJson()));
     if (_privatetoken != null) {
       _prefs.setString(MoodleStorageKeys.privatetoken, _privatetoken!);
-    }
-    if (_autoLoginKey != null) {
-      _prefs.setString(MoodleStorageKeys.autoLoginKey, _autoLoginKey!);
     }
     // Courses
     _prefs.setStringList(
@@ -634,15 +669,18 @@ class Moodle {
   // ------------Auto login Utilities------------
 
   /// Update the auto login key of Moodle.
-  Future<bool> _updateAutoLoginKey({bool saveNow = true}) async {
+  Future<bool> _updateAutoLoginKey() async {
     if (_privatetoken == null) return false;
     final response = await _callMoodleFunction(MoodleFunctions.getAutoLoginKey,
         params: {'privatetoken': _privatetoken});
     if (!response.fail && response.data != null) {
       _autoLoginKey = response.data['key'];
-      if (saveNow) _save();
+      // Invalidate after 360 sec
+      Future.delayed(const Duration(seconds: 360))
+          .then((_) => _autoLoginKey = null);
       return true;
     }
+    _autoLoginKey = null;
     return false;
   }
 

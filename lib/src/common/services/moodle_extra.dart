@@ -12,7 +12,6 @@ enum MoodleEventGroupingType { byTime, byCourse }
 class MoodleStorageKeys {
   static const wstoken = 'moodle_wstoken';
   static const privatetoken = 'moodle_privatetoken';
-  static const autoLoginKey = 'moodle_auto_login_key';
   static const siteInfo = 'moodle_site_info';
   static const courses = 'moodle_courses';
   static const events = 'moodle_events';
@@ -28,6 +27,8 @@ class MoodleFunctions {
   static const getCompletionStatus =
       'core_completion_get_activities_completion_status';
   static const getAutoLoginKey = 'tool_mobile_get_autologin_key';
+  static const updateCompletionStatus =
+      'core_completion_update_activity_completion_status_manually';
 }
 
 /// Types of Moodle events.
@@ -126,6 +127,14 @@ extension MoodleEventExtension on MoodleEvent {
   /// If the event is marked as completed.
   bool get isCompleted =>
       completed ?? (state == null ? null : state! >= 1) ?? false;
+
+  /// Mark event as completed.
+  set completionMark(bool c) {
+    completed = c;
+    Moodle().eventManager._notifyManually();
+    Moodle()._save();
+    Moodle.syncEventCompletion();
+  }
 
   /// Event associated color.
   Color? get color => course?.color;

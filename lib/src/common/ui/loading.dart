@@ -1,9 +1,10 @@
+import 'package:cuckoo/src/app.dart';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:flutter/material.dart';
 
 class CuckooFullScreenIndicator {
-  CuckooFullScreenIndicator(this.context);
+  CuckooFullScreenIndicator() : context = navigatorKey.currentContext!;
 
   late final BuildContext context;
 
