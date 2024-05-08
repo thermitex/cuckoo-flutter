@@ -3,6 +3,7 @@ class Constants {
   static const kEventsTitle = 'Events';
   static const kCoursesTitle = 'Courses';
   static const kCalendarTitle = 'Calendar';
+  static const kReminderTitle = 'Reminders';
   static const kEventsRequireLoginPrompt =
       'Hey there, would you mind connecting us to Moodle? Much appreciated.';
   static const kLoginMoodleButton = 'Log in to HKU Moodle';
@@ -27,4 +28,7 @@ class Constants {
   static const kMarkCompleteToast = 'Event Marked as Completed';
   static const kUnmarkCompleteToast = 'Event Unmarked as Completed';
   static const kMoodleUrlOpenLoading = 'Launching Moodle website...';
+  static const kMorePanelGrouping = 'Grouped By';
+  static const kMorePanelSync = 'Sync With Moodle';
+  static const kMorePanelAddEvent = 'Add Custom Event';
 }

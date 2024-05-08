@@ -1,10 +1,14 @@
+import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'text.dart';
 
-/// Default height of the large app bar.
+/// Default height of the app bars.
+const double kCuckooAppBarHeight = 38.0;
 const double kCuckooLargeAppBarHeight = 58.0;
 
-/// Paddings for the large app bar.
+/// Paddings for the app bars.
+const EdgeInsetsGeometry kCuckooAppBarPadding =
+    EdgeInsets.fromLTRB(18, 5, 18, 5);
 const EdgeInsetsGeometry kCuckooLargeAppBarPadding =
     EdgeInsets.fromLTRB(18, 8, 18, 8);
 
@@ -83,6 +87,99 @@ class CuckooLargeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kCuckooLargeAppBarHeight);
 }
+
+/// Cuckoo standard app bar.
+///
+/// Uses in subpages which titles are less emphasized.
+class CuckooAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const CuckooAppBar({
+    super.key,
+    required this.title,
+    this.titleTransparency = 1.0,
+    this.actionItems,
+    this.spaceBetweenActionItems = kSpaceBetweenActionItems,
+    this.exitButtonStyle,
+  });
+
+  /// Title of the app bar.
+  final String title;
+
+  /// Transparency of the title on the app bar.
+  final double titleTransparency;
+
+  /// App bar's action items.
+  final List<CuckooAppBarActionItem>? actionItems;
+
+  /// Spaces between app bar action items.
+  final double spaceBetweenActionItems;
+
+  /// Style of the exit button.
+  final ExitButtonStyle? exitButtonStyle;
+
+  /// App bar title.
+  Widget _titleWidget(BuildContext context) {
+    return Text(
+      title,
+      style: TextStylePresets.body(weight: FontWeight.w600, size: 16).copyWith(
+          color: context.cuckooTheme.primaryText
+              .withAlpha((255 * titleTransparency).round())),
+    );
+  }
+
+  /// Get row children in a list.
+  List<Widget> _buildRowChildren(BuildContext context) {
+    final left = <Widget>[];
+    final right = <Widget>[];
+    final middle = <Widget>[const Spacer()];
+
+    if (actionItems != null) {
+      for (final actionItem in actionItems!) {
+        final itemList =
+            actionItem.position == ActionItemPosition.left ? left : right;
+        if (itemList.isNotEmpty) {
+          itemList.add(SizedBox(width: spaceBetweenActionItems));
+        }
+        itemList.add(CuckooAppBarActionWidget(item: actionItem));
+      }
+    }
+
+    if (exitButtonStyle != null) {
+      final exit = CuckooAppBarActionItem(
+          icon: Icon(
+              exitButtonStyle == ExitButtonStyle.close
+                  ? Icons.close_rounded
+                  : Icons.arrow_back_rounded,
+              color: context.cuckooTheme.primaryText),
+          onPressed: () => Navigator.of(context).pop());
+      left.insert(0, CuckooAppBarActionWidget(item: exit));
+    }
+
+    return left + middle + right;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: kCuckooAppBarPadding,
+        child: Stack(children: [
+          Row(
+            children: _buildRowChildren(context),
+          ),
+          Center(
+            child: _titleWidget(context),
+          )
+        ]),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kCuckooAppBarHeight);
+}
+
+/// Style of the exit button on `CuckooAppBar`.
+enum ExitButtonStyle { close, back }
 
 /// Widget based on an app bar action item.
 ///

@@ -81,7 +81,10 @@ class _MoodleEventListViewState extends State<MoodleEventListView> {
   @override
   Widget build(BuildContext context) {
     // Subscribe to grouped events
-    events = context.eventManager.groupedEvents();
+    events = context.eventManager.groupedEvents(
+        groupBy: MoodleEventGroupingType.values[
+            context.settingsValue<int>(SettingsKey.eventGroupingType) ??
+                MoodleEventGroupingType.byTime.index]);
 
     return ListView.builder(
         itemCount: events.length + 1,

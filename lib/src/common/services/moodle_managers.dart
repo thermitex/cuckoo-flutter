@@ -195,6 +195,9 @@ class MoodleEventManager with ChangeNotifier {
           }
         }
       }
+    } else if (groupBy == MoodleEventGroupingType.none) {
+      sortedEvents.sort(compareTime);
+      events['ALL EVENTS'] = sortedEvents;
     } else {
       throw Exception('Grouping type not recognized.');
     }

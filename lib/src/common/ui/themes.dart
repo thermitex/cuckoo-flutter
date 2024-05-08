@@ -87,6 +87,7 @@ class CuckooThemeExtension extends ThemeExtension<CuckooThemeExtension> {
   final Color primaryBackground;
   final Color primaryInverseBackground;
   final Color secondaryBackground;
+  final Color secondaryTransBg;
   final Color tertiaryBackground;
   final Color popUpBackground;
 
@@ -119,6 +120,9 @@ class CuckooThemeExtension extends ThemeExtension<CuckooThemeExtension> {
         secondaryBackground = brightness == Brightness.light
             ? ColorPresets.lightSecondaryBackground
             : ColorPresets.darkSecondaryBackground,
+        secondaryTransBg = brightness == Brightness.light
+            ? ColorPresets.lightSecondaryTransBg
+            : ColorPresets.darkSecondaryTransBg,
         popUpBackground = brightness == Brightness.light
             ? ColorPresets.lightPrimaryBackground
             : ColorPresets.darkSecondaryBackground,
@@ -138,6 +142,7 @@ class CuckooThemeExtension extends ThemeExtension<CuckooThemeExtension> {
     this.secondaryBackground = ColorPresets.lightSecondaryBackground,
     this.tertiaryBackground = ColorPresets.lightTertiaryBackground,
     this.popUpBackground = ColorPresets.lightPrimaryBackground,
+    this.secondaryTransBg = ColorPresets.lightSecondaryTransBg,
   });
 
   @override
@@ -173,6 +178,9 @@ class CuckooThemeExtension extends ThemeExtension<CuckooThemeExtension> {
           Colors.white,
       secondaryBackground:
           Color.lerp(secondaryBackground, other.secondaryBackground, t) ??
+              Colors.white,
+      secondaryTransBg:
+          Color.lerp(secondaryTransBg, other.secondaryTransBg, t) ??
               Colors.white,
       tertiaryBackground:
           Color.lerp(tertiaryBackground, other.tertiaryBackground, t) ??

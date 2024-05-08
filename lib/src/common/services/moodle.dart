@@ -334,7 +334,7 @@ class Moodle {
   ///
   /// This function will only work if the sync feature is turned on in Settings.
   /// When an event is marked/unmarked as completed, this function will post
-  /// the update to Moodle as well. For the events do not have a Moodle 
+  /// the update to Moodle as well. For the events do not have a Moodle
   /// completion status (e.g. not associated with course, custom events), the
   /// completion mark will remain unchanged.
   static Future<void> syncEventCompletion() {

@@ -6,6 +6,7 @@ import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/routes/events/events.dart';
 import 'package:cuckoo/src/routes/courses/courses.dart';
 import 'package:cuckoo/src/routes/calendar/calendar.dart';
+import 'package:cuckoo/src/routes/settings/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -57,7 +58,7 @@ class RootState extends State<Root> with WidgetsBindingObserver {
       const EventsPage(), // Events route
       const CoursesPage(), // Courses route
       const CalendarPage(), // Calendar route
-      const Placeholder(), // Settings route
+      const SettingsPage(), // Settings route
     ];
   }
 

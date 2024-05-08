@@ -103,8 +103,7 @@ class _CuckooButtonState extends State<CuckooButton> {
     var bgColor = widget.backgroundColor;
     bgColor ??= {
       CuckooButtonStyle.primary: ColorPresets.primary,
-      CuckooButtonStyle.secondary:
-          context.cuckooTheme.primaryText.withAlpha(20),
+      CuckooButtonStyle.secondary: context.cuckooTheme.secondaryTransBg,
       CuckooButtonStyle.danger: ColorPresets.negativePrimary,
     }[widget.style];
     return bgColor ?? ColorPresets.primary;

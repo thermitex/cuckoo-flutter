@@ -26,6 +26,7 @@ class ColorPresets {
   static const Color lightSecondaryText = Color.fromARGB(153, 60, 60, 67);
   static const Color lightSecondaryBackground =
       Color.fromARGB(255, 242, 242, 247);
+  static const Color lightSecondaryTransBg = Color.fromARGB(15, 0, 0, 0);
 
   // Tertiary
   static const Color lightTertiaryText = Color.fromARGB(77, 60, 60, 67);
@@ -49,6 +50,7 @@ class ColorPresets {
   // Secondary
   static const Color darkSecondaryText = Color.fromARGB(153, 235, 235, 245);
   static const Color darkSecondaryBackground = Color.fromARGB(255, 28, 28, 30);
+  static const Color darkSecondaryTransBg = Color.fromARGB(25, 255, 255, 255);
 
   // Tertiary
   static const Color darkTertiaryText = Color.fromARGB(77, 235, 235, 245);

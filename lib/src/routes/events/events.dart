@@ -6,6 +6,8 @@ import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/routes/events/events_list.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:cuckoo/src/routes/events/more_panel.dart';
+import 'package:cuckoo/src/routes/events/reminders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
@@ -71,7 +73,12 @@ class _EventsPageState extends State<EventsPage> {
   }
 
   /// Action routine for opening reminder page.
-  void _openReminderPage() {}
+  void _openReminderPage() {
+    Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+      fullscreenDialog: true,
+      builder: (context) => const ReminderPage(),
+    ));
+  }
 
   /// Action routine for error.
   void _showErrorDetails() async {
@@ -122,7 +129,17 @@ class _EventsPageState extends State<EventsPage> {
 
   /// Action routine for opening "more" panel.
   void _openMorePanel() {
-    Moodle.logout();
+    showModalBottomSheet<void>(
+      context: context,
+      useRootNavigator: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30.0))),
+      backgroundColor: context.cuckooTheme.popUpBackground,
+      builder: (context) {
+        return const EventsMorePanel();
+      },
+    );
   }
 
   /// Show a view to prompt user for logging in.

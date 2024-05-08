@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsKey {
   static const String deadlineDisplay = 'settings_deadline_display';
+  static const String eventGroupingType = 'settings_event_grouping';
 }
 
 /// Settings service for cuckoo.
