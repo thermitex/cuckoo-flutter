@@ -34,8 +34,7 @@ class MoodleCourse {
   bool? showcompletionconditions;
   num? timemodified;
   String? colorHex;
-
-  factory MoodleCourse.fromJson(Map<String, dynamic> json) =>
-      _$MoodleCourseFromJson(json);
+  
+  factory MoodleCourse.fromJson(Map<String,dynamic> json) => _$MoodleCourseFromJson(json);
   Map<String, dynamic> toJson() => _$MoodleCourseToJson(this);
 }

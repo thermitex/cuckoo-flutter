@@ -1,0 +1,11 @@
+{
+    "id": "uuid",
+    "title": "Reminder Title",
+    "rules": "$[]eventReminderRule",
+    "scheduledNotifications": [""],
+    "amount": 30,
+    "unit": 1,
+    "hour?": 10,
+    "min?": 0,
+    "disabled?": false
+}

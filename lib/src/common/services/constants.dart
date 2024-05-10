@@ -31,4 +31,7 @@ class Constants {
   static const kMorePanelGrouping = 'Grouped By';
   static const kMorePanelSync = 'Sync With Moodle';
   static const kMorePanelAddEvent = 'Add Custom Event';
+  static const kAddReminder = 'Add Reminder';
+  static const kReminderIntroPrompt =
+      'Afraid of missing deadlines? Adding a reminder is probably a good idea.';
 }

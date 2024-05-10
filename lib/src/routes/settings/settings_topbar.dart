@@ -23,9 +23,9 @@ class SettingsTopBar extends StatelessWidget implements PreferredSizeWidget {
           strokeAlign: BorderSide.strokeAlignOutside,
         ),
         color: loggedIn ? null : Colors.grey,
-        image: DecorationImage(
+        image: loggedIn ? DecorationImage(
           image: CachedNetworkImageProvider(Moodle.profilePicUrl),
-        ),
+        ) : null,
       ),
     );
   }
@@ -49,7 +49,7 @@ class SettingsTopBar extends StatelessWidget implements PreferredSizeWidget {
       padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
       child: Center(
           child: Text(
-        Moodle.username,
+        loggedIn ? Moodle.username : '',
         style: TextStylePresets.body(size: 12, weight: FontWeight.w600)
             .copyWith(color: ColorPresets.primary),
       )),
