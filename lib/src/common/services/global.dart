@@ -1,7 +1,10 @@
 import 'package:cuckoo/src/common/services/color_registry.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
+import 'package:cuckoo/src/common/services/reminders.dart';
 import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// The common global app service.
@@ -25,5 +28,15 @@ class Global {
     Settings.init();
     ColorRegistry.init();
     Moodle.init();
+    Reminders.init();
   }
+
+  /// Notifier providers for the app.
+  static List<SingleChildWidget> get notifierProviders => [
+        ChangeNotifierProvider(create: (_) => Moodle().loginStatusManager),
+        ChangeNotifierProvider(create: (_) => Moodle().courseManager),
+        ChangeNotifierProvider(create: (_) => Moodle().eventManager),
+        ChangeNotifierProvider(create: (_) => Settings()),
+        ChangeNotifierProvider(create: (_) => Reminders()),
+      ];
 }

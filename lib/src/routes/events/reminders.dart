@@ -1,6 +1,8 @@
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
+import 'package:cuckoo/src/common/services/reminders.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
+import 'package:cuckoo/src/routes/events/reminder_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
@@ -13,9 +15,6 @@ class ReminderPage extends StatefulWidget {
 }
 
 class _ReminderPageState extends State<ReminderPage> {
-  // If there are no reminders.
-  bool _noReminders = true;
-
   // Transparency of the title.
   double _titleTrans = 0.0;
 
@@ -51,7 +50,7 @@ class _ReminderPageState extends State<ReminderPage> {
                   CuckooButton(
                     text: Constants.kAddReminder,
                     icon: Symbols.add_circle_rounded,
-                    action: () {},
+                    action: () => _createNewReminder(),
                   )
                 ],
                 bottomOffset: 65.0,
@@ -69,16 +68,19 @@ class _ReminderPageState extends State<ReminderPage> {
       child: SizedBox(
         width: double.infinity,
         height: 55.0,
-        child: Center(
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
-          const Icon(Icons.add_circle_rounded, color: ColorPresets.primary),
-          const SizedBox(width: 6.0),
-          Text(
-            Constants.kAddReminder,
-            style: TextStylePresets.body(size: 13.0, weight: FontWeight.w500)
-                .copyWith(color: ColorPresets.primary),
-          )
-        ])),
+        child: GestureDetector(
+          onTap: () => _createNewReminder(),
+          child: Center(
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+            const Icon(Icons.add_circle_rounded, color: ColorPresets.primary),
+            const SizedBox(width: 6.0),
+            Text(
+              Constants.kAddReminder,
+              style: TextStylePresets.body(size: 13.0, weight: FontWeight.w500)
+                  .copyWith(color: ColorPresets.primary),
+            )
+          ])),
+        ),
       ),
     );
   }
@@ -103,6 +105,14 @@ class _ReminderPageState extends State<ReminderPage> {
     );
   }
 
+  /// Start the process of creating a new reminder.
+  void _createNewReminder() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => ReminderDetailPage(Reminders.create())),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,7 +125,9 @@ class _ReminderPageState extends State<ReminderPage> {
       body: SafeArea(
           child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18.0),
-        child: _noReminders ? _emptyReminderView() : _reminderListView(),
+        child: context.reminders.isEmpty
+            ? _emptyReminderView()
+            : _reminderListView(),
       )),
     );
   }

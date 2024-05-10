@@ -33,4 +33,7 @@ class TextStylePresets {
       letterSpacing: Platform.isIOS ? 0 : null,
     );
   }
+
+  /// Text style for text fields.
+  static TextStyle textFieldBody() => body(size: 16);
 }

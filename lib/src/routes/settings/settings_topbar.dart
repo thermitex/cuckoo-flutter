@@ -23,9 +23,11 @@ class SettingsTopBar extends StatelessWidget implements PreferredSizeWidget {
           strokeAlign: BorderSide.strokeAlignOutside,
         ),
         color: loggedIn ? null : Colors.grey,
-        image: loggedIn ? DecorationImage(
-          image: CachedNetworkImageProvider(Moodle.profilePicUrl),
-        ) : null,
+        image: loggedIn
+            ? DecorationImage(
+                image: CachedNetworkImageProvider(Moodle.profilePicUrl),
+              )
+            : null,
       ),
     );
   }

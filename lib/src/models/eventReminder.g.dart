@@ -9,7 +9,7 @@ part of 'eventReminder.dart';
 EventReminder _$EventReminderFromJson(Map<String, dynamic> json) =>
     EventReminder()
       ..id = json['id'] as num
-      ..title = json['title'] as String
+      ..title = json['title'] as String?
       ..rules = (json['rules'] as List<dynamic>)
           .map((e) => EventReminderRule.fromJson(e as Map<String, dynamic>))
           .toList()

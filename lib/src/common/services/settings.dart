@@ -7,7 +7,7 @@ class SettingsKey {
   static const String eventGroupingType = 'settings_event_grouping';
 }
 
-/// Settings service for cuckoo.
+/// Settings service for Cuckoo.
 class Settings with ChangeNotifier {
   /// Shared preference instance.
   late SharedPreferences _prefs;

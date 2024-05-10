@@ -7,7 +7,7 @@ class EventReminder {
   EventReminder();
 
   late num id;
-  late String title;
+  String? title;
   late List<EventReminderRule> rules;
   late List<num> scheduledNotifications;
   late num amount;
@@ -15,7 +15,8 @@ class EventReminder {
   num? hour;
   num? min;
   bool? disabled;
-  
-  factory EventReminder.fromJson(Map<String,dynamic> json) => _$EventReminderFromJson(json);
+
+  factory EventReminder.fromJson(Map<String, dynamic> json) =>
+      _$EventReminderFromJson(json);
   Map<String, dynamic> toJson() => _$EventReminderToJson(this);
 }

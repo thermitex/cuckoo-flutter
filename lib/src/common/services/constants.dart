@@ -34,4 +34,7 @@ class Constants {
   static const kAddReminder = 'Add Reminder';
   static const kReminderIntroPrompt =
       'Afraid of missing deadlines? Adding a reminder is probably a good idea.';
+  static const kNewReminderTitle = 'New Reminder';
+  static const kAddNewRules = 'Add Rules';
+  static const kRulesUpperLimitToast = 'Cannot add more than 8 rules';
 }

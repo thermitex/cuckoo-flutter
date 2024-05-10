@@ -10,7 +10,8 @@ class EventReminderRule {
   late num action;
   late String pattern;
   num? relationWithNext;
-  
-  factory EventReminderRule.fromJson(Map<String,dynamic> json) => _$EventReminderRuleFromJson(json);
+
+  factory EventReminderRule.fromJson(Map<String, dynamic> json) =>
+      _$EventReminderRuleFromJson(json);
   Map<String, dynamic> toJson() => _$EventReminderRuleToJson(this);
 }

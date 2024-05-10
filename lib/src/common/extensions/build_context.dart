@@ -1,4 +1,5 @@
 import 'package:cuckoo/src/common/services/moodle.dart';
+import 'package:cuckoo/src/common/services/reminders.dart';
 import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
@@ -44,6 +45,9 @@ extension BuildContextExtensions on BuildContext {
   /// Settings notifier.
   @Deprecated('Use settingsValue')
   Settings get settings => watch<Settings>();
+
+  /// Reminders notifier
+  Reminders get reminders => watch<Reminders>();
 
   /// Watch a specific settings key.
   T? settingsValue<T>(String key) =>
