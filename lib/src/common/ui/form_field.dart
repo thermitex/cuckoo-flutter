@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// Cuckoo standard text field in a form.
+/// 
+/// The text field will trigger the form's `onChanged` callback and allows 
+/// validation by accepting `validator` as the argument.
+/// 
+/// Works similarly to `TextFormField`.
 class CuckooFormTextField extends CuckooFormInput<String> {
   CuckooFormTextField({
     super.key,
@@ -46,16 +51,15 @@ class CuckooFormTextField extends CuckooFormInput<String> {
                 onTapOutside: (_) =>
                     FocusManager.instance.primaryFocus?.unfocus(),
                 decoration: InputDecoration(
-                  prefixIcon: icon,
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  hintText: placeholder,
-                  hintStyle: TextStylePresets.textFieldBody(),
-                  contentPadding: const EdgeInsets.fromLTRB(0, 12, 0, 15)
-                ),
+                    prefixIcon: icon,
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    hintText: placeholder,
+                    hintStyle: TextStylePresets.textFieldBody(),
+                    contentPadding: const EdgeInsets.fromLTRB(0, 12, 0, 15)),
               );
             });
 

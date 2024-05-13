@@ -34,6 +34,10 @@ class TextStylePresets {
     );
   }
 
+  /// Text style for pop up displays.
+  static TextStyle popUpDisplayBody({FontWeight weight = FontWeight.normal}) =>
+      body(size: 15, weight: weight);
+
   /// Text style for text fields.
   static TextStyle textFieldBody() => body(size: 16);
 }

@@ -2,7 +2,7 @@ import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/reminders.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
-import 'package:cuckoo/src/routes/events/reminder_detail.dart';
+import 'package:cuckoo/src/routes/events/reminders/reminder_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';

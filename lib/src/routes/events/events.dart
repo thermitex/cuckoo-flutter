@@ -7,7 +7,7 @@ import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/routes/events/events_list.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cuckoo/src/routes/events/more_panel.dart';
-import 'package:cuckoo/src/routes/events/reminders.dart';
+import 'package:cuckoo/src/routes/events/reminders/reminders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';

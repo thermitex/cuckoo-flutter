@@ -90,7 +90,7 @@ class MorePanelElement extends StatelessWidget {
         const SizedBox(width: 14.0),
         Text(
           title,
-          style: TextStylePresets.body(weight: FontWeight.w600),
+          style: TextStylePresets.popUpDisplayBody(weight: FontWeight.w600),
         )
       ],
     );

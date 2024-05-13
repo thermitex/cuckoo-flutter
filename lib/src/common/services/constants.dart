@@ -28,7 +28,7 @@ class Constants {
   static const kMarkCompleteToast = 'Event Marked as Completed';
   static const kUnmarkCompleteToast = 'Event Unmarked as Completed';
   static const kMoodleUrlOpenLoading = 'Launching Moodle website...';
-  static const kMorePanelGrouping = 'Grouped By';
+  static const kMorePanelGrouping = 'Group By';
   static const kMorePanelSync = 'Sync With Moodle';
   static const kMorePanelAddEvent = 'Add Custom Event';
   static const kAddReminder = 'Add Reminder';
@@ -37,4 +37,16 @@ class Constants {
   static const kNewReminderTitle = 'New Reminder';
   static const kAddNewRules = 'Add Rules';
   static const kRulesUpperLimitToast = 'Cannot add more than 8 rules';
+  static const kRuleSubjectCourseCodeDesc =
+      'Course code of a course composed of capital letters and numbers (e.g., “CAES1000”).';
+  static const kRuleSubjectCourseNameDesc =
+      'Full name of a course excluding the course code (e.g., “Core University English”).';
+  static const kRuleSubjectEventTitleDesc =
+      'Title of the event or Moodle assignment (e.g., “Assignment 1”).';
+  static const kRuleActionContainsDesc =
+      'Reminder will apply to events that contains the content, case-insensitive.';
+  static const kRuleActionNotContainsDesc =
+      'Reminder will apply to events that does not contain the content, case-insensitive.';
+  static const kRuleActionMatchedDesc =
+      'Reminder will apply to events that matches the content as a regular expression pattern.';
 }

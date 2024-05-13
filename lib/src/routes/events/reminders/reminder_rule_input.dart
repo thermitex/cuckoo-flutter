@@ -1,6 +1,7 @@
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/reminders.dart';
+import 'package:cuckoo/src/common/ui/selection_panel.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ typedef EventReminderRules = List<EventReminderRule>;
 const List<String> kSubjectChoices = [
   'Course Code',
   'Course Name',
-  'Event Name',
+  'Event Title',
 ];
 
 const List<IconData> kSubjectChoiceIcons = [
@@ -23,6 +24,32 @@ const List<IconData> kSubjectChoiceIcons = [
 const List<String> kActionChoices = ['Contains', 'Does Not Contain', 'Matches'];
 
 const List<String> kRelationChoices = ['AND', 'OR'];
+
+class ReminderRuleInput extends CuckooFormInput<EventReminderRules> {
+  ReminderRuleInput({
+    super.key,
+    super.onSaved,
+    EventReminderRules? initialRules,
+  }) : super(
+            initialValue: initialRules ?? [],
+            autovalidateMode: AutovalidateMode.disabled,
+            builder: (field) {
+              final FormFieldState<EventReminderRules> state = field;
+              return ReminderRuleInputView(
+                initialRules: initialRules ?? [],
+                onChanged: (value) {
+                  // ignore: invalid_use_of_protected_member
+                  state.setValue(value);
+                },
+              );
+            });
+
+  @override
+  bool get hasIcon => false;
+
+  @override
+  bool get noWrap => true;
+}
 
 /// Widget of the reminder rule input configuration.
 /// To be wrapped inside a `CuckooInput`.
@@ -93,8 +120,50 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
                 InputSelectorAccessory(
                   kSubjectChoices[rule.subject.toInt()],
                   icon: kSubjectChoiceIcons[rule.subject.toInt()],
+                  onPressed: () {
+                    SelectionPanel(
+                      items: List.generate(
+                          kSubjectChoices.length,
+                          (index) => SelectionPanelItem(kSubjectChoices[index],
+                              icon: kSubjectChoiceIcons[index],
+                              description: [
+                                Constants.kRuleSubjectCourseCodeDesc,
+                                Constants.kRuleSubjectCourseNameDesc,
+                                Constants.kRuleSubjectEventTitleDesc
+                              ][index])),
+                      selectedIndex: rule.subject.toInt(),
+                    ).show(context).then((index) {
+                      if (index != null) {
+                        setState(() => rule.subject = index);
+                      }
+                    });
+                  },
                 ),
-                InputSelectorAccessory(kActionChoices[rule.action.toInt()]),
+                InputSelectorAccessory(
+                  kActionChoices[rule.action.toInt()],
+                  onPressed: () {
+                    SelectionPanel(
+                      items: List.generate(
+                          kActionChoices.length,
+                          (index) => SelectionPanelItem(kActionChoices[index],
+                              icon: [
+                                Icons.search_rounded,
+                                Icons.search_off_rounded,
+                                Icons.saved_search_rounded
+                              ][index],
+                              description: [
+                                Constants.kRuleActionContainsDesc,
+                                Constants.kRuleActionNotContainsDesc,
+                                Constants.kRuleActionMatchedDesc
+                              ][index])),
+                      selectedIndex: rule.action.toInt(),
+                    ).show(context).then((index) {
+                      if (index != null) {
+                        setState(() => rule.action = index);
+                      }
+                    });
+                  },
+                ),
               ],
             ),
           ),
@@ -179,7 +248,8 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
                 kRelationChoices[
                     (rule.relationWithNext ?? ReminderRuleRelation.and)
                         .toInt()],
-                style: TextStylePresets.body(size: 10, weight: FontWeight.w600),
+                style: TextStylePresets.body(size: 10, weight: FontWeight.w600)
+                    .copyWith(color: Colors.white),
               )),
             ),
           )
