@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// Cuckoo standard text field in a form.
-/// 
-/// The text field will trigger the form's `onChanged` callback and allows 
+///
+/// The text field will trigger the form's `onChanged` callback and allows
 /// validation by accepting `validator` as the argument.
-/// 
+///
 /// Works similarly to `TextFormField`.
 class CuckooFormTextField extends CuckooFormInput<String> {
   CuckooFormTextField({

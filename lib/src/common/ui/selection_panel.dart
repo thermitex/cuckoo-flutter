@@ -4,7 +4,7 @@ import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:flutter/material.dart';
 
 /// Create a selection panel with multiple choices to select from.
-/// 
+///
 /// The panel will be dismissed once a choice has been made. To obtain the
 /// item selected by the user, check the return value of the future returned by
 /// `show`, which is used to show the panel on the current screen. Add selection
@@ -87,7 +87,8 @@ class SelectionPanel extends StatelessWidget {
       ));
 
       if (index < items.length - 1) {
-        children.add(const SizedBox(height: 33.0));
+        final gap = item.description == null ? 23.0 : 33.0;
+        children.add(SizedBox(height: gap));
       }
     });
 
@@ -96,10 +97,13 @@ class SelectionPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(34, 34, 34, 48),
-      child: Column(
-          mainAxisSize: MainAxisSize.min, children: _panelChildren(context)),
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.all(34.0),
+        child: Column(
+            mainAxisSize: MainAxisSize.min, children: _panelChildren(context)),
+      ),
     );
   }
 }

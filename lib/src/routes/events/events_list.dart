@@ -194,8 +194,8 @@ class MoodleEventListTile extends StatelessWidget {
   Future<void> _openEventDetails(BuildContext context) {
     return showModalBottomSheet<void>(
       constraints: BoxConstraints(
-          // Takes at most 70% of the screen, can go up to 90% if less than 350
-          maxHeight: max(MediaQuery.of(context).size.height * 0.7,
+          // Takes at most 72% of the screen, can go up to 90% if less than 350
+          maxHeight: max(MediaQuery.of(context).size.height * 0.72,
               min(350, MediaQuery.of(context).size.height * 0.9)),
           maxWidth: 650),
       context: context,

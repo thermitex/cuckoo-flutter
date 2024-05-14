@@ -187,21 +187,24 @@ class EventDetailView extends StatelessWidget {
 
     return ClipRRect(
         borderRadius: borderRadius,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(25.0),
-          decoration: BoxDecoration(gradient: gradient),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 5.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildEventHeader(context),
-                const SizedBox(height: 18.0),
-                _buildEventContent(context),
-                const SizedBox(height: 20.0),
-                _buildEventActions(context)
-              ],
+        child: SafeArea(
+          top: false,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(25.0),
+            decoration: BoxDecoration(gradient: gradient),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildEventHeader(context),
+                  const SizedBox(height: 18.0),
+                  _buildEventContent(context),
+                  const SizedBox(height: 20.0),
+                  _buildEventActions(context)
+                ],
+              ),
             ),
           ),
         ));

@@ -67,11 +67,14 @@ class ErrorPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(25, 25, 25, 30),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: _buildColumnChildren(context),
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.all(25.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: _buildColumnChildren(context),
+        ),
       ),
     );
   }

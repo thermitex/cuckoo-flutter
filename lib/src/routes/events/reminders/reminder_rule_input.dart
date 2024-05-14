@@ -1,7 +1,9 @@
+import 'dart:convert';
+
+import 'package:collection/collection.dart';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/reminders.dart';
-import 'package:cuckoo/src/common/ui/selection_panel.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +75,11 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
   @override
   void initState() {
     super.initState();
-    _rules = widget.initialRules;
+    // Perform a deep copy of the initial rules
+    _rules = widget.initialRules
+        .map((rule) => jsonEncode(rule.toJson()))
+        .map((e) => EventReminderRule.fromJson(jsonDecode(e)))
+        .toList();
   }
 
   Widget _addButton({bool shrinked = false}) {
@@ -293,14 +299,13 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
       // Only show add button
       children.add(_addButton());
     } else {
-      for (int i = 0; i < _rules.length; i++) {
-        final rule = _rules[i];
+      _rules.forEachIndexed((i, rule) {
         children.add(_ruleBlock(rule, i == 0, i == _rules.length - 1));
         if (i < _rules.length - 1) {
           // Add separator showing relation
           children.add(_relationSeparator(rule));
         }
-      }
+      });
       children.add(_addButton(shrinked: true));
     }
 

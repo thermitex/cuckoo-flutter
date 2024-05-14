@@ -11,59 +11,63 @@ class EventsMorePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(30, 30, 30, 44),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          MorePanelElement(
-            title: Constants.kMorePanelGrouping,
-            icon: const Icon(Icons.view_stream_outlined),
-            extendedView: Padding(
-              padding: const EdgeInsets.only(bottom: 3.0),
-              child: SizedBox(
-                height: 35,
-                width: double.infinity,
-                child: ToggleSwitch(
-                  minWidth: double.infinity,
-                  customTextStyles: [TextStylePresets.body()],
-                  initialLabelIndex: context
-                          .settingsValue<int>(SettingsKey.eventGroupingType) ??
-                      0,
-                  dividerColor: Colors.transparent,
-                  activeBgColor: const [ColorPresets.primary],
-                  activeFgColor: Colors.white,
-                  inactiveBgColor: context.cuckooTheme.secondaryTransBg,
-                  inactiveFgColor: context.cuckooTheme.primaryText,
-                  totalSwitches: 3,
-                  radiusStyle: true,
-                  cornerRadius: 10.0,
-                  labels: const ['Time', 'Course', 'None'],
-                  onToggle: (index) {
-                    if (index != null) {
-                      Settings().set<int>(SettingsKey.eventGroupingType, index);
-                    }
-                  },
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            MorePanelElement(
+              title: Constants.kMorePanelGrouping,
+              icon: const Icon(Icons.view_stream_outlined),
+              extendedView: Padding(
+                padding: const EdgeInsets.only(bottom: 3.0),
+                child: SizedBox(
+                  height: 35,
+                  width: double.infinity,
+                  child: ToggleSwitch(
+                    minWidth: double.infinity,
+                    customTextStyles: [TextStylePresets.body()],
+                    initialLabelIndex: context.settingsValue<int>(
+                            SettingsKey.eventGroupingType) ??
+                        0,
+                    dividerColor: Colors.transparent,
+                    activeBgColor: const [ColorPresets.primary],
+                    activeFgColor: Colors.white,
+                    inactiveBgColor: context.cuckooTheme.secondaryTransBg,
+                    inactiveFgColor: context.cuckooTheme.primaryText,
+                    totalSwitches: 3,
+                    radiusStyle: true,
+                    cornerRadius: 10.0,
+                    labels: const ['Time', 'Course', 'None'],
+                    onToggle: (index) {
+                      if (index != null) {
+                        Settings()
+                            .set<int>(SettingsKey.eventGroupingType, index);
+                      }
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 15.0),
-          MorePanelElement(
-            title: Constants.kMorePanelSync,
-            icon: const Icon(Icons.sync_rounded),
-            action: () {
-              Moodle.fetchEvents(force: true);
-              Navigator.of(context, rootNavigator: true).pop();
-            },
-          ),
-          const SizedBox(height: 15.0),
-          MorePanelElement(
-            title: Constants.kMorePanelAddEvent,
-            icon: const Icon(Icons.add_rounded),
-            action: () {},
-          ),
-        ],
+            const SizedBox(height: 15.0),
+            MorePanelElement(
+              title: Constants.kMorePanelSync,
+              icon: const Icon(Icons.sync_rounded),
+              action: () {
+                Moodle.fetchEvents(force: true);
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+            ),
+            const SizedBox(height: 15.0),
+            MorePanelElement(
+              title: Constants.kMorePanelAddEvent,
+              icon: const Icon(Icons.add_rounded),
+              action: () {},
+            ),
+          ],
+        ),
       ),
     );
   }

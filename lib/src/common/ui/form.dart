@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 
@@ -55,7 +56,7 @@ class _CuckooFormInputWrapper extends StatelessWidget {
     if (input.noWrap) return input;
     return Container(
       padding: input.padding ??
-          const EdgeInsets.symmetric(vertical: 12.0, horizontal: 15.0),
+          const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
       decoration: BoxDecoration(
           color: context.cuckooTheme.secondaryBackground,
           borderRadius: BorderRadius.vertical(
@@ -74,15 +75,33 @@ class CuckooFormSection extends StatelessWidget {
   /// Children of the section.
   final List<CuckooFormInput> children;
 
-  List<Widget> _sectionChildren() {
+  List<Widget> _sectionChildren(BuildContext context) {
+    Widget separator(bool withIcon) {
+      return Container(
+        height: 0.5,
+        width: double.infinity,
+        color: context.cuckooTheme.secondaryBackground,
+        child: SizedBox.expand(
+          child: Container(
+            color: context.cuckooTheme.separator,
+            margin: EdgeInsets.only(left: withIcon ? 50.0 : 16.0),
+          ),
+        ),
+      );
+    }
+
     final colChildren = <Widget>[];
-    for (int i = 0; i < children.length; i++) {
+    children.forEachIndexed((i, child) {
       colChildren.add(_CuckooFormInputWrapper(
-        children[i],
+        child,
         firstInSection: i == 0,
         lastInSection: i == children.length - 1,
       ));
-    }
+      if (i < children.length - 1) {
+        bool withIcon = child.hasIcon & children[i + 1].hasIcon;
+        colChildren.add(separator(withIcon));
+      }
+    });
     return colChildren;
   }
 
@@ -90,7 +109,7 @@ class CuckooFormSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: _sectionChildren(),
+      children: _sectionChildren(context),
     );
   }
 }

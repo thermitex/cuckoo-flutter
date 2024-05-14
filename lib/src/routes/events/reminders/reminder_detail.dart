@@ -1,8 +1,10 @@
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
+import 'package:cuckoo/src/common/services/reminders.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:cuckoo/src/routes/events/reminders/reminder_rule_input.dart';
+import 'package:cuckoo/src/routes/events/reminders/reminder_time_input.dart';
 import 'package:flutter/material.dart';
 
 class ReminderDetailPage extends StatefulWidget {
@@ -18,7 +20,9 @@ class ReminderDetailPage extends StatefulWidget {
 class _ReminderDetailPageState extends State<ReminderDetailPage> {
   final _formKey = GlobalKey<FormState>();
 
+  late bool _isEdit;
   bool _formValid = false;
+  bool _showExactTiming = false;
 
   EventReminder get _reminder => widget.reminder;
 
@@ -43,9 +47,36 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
               initialValue: _reminder.title,
               autofocus: _reminder.title == null,
               validator: (value) =>
-                  (value == null || value.isEmpty) ? '' : null,
-              onSaved: (newValue) => _reminder.title = newValue,
+                  (value == null || value.trim().isEmpty) ? '' : null,
+              onSaved: (newValue) => _reminder.title = newValue!.trim(),
             )
+          ]),
+          separator,
+          // Timing
+          CuckooFormSection(children: [
+            ReminderRelativeTimingInput(
+              initialAmount: _reminder.amount.toInt(),
+              initialUnit: _reminder.unit.toInt(),
+              validator: (value) =>
+                  (value == null || value.amount == null) ? '' : null,
+              onChanged: (value) =>
+                  setState(() => _showExactTiming = value.unit > 2),
+              onSaved: (newValue) {
+                if (newValue == null) return;
+                _reminder.amount = newValue.amount!;
+                _reminder.unit = newValue.unit;
+              },
+            ),
+            if (_showExactTiming)
+              ReminderExactTimingInput(
+                initialHour: _reminder.hour?.toInt(),
+                initialMinute: _reminder.min?.toInt(),
+                onSaved: (newValue) {
+                  if (newValue == null) return;
+                  _reminder.hour = newValue.hour;
+                  _reminder.min = newValue.minute;
+                },
+              )
           ]),
           separator,
           // Rules
@@ -57,10 +88,16 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
               newValue.removeWhere((rule) => rule.pattern.isEmpty);
               _reminder.rules = newValue;
             },
-          )
+          ),
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _isEdit = widget.reminder.title != null;
   }
 
   @override
@@ -80,6 +117,14 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
               onPressed: () {
                 if (_formValid) {
                   _formKey.currentState!.save();
+                  // Remove exact timing if needed
+                  if (_reminder.unit <= 2) {
+                    _reminder.hour = null;
+                    _reminder.min = null;
+                  }
+                  // Save reminder
+                  // Reminders().add(_reminder);
+                  Navigator.of(context).pop();
                 }
               })
         ],
