@@ -98,6 +98,8 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
   void initState() {
     super.initState();
     _isEdit = widget.reminder.title != null;
+    _formValid = _isEdit;
+    _showExactTiming = _isEdit && widget.reminder.unit > 2;
   }
 
   @override
@@ -123,8 +125,13 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
                     _reminder.min = null;
                   }
                   // Save reminder
-                  // Reminders().add(_reminder);
+                  Reminders().add(_reminder);
                   Navigator.of(context).pop();
+                  CuckooToast(Constants.kReminderSavedPrompt,
+                      icon: const Icon(
+                        Icons.check_circle_rounded,
+                        color: ColorPresets.positivePrimary,
+                      )).show(delayInMillisec: 250, haptic: true);
                 }
               })
         ],

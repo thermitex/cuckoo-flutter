@@ -2,6 +2,7 @@ import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/reminders.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
+import 'package:cuckoo/src/models/index.dart';
 import 'package:cuckoo/src/routes/events/reminders/reminder_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,9 +19,12 @@ class _ReminderPageState extends State<ReminderPage> {
   // Transparency of the title.
   double _titleTrans = 0.0;
 
-  final title = Text(
-    Constants.kReminderTitle,
-    style: TextStylePresets.title(size: 30, weight: FontWeight.w600),
+  final title = Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: Text(
+      Constants.kReminderTitle,
+      style: TextStylePresets.title(size: 30, weight: FontWeight.w600),
+    ),
   );
 
   Widget _emptyReminderView() {
@@ -85,6 +89,64 @@ class _ReminderPageState extends State<ReminderPage> {
     );
   }
 
+  Widget _reminderTile(EventReminder reminder) {
+    bool disabled = reminder.disabled ?? false;
+    return GestureDetector(
+      onTap: () => _enterDetailPage(reminder),
+      child: Container(
+        height: 60,
+        padding: const EdgeInsets.all(7.0),
+        margin: const EdgeInsets.only(top: 7.0),
+        decoration: BoxDecoration(
+          color: context.cuckooTheme.secondaryBackground,
+          borderRadius: BorderRadius.circular(17.0),
+        ),
+        child: Row(children: [
+          Container(
+            height: double.infinity,
+            width: 20,
+            decoration: BoxDecoration(
+              color: disabled
+                  ? context.cuckooTheme.tertiaryText
+                  : ColorPresets.primary,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Center(
+              child: Icon(
+                disabled
+                    ? Icons.notifications_off_rounded
+                    : Icons.notifications_rounded,
+                color: Colors.white,
+                size: 18.0,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10.0),
+          Expanded(
+              child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                reminder.title!,
+                style: TextStylePresets.body(size: 15, weight: FontWeight.w600),
+              ),
+              Text(
+                reminder.timingDescription,
+                style: TextStylePresets.body(size: 12)
+                    .copyWith(color: ColorPresets.primary),
+              )
+            ],
+          )),
+          Icon(
+            Icons.chevron_right_rounded,
+            color: context.cuckooTheme.tertiaryText,
+          )
+        ]),
+      ),
+    );
+  }
+
   Widget _reminderListView() {
     return NotificationListener<ScrollNotification>(
       onNotification: (scrollNotification) {
@@ -94,11 +156,15 @@ class _ReminderPageState extends State<ReminderPage> {
         return false;
       },
       child: ListView.builder(
-          itemCount: 2,
+          itemCount: Reminders().numReminders + 2,
           itemBuilder: (context, index) {
             if (index == 0) {
               // Title
               return title;
+            }
+            if (index <= Reminders().numReminders) {
+              // Show reminder tiles
+              return _reminderTile(Reminders().reminderAtIndex(index - 1));
             }
             return _addReminderItem();
           }),
@@ -107,9 +173,13 @@ class _ReminderPageState extends State<ReminderPage> {
 
   /// Start the process of creating a new reminder.
   void _createNewReminder() {
+    _enterDetailPage(Reminders.create());
+  }
+
+  /// Entere detail page of a reminder
+  void _enterDetailPage(EventReminder reminder) {
     Navigator.of(context).push(
-      MaterialPageRoute(
-          builder: (context) => ReminderDetailPage(Reminders.create())),
+      MaterialPageRoute(builder: (context) => ReminderDetailPage(reminder)),
     );
   }
 

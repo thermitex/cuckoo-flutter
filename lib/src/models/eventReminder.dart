@@ -9,7 +9,7 @@ class EventReminder {
   late num id;
   String? title;
   late List<EventReminderRule> rules;
-  late List<num> scheduledNotifications;
+  late List scheduledNotifications;
   late num amount;
   late num unit;
   num? hour;

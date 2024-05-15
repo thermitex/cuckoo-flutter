@@ -1,8 +1,8 @@
 {
-    "id": "uuid",
-    "title": "Reminder Title",
+    "id": 0,
+    "title?": "Reminder Title",
     "rules": "$[]eventReminderRule",
-    "scheduledNotifications": [""],
+    "scheduledNotifications": [0, 1, 2],
     "amount": 30,
     "unit": 1,
     "hour?": 10,

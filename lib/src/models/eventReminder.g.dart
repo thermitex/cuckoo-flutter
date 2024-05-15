@@ -13,7 +13,7 @@ EventReminder _$EventReminderFromJson(Map<String, dynamic> json) =>
       ..rules = (json['rules'] as List<dynamic>)
           .map((e) => EventReminderRule.fromJson(e as Map<String, dynamic>))
           .toList()
-      ..scheduledNotifications = json['scheduledNotifications'] as List<num>
+      ..scheduledNotifications = json['scheduledNotifications'] as List<dynamic>
       ..amount = json['amount'] as num
       ..unit = json['unit'] as num
       ..hour = json['hour'] as num?

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cuckoo/src/common/services/global.dart';
+import 'package:cuckoo/src/models/eventReminder.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,6 +48,12 @@ class Reminders with ChangeNotifier {
   /// If there are no existing reminders.
   bool get isEmpty => _reminders.isEmpty;
 
+  /// Number of reminders.
+  int get numReminders => _reminders.length;
+
+  // Get reminder at a specific index.
+  EventReminder reminderAtIndex(int index) => _reminders[index];
+
   /// Create a new reminder for configuration.
   static EventReminder create() {
     final reminder = EventReminder();
@@ -65,10 +72,13 @@ class Reminders with ChangeNotifier {
     // First check if there is an existing reminder
     final existingReminder = _reminderMap[reminder.id];
     if (existingReminder != null) {
+      final index = _reminders.indexOf(existingReminder);
       _cancelNotification(existingReminder);
       _reminders.remove(existingReminder);
+      _reminders.insert(index, reminder);
+    } else {
+      _reminders.add(reminder);
     }
-    _reminders.add(reminder);
     _scheduleNotification(reminder);
     _remindersChanged();
   }
@@ -146,4 +156,17 @@ class Reminders with ChangeNotifier {
   factory Reminders() => _instance;
 
   static final Reminders _instance = Reminders._internal();
+}
+
+extension EventReminderExtenson on EventReminder {
+  /// Timing description to be shown in reminder list.
+  String get timingDescription {
+    final unitDesc = ['second', 'minute', 'hour', 'day', 'week'];
+    var desc =
+        '$amount ${unitDesc[unit.toInt()]}${amount > 1 ? "s" : ""} before due';
+    if (hour != null && min != null) {
+      desc += ' at $hour:${min.toString().padLeft(2, "0")}';
+    }
+    return desc;
+  }
 }

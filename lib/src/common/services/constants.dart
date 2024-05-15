@@ -49,4 +49,5 @@ class Constants {
       'Reminder will apply to events that does not contain the content, case-insensitive.';
   static const kRuleActionMatchedDesc =
       'Reminder will apply to events that matches the content as a regular expression pattern.';
+  static const kReminderSavedPrompt = 'Reminder Saved';
 }
