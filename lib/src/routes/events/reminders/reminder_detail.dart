@@ -7,6 +7,10 @@ import 'package:cuckoo/src/routes/events/reminders/reminder_rule_input.dart';
 import 'package:cuckoo/src/routes/events/reminders/reminder_time_input.dart';
 import 'package:flutter/material.dart';
 
+/// The detail page of a reminder.
+/// 
+/// Will be pushed into the navigator when tapping on a reminder tile or
+/// creating a new reminder.
 class ReminderDetailPage extends StatefulWidget {
   const ReminderDetailPage(this.reminder, {super.key});
 
@@ -20,12 +24,20 @@ class ReminderDetailPage extends StatefulWidget {
 class _ReminderDetailPageState extends State<ReminderDetailPage> {
   final _formKey = GlobalKey<FormState>();
 
+  /// If the page is open for editing.
   late bool _isEdit;
+
+  /// If the current form has valid data.
   bool _formValid = false;
+
+  /// If the page should show exact timing input.
+  /// Exact timing input should be shown when the unit is days or weeks.
   bool _showExactTiming = false;
 
+  /// The reminder to view/edit.
   EventReminder get _reminder => widget.reminder;
 
+  /// Fields on the reminder detail page.
   Widget _reminderFields() {
     const separator = SizedBox(height: 20.0);
     return Form(
@@ -59,8 +71,8 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
               initialUnit: _reminder.unit.toInt(),
               validator: (value) =>
                   (value == null || value.amount == null) ? '' : null,
-              onChanged: (value) =>
-                  setState(() => _showExactTiming = value.unit > 2),
+              onChanged: (value) => setState(
+                  () => _showExactTiming = value.unit >= ReminderUnit.days),
               onSaved: (newValue) {
                 if (newValue == null) return;
                 _reminder.amount = newValue.amount!;
@@ -99,7 +111,7 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
     super.initState();
     _isEdit = widget.reminder.title != null;
     _formValid = _isEdit;
-    _showExactTiming = _isEdit && widget.reminder.unit > 2;
+    _showExactTiming = _isEdit && widget.reminder.unit >= ReminderUnit.days;
   }
 
   @override
@@ -120,12 +132,13 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
                 if (_formValid) {
                   _formKey.currentState!.save();
                   // Remove exact timing if needed
-                  if (_reminder.unit <= 2) {
+                  if (_reminder.unit < ReminderUnit.days) {
                     _reminder.hour = null;
                     _reminder.min = null;
                   }
                   // Save reminder
                   Reminders().add(_reminder);
+                  // Go back to list page
                   Navigator.of(context).pop();
                   CuckooToast(Constants.kReminderSavedPrompt,
                       icon: const Icon(
