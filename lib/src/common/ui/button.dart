@@ -7,6 +7,7 @@ enum CuckooButtonStyle {
   primary, // Primary actions
   secondary, // Secondary actions
   danger, // Dangerous actions
+  secondaryDanger, // Secondary dangerous actions
 }
 
 /// Size of a `CuckooButton`.
@@ -66,6 +67,11 @@ class CuckooButton extends StatefulWidget {
 class _CuckooButtonState extends State<CuckooButton> {
   double overlayOpacity = 0.0;
 
+  /// If the button is secondary style.
+  bool get _isSecondary =>
+      widget.style == CuckooButtonStyle.secondary ||
+      widget.style == CuckooButtonStyle.secondaryDanger;
+
   /// Get icon size.
   double get _buttonIconSize =>
       {
@@ -105,6 +111,8 @@ class _CuckooButtonState extends State<CuckooButton> {
       CuckooButtonStyle.primary: ColorPresets.primary,
       CuckooButtonStyle.secondary: context.cuckooTheme.secondaryTransBg,
       CuckooButtonStyle.danger: ColorPresets.negativePrimary,
+      CuckooButtonStyle.secondaryDanger:
+          ColorPresets.negativePrimary.withAlpha(context.isDarkMode ? 50 : 25),
     }[widget.style];
     return bgColor ?? ColorPresets.primary;
   }
@@ -116,6 +124,7 @@ class _CuckooButtonState extends State<CuckooButton> {
       CuckooButtonStyle.primary: Colors.white,
       CuckooButtonStyle.secondary: context.cuckooTheme.primaryText,
       CuckooButtonStyle.danger: Colors.white,
+      CuckooButtonStyle.secondaryDanger: ColorPresets.negativePrimary,
     }[widget.style];
     return textColor ?? Colors.white;
   }
@@ -129,7 +138,7 @@ class _CuckooButtonState extends State<CuckooButton> {
         widget.icon!,
         size: _buttonIconSize,
         color: _buttonTextColor(),
-        weight: widget.style == CuckooButtonStyle.secondary ? 400 : 600,
+        weight: _isSecondary ? 400 : 600,
       );
       children.add(iconWidget);
       if (widget.text != null) {
@@ -141,9 +150,7 @@ class _CuckooButtonState extends State<CuckooButton> {
       var textWidget = Text(
         widget.text!,
         style: TextStylePresets.body(size: _buttonTextSize).copyWith(
-          fontWeight: widget.style == CuckooButtonStyle.secondary
-              ? FontWeight.normal
-              : FontWeight.w600,
+          fontWeight: _isSecondary ? FontWeight.normal : FontWeight.w600,
           color: _buttonTextColor(),
         ),
       );

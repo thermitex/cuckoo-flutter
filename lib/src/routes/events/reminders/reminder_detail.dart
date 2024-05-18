@@ -6,6 +6,7 @@ import 'package:cuckoo/src/models/index.dart';
 import 'package:cuckoo/src/routes/events/reminders/reminder_rule_input.dart';
 import 'package:cuckoo/src/routes/events/reminders/reminder_time_input.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 /// The detail page of a reminder.
 ///
@@ -102,6 +103,16 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
             },
           ),
           // Add delete button if in editing mode
+          if (_isEdit) const SizedBox(height: 35.0),
+          if (_isEdit)
+            CuckooButton(
+              text: Constants.kReminderDeleteButton,
+              icon: Symbols.delete_rounded,
+              height: 48.0,
+              style: CuckooButtonStyle.secondaryDanger,
+              action: () {},
+            ),
+          separator
         ],
       ),
     );

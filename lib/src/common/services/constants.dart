@@ -50,4 +50,6 @@ class Constants {
   static const kRuleActionMatchedDesc =
       'Reminder will apply to events that matches the content as a regular expression pattern.';
   static const kReminderSavedPrompt = 'Reminder Saved';
+  static const kReminderDeletedPrompt = 'Reminder Deleted';
+  static const kReminderDeleteButton = 'Delete Reminder';
 }
