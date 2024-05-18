@@ -8,7 +8,7 @@ import 'package:cuckoo/src/routes/events/reminders/reminder_time_input.dart';
 import 'package:flutter/material.dart';
 
 /// The detail page of a reminder.
-/// 
+///
 /// Will be pushed into the navigator when tapping on a reminder tile or
 /// creating a new reminder.
 class ReminderDetailPage extends StatefulWidget {
@@ -101,6 +101,7 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
               _reminder.rules = newValue;
             },
           ),
+          // Add delete button if in editing mode
         ],
       ),
     );

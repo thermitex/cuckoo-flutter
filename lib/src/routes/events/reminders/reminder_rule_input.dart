@@ -141,6 +141,7 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
                     ).show(context).then((index) {
                       if (index != null) {
                         setState(() => rule.subject = index);
+                        if (widget.onChanged != null) widget.onChanged!(_rules);
                       }
                     });
                   },
@@ -166,6 +167,7 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
                     ).show(context).then((index) {
                       if (index != null) {
                         setState(() => rule.action = index);
+                        if (widget.onChanged != null) widget.onChanged!(_rules);
                       }
                     });
                   },

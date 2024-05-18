@@ -152,7 +152,9 @@ class MoodleEventListTile extends StatelessWidget {
       final date = DateFormat.MMMd().format(eventTime);
       final time = DateFormat.Hm().format(eventTime);
       final daysRemaining = (event.remainingTime / 86400).floor().clamp(0, 999);
-      final daysStr = daysRemaining == 0 ? 'Today' : '$daysRemaining days';
+      final daysStr = daysRemaining == 0
+          ? 'Today'
+          : '$daysRemaining day${daysRemaining > 1 ? "s" : ""}';
       switch (style) {
         case DeadlineDisplayStyle.date:
           return date;
