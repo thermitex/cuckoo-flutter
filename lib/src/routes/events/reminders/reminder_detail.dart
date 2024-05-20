@@ -110,7 +110,29 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
               icon: Symbols.delete_rounded,
               height: 48.0,
               style: CuckooButtonStyle.secondaryDanger,
-              action: () {},
+              action: () {
+                const CuckooDialog(
+                    title: Constants.kReminderDeletionDialogText,
+                    buttonTitles: [
+                      Constants.kYes,
+                      Constants.kCancel
+                    ],
+                    buttonStyles: [
+                      CuckooButtonStyle.danger,
+                      CuckooButtonStyle.secondary
+                    ]).show(context).then((index) {
+                  if (index != null && index == 0) {
+                    // Remove reminder and go back
+                    Reminders().remove(_reminder.id);
+                    Navigator.of(context).pop();
+                    CuckooToast(Constants.kReminderDeletedPrompt,
+                        icon: const Icon(
+                          Icons.delete,
+                          color: ColorPresets.negativePrimary,
+                        )).show(delayInMillisec: 250, haptic: true);
+                  }
+                });
+              },
             ),
           separator
         ],

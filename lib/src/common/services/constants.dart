@@ -4,6 +4,8 @@ class Constants {
   static const kCoursesTitle = 'Courses';
   static const kCalendarTitle = 'Calendar';
   static const kReminderTitle = 'Reminders';
+  static const kYes = 'Yes';
+  static const kCancel = 'Cancel';
   static const kEventsRequireLoginPrompt =
       'Hey there, would you mind connecting us to Moodle? Much appreciated.';
   static const kLoginMoodleButton = 'Log in to HKU Moodle';
@@ -52,4 +54,6 @@ class Constants {
   static const kReminderSavedPrompt = 'Reminder Saved';
   static const kReminderDeletedPrompt = 'Reminder Deleted';
   static const kReminderDeleteButton = 'Delete Reminder';
+  static const kReminderDeletionDialogText =
+      'Are you sure to delete this reminder?';
 }
