@@ -1,17 +1,22 @@
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:cuckoo/src/common/services/global.dart';
-import 'package:cuckoo/src/models/eventReminder.dart';
+import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 const String kRemindersStorageKey = 'event_reminders';
 
 /// Unit of the reminder timing.
 class ReminderUnit {
-  static const num second = 0;
-  static const num minute = 1;
+  static const num seconds = 0;
+  static const num minutes = 1;
   static const num hours = 2;
   static const num days = 3;
   static const num weeks = 4;
@@ -21,6 +26,13 @@ class ReminderUnit {
 class ReminderRuleRelation {
   static const num and = 0;
   static const num or = 1;
+}
+
+/// Action of the reminder rule.
+class ReminderRuleAction {
+  static const num contains = 0;
+  static const num doesNotContain = 1;
+  static const num matches = 2;
 }
 
 /// Reminders service for Cuckoo.
@@ -33,6 +45,9 @@ class Reminders with ChangeNotifier {
 
   /// Reminder map.
   late Map<num, EventReminder> _reminderMap;
+
+  /// If timezone has been initialized.
+  bool _tzInited = false;
 
   /// Initialize Settings module.
   ///
@@ -59,11 +74,11 @@ class Reminders with ChangeNotifier {
     final reminder = EventReminder();
     // Supplement necessary information
     reminder
-      ..id = DateTime.now().millisecondsSinceEpoch
+      ..id = DateTime.now().millisecondsSinceEpoch % math.pow(10, 9)
       ..rules = []
       ..scheduledNotifications = []
       ..amount = 30
-      ..unit = ReminderUnit.minute;
+      ..unit = ReminderUnit.minutes;
     return reminder;
   }
 
@@ -142,13 +157,54 @@ class Reminders with ChangeNotifier {
   }
 
   /// Schedule notifications for reminder.
-  void _scheduleNotification(EventReminder reminder) {}
+  Future<void> _scheduleNotification(EventReminder reminder) async {
+    await _initTimezoneIfNeeded();
+    for (final event in Moodle().eventManager.events) {
+      if (!event.expired && reminder.applicableToEvent(event)) {
+        final content = event.course == null
+            ? event.name
+            : '${event.course!.courseCode} ${event.name}';
+        // Check if scheduled time is earlier than now
+        final time = reminder.scheduleTime(event);
+        if (time.isBefore(tz.TZDateTime.now(tz.local))) continue;
+        // Schedule the notification
+        FlutterLocalNotificationsPlugin().zonedSchedule(
+            reminder.id.toInt(),
+            reminder.title!,
+            content,
+            time,
+            const NotificationDetails(
+                android: AndroidNotificationDetails(
+              'reminder_noti',
+              'Reminder notifications',
+              importance: Importance.max,
+              priority: Priority.high,
+            )),
+            uiLocalNotificationDateInterpretation:
+                UILocalNotificationDateInterpretation.absoluteTime);
+      }
+    }
+  }
 
   /// Cancel scheduled notifications for reminder.
-  void _cancelNotification(EventReminder reminder) {}
+  void _cancelNotification(EventReminder reminder) {
+    FlutterLocalNotificationsPlugin().cancel(reminder.id.toInt());
+  }
 
   /// Cancel all scheduled notifications.
-  void _cancelAllNotifications() {}
+  void _cancelAllNotifications() {
+    FlutterLocalNotificationsPlugin().cancelAll();
+  }
+
+  /// Initialize timezone setup if needed.
+  /// This function is lazily called and called once only.
+  Future<void> _initTimezoneIfNeeded() async {
+    if (_tzInited) return;
+    tz.initializeTimeZones();
+    tz.setLocalLocation(
+        tz.getLocation(await FlutterTimezone.getLocalTimezone()));
+    _tzInited = true;
+  }
 
   // Singleton configurations
   Reminders._internal();
@@ -168,5 +224,83 @@ extension EventReminderExtenson on EventReminder {
       desc += ' at $hour:${min.toString().padLeft(2, "0")}';
     }
     return desc;
+  }
+
+  /// If the reminder can be applied to event.
+  bool applicableToEvent(MoodleEvent event) {
+    if (rules.isEmpty) return true;
+    bool? ret;
+    num relation = 0;
+    // Evaluate sequentially
+    for (final rule in rules) {
+      final subject = [
+        event.course?.courseCode,
+        event.course?.fullname,
+        event.name
+      ][rule.subject.toInt()];
+      late bool pass;
+      if (subject == null) {
+        pass = false;
+      } else {
+        final lowerSubject = subject.toLowerCase();
+        final lowerPattern = rule.pattern.toLowerCase();
+        switch (rule.action) {
+          case ReminderRuleAction.contains:
+            pass = lowerSubject.contains(lowerPattern);
+            break;
+          case ReminderRuleAction.doesNotContain:
+            pass = !lowerSubject.contains(lowerPattern);
+            break;
+          case ReminderRuleAction.matches:
+            pass = subject.contains(RegExp(rule.pattern));
+            break;
+          default:
+            pass = false;
+        }
+      }
+      if (ret == null) {
+        ret = pass;
+      } else {
+        if (relation == ReminderRuleRelation.and) {
+          ret &= pass;
+        } else {
+          ret |= pass;
+        }
+      }
+      relation = rule.relationWithNext ?? 0;
+    }
+    return ret!;
+  }
+
+  /// Time to schedule notification of an event.
+  tz.TZDateTime scheduleTime(MoodleEvent event) {
+    var eventTime = tz.TZDateTime.fromMillisecondsSinceEpoch(
+        tz.local, event.timestart.toInt() * 1000);
+    // Consider relative timing
+    switch (unit) {
+      case ReminderUnit.seconds:
+        eventTime = eventTime.add(Duration(seconds: -amount.toInt()));
+        break;
+      case ReminderUnit.minutes:
+        eventTime = eventTime.add(Duration(minutes: -amount.toInt()));
+        break;
+      case ReminderUnit.hours:
+        eventTime = eventTime.add(Duration(hours: -amount.toInt()));
+        break;
+      case ReminderUnit.days:
+        eventTime = eventTime.add(Duration(days: -amount.toInt()));
+        break;
+      case ReminderUnit.weeks:
+        eventTime = eventTime.add(Duration(days: -amount.toInt() * 7));
+        break;
+      default:
+    }
+    // Consider exact timing
+    if (hour != null && min != null) {
+      eventTime = eventTime.add(Duration(
+          hours: hour!.toInt() - eventTime.hour,
+          minutes: min!.toInt() - eventTime.minute));
+    }
+    return eventTime;
   }
 }

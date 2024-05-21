@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
@@ -9,6 +10,7 @@ import 'package:cuckoo/src/routes/calendar/calendar.dart';
 import 'package:cuckoo/src/routes/settings/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
@@ -95,8 +97,27 @@ class RootState extends State<Root> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    // Init custom scheme listener
     _handleIncomingLinks();
+    // Init resume from background observer
     WidgetsBinding.instance.addObserver(this);
+    // Init notifications
+    FlutterLocalNotificationsPlugin().initialize(const InitializationSettings(
+        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        iOS: DarwinInitializationSettings()));
+    // Request permissions for android
+    if (Platform.isAndroid) {
+      final androidPlugin = FlutterLocalNotificationsPlugin()
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+      if (androidPlugin != null) {
+        androidPlugin.requestNotificationsPermission().then((value) {
+          if (value ?? false) {
+            androidPlugin.requestExactAlarmsPermission();
+          }
+        });
+      }
+    }
     super.initState();
   }
 

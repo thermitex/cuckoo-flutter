@@ -270,6 +270,7 @@ class MoodleEventManager with ChangeNotifier {
   void _eventsUpdated({bool notify = true}) {
     _generateEventMap();
     _groupedEventsCache = {};
+    Reminders().rescheduleAll();
     if (notify) notifyListeners();
   }
 
