@@ -153,7 +153,15 @@ class MoodleEventListTile extends StatelessWidget {
       DateTime eventTime = event.time;
       final date = DateFormat.MMMd().format(eventTime);
       final time = DateFormat.Hm().format(eventTime);
-      final daysRemaining = (event.remainingTime / 86400).floor().clamp(0, 999);
+
+      int daysBetween(DateTime from, DateTime to) {
+        from = DateTime(from.year, from.month, from.day);
+        to = DateTime(to.year, to.month, to.day);
+        return (to.difference(from).inHours / 24).round();
+      }
+
+      final daysRemaining =
+          daysBetween(DateTime.now(), eventTime).clamp(0, 999);
       final daysStr = daysRemaining == 0
           ? 'Today'
           : '$daysRemaining day${daysRemaining > 1 ? "s" : ""}';

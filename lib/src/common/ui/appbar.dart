@@ -4,7 +4,7 @@ import 'text.dart';
 
 /// Default height of the app bars.
 const double kCuckooAppBarHeight = 38.0;
-const double kCuckooLargeAppBarHeight = 58.0;
+const double kCuckooLargeAppBarHeight = 55.0;
 
 /// Paddings for the app bars.
 const EdgeInsetsGeometry kCuckooAppBarPadding =
@@ -45,7 +45,7 @@ class CuckooLargeAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget _titleWidget() {
     return Text(
       title,
-      style: TextStylePresets.title(size: 34),
+      style: TextStylePresets.title(size: 32),
     );
   }
 

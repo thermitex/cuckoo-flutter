@@ -1,6 +1,7 @@
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
+import 'package:cuckoo/src/common/services/reminders.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:cuckoo/src/routes/events/create/create.dart';
@@ -180,6 +181,8 @@ class EventDetailView extends StatelessWidget {
     // Set completion
     bool cachedCompletion = event.isCompleted;
     event.completionMark = !cachedCompletion;
+    // Reschedule reminders
+    Reminders().rescheduleAll();
     // Show toast
     CuckooToast(
         cachedCompletion

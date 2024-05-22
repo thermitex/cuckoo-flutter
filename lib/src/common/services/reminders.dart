@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'dart:math' as math;
 
+import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/global.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/models/index.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -74,7 +75,7 @@ class Reminders with ChangeNotifier {
     final reminder = EventReminder();
     // Supplement necessary information
     reminder
-      ..id = DateTime.now().millisecondsSinceEpoch % math.pow(10, 9)
+      ..id = DateTime.now().secondEpoch
       ..rules = []
       ..scheduledNotifications = []
       ..amount = 30
@@ -94,7 +95,7 @@ class Reminders with ChangeNotifier {
     } else {
       _reminders.add(reminder);
     }
-    _scheduleNotification(reminder);
+    await _scheduleNotification(reminder);
     _remindersChanged();
   }
 
@@ -159,8 +160,12 @@ class Reminders with ChangeNotifier {
   /// Schedule notifications for reminder.
   Future<void> _scheduleNotification(EventReminder reminder) async {
     await _initTimezoneIfNeeded();
+    reminder.scheduledNotifications.clear();
+    var notificationId = DateTime.now().secondEpoch;
     for (final event in Moodle().eventManager.events) {
-      if (!event.expired && reminder.applicableToEvent(event)) {
+      if (!event.expired &&
+          !event.isCompleted &&
+          reminder.applicableToEvent(event)) {
         final content = event.course == null
             ? event.name
             : '${event.course!.courseCode} ${event.name}';
@@ -169,7 +174,7 @@ class Reminders with ChangeNotifier {
         if (time.isBefore(tz.TZDateTime.now(tz.local))) continue;
         // Schedule the notification
         FlutterLocalNotificationsPlugin().zonedSchedule(
-            reminder.id.toInt(),
+            notificationId,
             reminder.title!,
             content,
             time,
@@ -182,13 +187,17 @@ class Reminders with ChangeNotifier {
             )),
             uiLocalNotificationDateInterpretation:
                 UILocalNotificationDateInterpretation.absoluteTime);
+        // Add id to reminder
+        reminder.scheduledNotifications.add(notificationId++);
       }
     }
   }
 
   /// Cancel scheduled notifications for reminder.
   void _cancelNotification(EventReminder reminder) {
-    FlutterLocalNotificationsPlugin().cancel(reminder.id.toInt());
+    for (final noti in reminder.scheduledNotifications) {
+      FlutterLocalNotificationsPlugin().cancel(noti);
+    }
   }
 
   /// Cancel all scheduled notifications.
