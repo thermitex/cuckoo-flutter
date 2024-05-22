@@ -122,9 +122,11 @@ class MoodleEventListTile extends StatelessWidget {
   Widget _eventContent(BuildContext context) {
     List<Widget> children = [];
     if (event.course != null) {
-      children.add(Text(event.course!.courseCode,
-          style: TextStylePresets.body(size: 10.5).copyWith(
-              fontWeight: FontWeight.bold, color: _eventTintColor(context))));
+      children
+        ..add(Text(event.course!.courseCode,
+            style: TextStylePresets.body(size: 10.5).copyWith(
+                fontWeight: FontWeight.bold, color: _eventTintColor(context))))
+        ..add(const SizedBox(height: 1.0));
     }
     children.add(Text(event.name,
         maxLines: 1,

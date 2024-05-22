@@ -37,6 +37,7 @@ class CourseSelectionPanel extends StatelessWidget {
   Widget _courseTile(MoodleCourse course, BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pop(course),
+      behavior: HitTestBehavior.translucent,
       child: Container(
         padding: const EdgeInsets.fromLTRB(30, 0, 20, 0),
         height: 65.0,

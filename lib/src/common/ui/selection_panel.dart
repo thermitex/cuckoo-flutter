@@ -82,8 +82,9 @@ class SelectionPanel extends StatelessWidget {
       ]);
 
       children.add(GestureDetector(
-        child: Row(children: rowComps),
+        behavior: HitTestBehavior.translucent,
         onTap: () => Navigator.of(context, rootNavigator: true).pop(index),
+        child: Row(children: rowComps),
       ));
 
       if (index < items.length - 1) {
