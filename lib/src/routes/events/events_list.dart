@@ -213,6 +213,45 @@ class MoodleEventListTile extends StatelessWidget {
     );
   }
 
+  /// Stripes for the custom events.
+  Gradient _customEventGradient(BuildContext context) {
+    const contrast = 0.4; // 0.0 - 1.0
+    const stripeWidth = 0.35; // 0.0 - 1.0
+    Color baseColor = _eventTintColor(context);
+
+    late Color stripeColor;
+    if (event.color == null || event.isCompleted) {
+      stripeColor = context.isDarkMode
+          ? const Color.fromARGB(100, 91, 91, 95)
+          : const Color.fromARGB(80, 187, 187, 191);
+    } else if (context.isDarkMode) {
+      stripeColor = Color.fromARGB(
+          baseColor.alpha,
+          (baseColor.red * (1 - contrast)).round(),
+          (baseColor.green * (1 - contrast)).round(),
+          (baseColor.blue * (1 - contrast)).round());
+    } else {
+      stripeColor = Color.fromARGB(
+          baseColor.alpha,
+          baseColor.red + ((255 - baseColor.red) * contrast).round(),
+          baseColor.green + ((255 - baseColor.green) * contrast).round(),
+          baseColor.blue + ((255 - baseColor.blue) * contrast).round());
+    }
+
+    return LinearGradient(
+      begin: Alignment.topLeft,
+      end: const Alignment(-0.4, -0.8),
+      stops: const [0, 1 - stripeWidth, 1 - stripeWidth, 1],
+      colors: [
+        baseColor,
+        baseColor,
+        stripeColor,
+        stripeColor,
+      ],
+      tileMode: TileMode.repeated,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -232,9 +271,13 @@ class MoodleEventListTile extends StatelessWidget {
                     height: kEventTileHeight - 2 * 8.0,
                     width: 10.0,
                     decoration: BoxDecoration(
-                      color: _eventTintColor(context),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
+                        color: event.eventtype == MoodleEventTypes.custom
+                            ? null
+                            : _eventTintColor(context),
+                        borderRadius: BorderRadius.circular(10.0),
+                        gradient: event.eventtype == MoodleEventTypes.custom
+                            ? _customEventGradient(context)
+                            : null),
                   ),
                   const SizedBox(width: 9.0),
                   _eventContent(context),

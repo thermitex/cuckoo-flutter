@@ -266,6 +266,22 @@ class MoodleEventManager with ChangeNotifier {
     _eventsUpdated(notify: notify);
   }
 
+  /// Add a custom event in the events list.
+  void _addCustomEvent(MoodleEvent event) {
+    // Double check that the event is custom
+    assert(event.eventtype == MoodleEventTypes.custom);
+    // Check if existing
+    _events.removeWhere((e) => e.id == event.id);
+    _events.add(event);
+    _eventsUpdated();
+  }
+
+  /// Remove a custom event from the events list.
+  void _removeCustomEvent(MoodleEvent event) {
+    _events.removeWhere((e) => e.id == event.id);
+    _eventsUpdated();
+  }
+
   /// Event has been updated.
   void _eventsUpdated({bool notify = true}) {
     _generateEventMap();

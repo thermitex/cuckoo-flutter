@@ -85,7 +85,7 @@ class CuckooLargeAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kCuckooLargeAppBarHeight);
+  Size get preferredSize => Size.fromHeight(appBarHeight);
 }
 
 /// Cuckoo standard app bar.
@@ -95,6 +95,7 @@ class CuckooAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CuckooAppBar({
     super.key,
     required this.title,
+    this.appBarHeight = kCuckooAppBarHeight,
     this.titleTransparency = 1.0,
     this.actionItems,
     this.spaceBetweenActionItems = kSpaceBetweenActionItems,
@@ -106,6 +107,9 @@ class CuckooAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   /// Transparency of the title on the app bar.
   final double titleTransparency;
+
+  /// Height of the app bar.
+  final double appBarHeight;
 
   /// App bar's action items.
   final List<CuckooAppBarActionItem>? actionItems;
@@ -175,7 +179,7 @@ class CuckooAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kCuckooAppBarHeight);
+  Size get preferredSize => Size.fromHeight(appBarHeight);
 }
 
 /// Style of the exit button on `CuckooAppBar`.

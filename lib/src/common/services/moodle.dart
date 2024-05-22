@@ -294,9 +294,8 @@ class Moodle {
     // Obtain current timestamp
     var timeStart = DateTime.now().secondEpoch;
     if (kDebugMode) {
-      // Go back 200 days for ease of debugging
-      timeStart =
-          DateTime.now().subtract(const Duration(days: 200)).secondEpoch;
+      // Go back custom days for ease of debugging
+      timeStart = DateTime.now().subtract(const Duration(days: 0)).secondEpoch;
     }
     final response =
         await callFunction(MoodleFunctions.callExternal, subrequests: [
@@ -376,6 +375,22 @@ class Moodle {
       return moodle.courseManager._courseMap[courseId];
     }
     return null;
+  }
+
+  /// Add or update a custom event to the current event list.
+  ///
+  /// Custom events will maintain in the events list after merging.
+  static void addCustomEvent(MoodleEvent event) {
+    final moodle = Moodle();
+    moodle.eventManager._addCustomEvent(event);
+    moodle._save();
+  }
+
+  /// Remove a custom event from the current event list.
+  static void removeCustomEvent(MoodleEvent event) {
+    final moodle = Moodle();
+    moodle.eventManager._removeCustomEvent(event);
+    moodle._save();
   }
 
   // ------------Moodle Web Interfaces------------
@@ -599,9 +614,9 @@ class Moodle {
     // Maintain a list of requests to be fired at once
     var requests = <Future<MoodleFunctionResponse>>[];
     // Fetch event details
-    // First check url fields of all events
-    final eventsToCheck =
-        eventManager._events.where((event) => event.url == null);
+    // First check url fields of all events except custom
+    final eventsToCheck = eventManager._events.where((event) =>
+        event.eventtype != MoodleEventTypes.custom && event.url == null);
     // Add to request list
     for (final event in eventsToCheck) {
       requests.add(_callMoodleFunction(MoodleFunctions.getEventById,
@@ -609,8 +624,10 @@ class Moodle {
     }
     // Fetch completion status
     // Gather courses with outstanding events
-    final coursesToCheck =
-        eventManager._events.map((event) => event.course).toSet();
+    final coursesToCheck = eventManager._events
+        .where((event) => event.eventtype != MoodleEventTypes.custom)
+        .map((event) => event.course)
+        .toSet();
     // Add to request list
     for (final course in coursesToCheck) {
       if (course != null) {

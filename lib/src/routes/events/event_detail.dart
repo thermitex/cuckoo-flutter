@@ -3,6 +3,7 @@ import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
+import 'package:cuckoo/src/routes/events/create/create.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -21,7 +22,9 @@ class EventDetailView extends StatelessWidget {
         children: [
           Text(
             event.course == null
-                ? 'Moodle User Event'
+                ? (event.eventtype == MoodleEventTypes.user
+                    ? 'Moodle User Event'
+                    : 'Custom Event')
                 : event.course!.displayname,
             style: TextStylePresets.body(weight: FontWeight.w600).copyWith(
                 color: event.color == null
@@ -146,12 +149,27 @@ class EventDetailView extends StatelessWidget {
           action: () => _toggleEventCompletion(context),
         ),
         const SizedBox(height: 10.0),
-        CuckooButton(
-          style: CuckooButtonStyle.secondary,
-          text: Constants.kViewActivity,
-          icon: Symbols.open_in_new_rounded,
-          action: () => Moodle.openMoodleUrl(event.url),
-        )
+        if (event.eventtype != MoodleEventTypes.custom)
+          CuckooButton(
+            style: CuckooButtonStyle.secondary,
+            text: Constants.kViewActivity,
+            icon: Symbols.open_in_new_rounded,
+            action: () => Moodle.openMoodleUrl(event.url),
+          )
+        else
+          CuckooButton(
+            style: CuckooButtonStyle.secondary,
+            text: Constants.kEditCustomEvent,
+            icon: Symbols.edit_document_rounded,
+            action: () {
+              Navigator.of(context, rootNavigator: true)
+                ..pop()
+                ..push(MaterialPageRoute(
+                  fullscreenDialog: true,
+                  builder: (context) => CreateEventPage(event),
+                ));
+            },
+          )
       ],
     );
   }

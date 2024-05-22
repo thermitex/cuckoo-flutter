@@ -141,12 +141,28 @@ extension MoodleEventExtension on MoodleEvent {
 
   /// If the event has expired.
   bool get expired => remainingTime < 0;
+
+  /// A blank template for custom event.
+  static MoodleEvent custom() {
+    final event = MoodleEvent();
+    event
+      ..id = DateTime.now().secondEpoch
+      ..name = ''
+      ..description = ''
+      ..timestart = DateTime.now().secondEpoch
+      ..eventtype = MoodleEventTypes.custom
+      ..hascompletion = false;
+    return event;
+  }
 }
 
 /// Shortcuts for Moodle course.
 extension MoodleCourseExtension on MoodleCourse {
   /// Standard ABCDXXXX course code.
   String get courseCode => fullname.split(' ').first;
+
+  /// Course name without course code.
+  String get nameWithoutCode => fullname.split(' ').sublist(1).join(' ');
 
   /// Course assigned color.
   Color get color =>

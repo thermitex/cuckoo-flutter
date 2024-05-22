@@ -6,6 +6,7 @@ class Constants {
   static const kReminderTitle = 'Reminders';
   static const kYes = 'Yes';
   static const kCancel = 'Cancel';
+  static const kOK = 'OK';
   static const kEventsRequireLoginPrompt =
       'Hey there, would you mind connecting us to Moodle? Much appreciated.';
   static const kLoginMoodleButton = 'Log in to HKU Moodle';
@@ -16,6 +17,7 @@ class Constants {
   static const kMarkAsCompleted = 'Mark as Completed';
   static const kUnmarkAsCompleted = 'Unmark as Completed';
   static const kViewActivity = 'Check Event on Moodle';
+  static const kEditCustomEvent = 'Edit Custom Event';
   static const kNoConnectivityErr =
       'It seems that you are not connected to the Internet.';
   static const kNoConnectivityErrDesc =
@@ -53,7 +55,15 @@ class Constants {
       'Reminder will apply to events that matches the content as a regular expression pattern.';
   static const kReminderSavedPrompt = 'Reminder Saved';
   static const kReminderDeletedPrompt = 'Reminder Deleted';
+  static const kCustomEventDeletedPrompt = 'Custom Event Deleted';
   static const kReminderDeleteButton = 'Delete Reminder';
+  static const kCustomEventDeleteButton = 'Delete Custom Event';
   static const kReminderDeletionDialogText =
       'Are you sure to delete this reminder?';
+  static const kCustomEventDeletionDialogText =
+      'Are you sure to delete this custom event?';
+  static const kCustomEventExpiredDialogText =
+      'Cannot create a custom event with due date earlier than now.';
+  static const kCreateEventPageTitle = 'New Custom Event';
+  static const kCustomEventSavedPrompt = 'Custom Event Saved';
 }

@@ -3,6 +3,7 @@ import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
+import 'package:cuckoo/src/routes/events/create/create.dart';
 import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
@@ -64,7 +65,15 @@ class EventsMorePanel extends StatelessWidget {
             MorePanelElement(
               title: Constants.kMorePanelAddEvent,
               icon: const Icon(Icons.add_rounded),
-              action: () {},
+              action: () {
+                Navigator.of(context, rootNavigator: true)
+                  ..pop()
+                  ..push(MaterialPageRoute(
+                    fullscreenDialog: true,
+                    builder: (context) =>
+                        CreateEventPage(MoodleEventExtension.custom()),
+                  ));
+              },
             ),
           ],
         ),

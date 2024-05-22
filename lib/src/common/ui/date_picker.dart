@@ -9,6 +9,7 @@ class TimePickerPanel extends StatelessWidget {
     this.mode = CupertinoDatePickerMode.time,
     this.onChanged,
     this.initialDateTime,
+    this.minimumDate,
   });
 
   /// Mode of the time picker
@@ -19,6 +20,9 @@ class TimePickerPanel extends StatelessWidget {
 
   /// Initial date time chosen.
   final DateTime? initialDateTime;
+
+  /// Minimum date time that can be chosen.
+  final DateTime? minimumDate;
 
   /// Show the date picker panel on current screen.
   void show(BuildContext context) {
@@ -42,7 +46,8 @@ class TimePickerPanel extends StatelessWidget {
           padding: const EdgeInsets.all(20.0),
           child: CupertinoDatePicker(
             initialDateTime: initialDateTime,
-            mode: CupertinoDatePickerMode.time,
+            mode: mode,
+            minimumDate: minimumDate,
             use24hFormat: true,
             onDateTimeChanged: (newTime) {
               if (onChanged != null) onChanged!(newTime);

@@ -40,7 +40,7 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
 
   /// Fields on the reminder detail page.
   Widget _reminderFields() {
-    const separator = SizedBox(height: 20.0);
+    const separator = SizedBox(height: 25.0);
     return Form(
       key: _formKey,
       onChanged: () {
