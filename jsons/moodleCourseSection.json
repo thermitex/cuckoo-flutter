@@ -1,0 +1,11 @@
+{
+    "id": 0,
+    "name": "",
+    "visible": 1,
+    "summary": "",
+    "summaryformat": 1,
+    "section": 0,
+    "hiddenbynumsections": 0,
+    "uservisible?": true,
+    "modules": "$[]moodleCourseModule"
+}

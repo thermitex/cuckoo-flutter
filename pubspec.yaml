@@ -38,6 +38,7 @@ dependencies:
   auto_size_text: ^3.0.0
   flutter_timezone: ^1.0.8
   timezone: ^0.9.3
+  html: ^0.15.4
 
 dev_dependencies:
   json_model: ^1.0.0

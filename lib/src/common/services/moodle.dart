@@ -280,6 +280,43 @@ class Moodle {
     return true;
   }
 
+  /// Get the content of a course as a JSON object.
+  ///
+  /// The function will also record the view of the course, which refreshes the
+  /// last accessed time at Moodle server.
+  static Future<MoodleCourseContent?> getCourseContent(
+      MoodleCourse course) async {
+    final response =
+        await callFunction(MoodleFunctions.callExternal, subrequests: [
+      MoodleFunctionSubrequest(MoodleFunctions.getCourseContents, params: {
+        "courseid": course.id,
+        "options": [
+          {"name": "excludemodules", "value": "0"},
+          {"name": "excludecontents", "value": "1"},
+          {"name": "includestealthmodules", "value": "1"}
+        ]
+      }),
+      // Record course view in the same request
+      MoodleFunctionSubrequest(MoodleFunctions.recordCourseView,
+          params: {"courseid": course.id}),
+    ]);
+    if (response.fail || response.data == null) return null;
+    final data = response.subResponseData<List>(0);
+    if (data == null) return null;
+
+    // Convert returned data to section model
+    MoodleCourseContent? content;
+    try {
+      content = data
+          .map((sec) =>
+              MoodleCourseSection.fromJson(sec as Map<String, dynamic>))
+          .toList();
+    } catch (_) {}
+    // Update last accessed property locally first
+    course.lastaccess = DateTime.now().secondEpoch;
+    return content;
+  }
+
   // ------------Event Interfaces------------
 
   /// Fetch events of the logged in user.

@@ -1,0 +1,20 @@
+{
+    "id": 1,
+    "url?": "",
+    "name": "",
+    "instance?": 1,
+    "contextid?": 1,
+    "description?": "",
+    "visible": 1,
+    "uservisible": true,
+    "visibleoncoursepage?": 1,
+    "modicon?": "",
+    "modname?": "",
+    "modplural?": "",
+    "indent?": 1,
+    "customdata?": "",
+    "downloadcontent?": 1,
+    "dates?": [],
+    "contents?": [],
+    "contentsinfo?": {}
+}

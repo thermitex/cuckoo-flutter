@@ -49,7 +49,7 @@ class _CoursesPageState extends State<CoursesPage> {
           icon: Icon(
             _showFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
             color: ColorPresets.primary,
-            size: 26,
+            size: 28,
           ),
           onPressed: () => _toggleFavorite()),
     ];

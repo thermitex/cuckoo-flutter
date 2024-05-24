@@ -105,8 +105,8 @@ class MoodleCourseManager with ChangeNotifier {
       if (existingCourse != null) {
         course.colorHex = existingCourse.colorHex;
       }
-      course.fullname = course.fullname.replaceAll('&amp;', '&');
-      course.displayname = course.displayname.replaceAll('&amp;', '&');
+      course.fullname = course.fullname.htmlParsed;
+      course.displayname = course.displayname.htmlParsed;
     }
     _courses = courses;
     _generateCourseMap();
@@ -311,7 +311,7 @@ class MoodleEventManager with ChangeNotifier {
         event.name = event.name.replaceAll('is due', '').trim();
       }
       // Deal with strange chars
-      event.name = event.name.replaceAll('&amp;', '&');
+      event.name = event.name.htmlParsed;
       mergedEvents.add(event);
     }
     _events = mergedEvents;

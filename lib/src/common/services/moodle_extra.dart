@@ -1,6 +1,7 @@
 part of 'moodle.dart';
 
 typedef GroupedMoodleEvents = Map<String, List<MoodleEvent>>;
+typedef MoodleCourseContent = List<MoodleCourseSection>;
 
 /// Status of Moodle authentication.
 enum MoodleAuthStatus { ignore, incomplete, fail, success }
@@ -32,6 +33,8 @@ class MoodleFunctions {
   static const getAutoLoginKey = 'tool_mobile_get_autologin_key';
   static const updateCompletionStatus =
       'core_completion_update_activity_completion_status_manually';
+  static const getCourseContents = 'core_course_get_contents';
+  static const recordCourseView = 'core_course_view_course';
 }
 
 /// Types of Moodle events.
@@ -172,4 +175,13 @@ extension MoodleCourseExtension on MoodleCourse {
       HexColor.fromHex(colorHex) ??
       ColorRegistry().colorForCourse(this) ??
       ColorPresets.primary;
+}
+
+/// Shortcuts for Moodle Course Section
+extension MoodleCourseSectionExtension on MoodleCourseSection {
+  /// If a section is empty.
+  bool get isEmpty => summary.isEmpty && modules.isEmpty;
+
+  /// If a section is visible.
+  bool get isVisible => visible == 1 && (uservisible ?? false);
 }
