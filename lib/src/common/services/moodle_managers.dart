@@ -105,6 +105,8 @@ class MoodleCourseManager with ChangeNotifier {
       if (existingCourse != null) {
         course.colorHex = existingCourse.colorHex;
       }
+      course.fullname = course.fullname.replaceAll('&amp;', '&');
+      course.displayname = course.displayname.replaceAll('&amp;', '&');
     }
     _courses = courses;
     _generateCourseMap();
