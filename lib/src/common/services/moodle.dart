@@ -110,6 +110,7 @@ class Moodle {
     if (isUserLoggedIn) {
       moodle._fetchSiteInfo();
       fetchEvents();
+      fetchCourses();
       moodle._updateAutoLoginKey();
     }
   }
@@ -257,19 +258,25 @@ class Moodle {
   static Future<bool> fetchCourses({bool saveNow = true}) async {
     final moodle = Moodle();
     if (!isUserLoggedIn) return false;
+    moodle.courseManager.status = MoodleManagerStatus.updating;
     final response =
         await callFunction(MoodleFunctions.getEnrolledCourses, params: {
       'userid': moodle._userId,
       'returnusercount': 0,
     });
-    if (response.fail) return false;
+    if (response.fail) {
+      moodle.courseManager.status = MoodleManagerStatus.error;
+      return false;
+    }
     try {
       moodle.courseManager.courses =
           (response.data as List).map((e) => MoodleCourse.fromJson(e)).toList();
     } catch (e) {
+      moodle.courseManager.status = MoodleManagerStatus.error;
       return false;
     }
     if (saveNow) moodle._save();
+    moodle.courseManager.status = MoodleManagerStatus.idle;
     return true;
   }
 

@@ -203,7 +203,7 @@ class EventDetailView extends StatelessWidget {
         ? LinearGradient(
             begin: Alignment.topCenter,
             end: const Alignment(0, -0.2),
-            colors: [event.color!.withAlpha(30), Colors.transparent])
+            colors: [event.color!.withAlpha(50), Colors.transparent])
         : null;
 
     return ClipRRect(

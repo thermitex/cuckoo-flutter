@@ -4,12 +4,12 @@ import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
+import 'package:cuckoo/src/common/widgets/login_required.dart';
 import 'package:cuckoo/src/routes/events/events_list.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cuckoo/src/routes/events/more_panel.dart';
 import 'package:cuckoo/src/routes/events/reminders/reminders.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class EventsPage extends StatefulWidget {
@@ -142,43 +142,12 @@ class _EventsPageState extends State<EventsPage> {
     );
   }
 
-  /// Show a view to prompt user for logging in.
-  Widget _loginRequiredView() {
-    return Padding(
-      padding: const EdgeInsets.all(50.0),
-      child: Center(
-          child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 500.0),
-        child: CuckooFullPageView(
-          SvgPicture.asset(
-            'images/illus/page_intro.svg',
-            width: 300,
-            height: 300,
-          ),
-          darkModeImage: SvgPicture.asset(
-            'images/illus/dark/page_intro.svg',
-            width: 300,
-            height: 300,
-          ),
-          message: Constants.kEventsRequireLoginPrompt,
-          buttons: [
-            CuckooButton(
-              text: Constants.kLoginMoodleButton,
-              action: () => Moodle.startAuth(),
-            )
-          ],
-          bottomOffset: 65.0,
-        ),
-      )),
-    );
-  }
-
   /// Build the event page according to the current state.
   Widget _buildEventPage() {
     if (context.loginStatusManager.isUserLoggedIn) {
       return const MoodleEventListView();
     }
-    return _loginRequiredView();
+    return const LoginRequiredView();
   }
 
   @override

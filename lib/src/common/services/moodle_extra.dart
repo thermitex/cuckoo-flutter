@@ -5,8 +5,11 @@ typedef GroupedMoodleEvents = Map<String, List<MoodleEvent>>;
 /// Status of Moodle authentication.
 enum MoodleAuthStatus { ignore, incomplete, fail, success }
 
-/// Moodle events sorting type.
+/// Moodle events grouping type.
 enum MoodleEventGroupingType { byTime, byCourse, none }
+
+/// Moodle courses sorting type.
+enum MoodleCourseSortingType { byCourseCode, byLastAccessed }
 
 /// Moodle storage keys.
 class MoodleStorageKeys {

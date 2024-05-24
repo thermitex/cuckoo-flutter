@@ -34,8 +34,14 @@ class MoodleCourseManager with ChangeNotifier {
   /// Where the courses are stored in memory.
   List<MoodleCourse> _courses = [];
 
+  /// Current manager status.
+  MoodleManagerStatus _status = MoodleManagerStatus.idle;
+
   /// Mapping of courseId -> MoodleCourse for faster access through ID.
   Map<num, MoodleCourse> _courseMap = {};
+
+  /// Cache for holding sorted events.
+  Map<MoodleCourseSortingType, List<MoodleCourse>> _sortedCoursesCache = {};
 
   // ---------------------Context Watch Interfaces Start---------------------
   // ONLY use the methods below when you are interacting with the manager
@@ -46,6 +52,41 @@ class MoodleCourseManager with ChangeNotifier {
   /// Most likely this method doesn't need to be called. Use other interfaces
   /// which are more convenient instead.
   List<MoodleCourse> get courses => _courses;
+
+  /// Get the current status of the course manager.
+  ///
+  /// Used for showing loading indicator / error on the page.
+  MoodleManagerStatus get status => _status;
+
+  /// Sorted courses given a sorting type.
+  List<MoodleCourse> sortedCourses(
+      {MoodleCourseSortingType sortBy = MoodleCourseSortingType.byCourseCode,
+      bool showFavoriteOnly = false}) {
+    late List<MoodleCourse> sortedCourses;
+    if (_sortedCoursesCache[sortBy] != null) {
+      sortedCourses = _sortedCoursesCache[sortBy]!;
+    } else {
+      sortedCourses = _courses.toList();
+
+      if (sortBy == MoodleCourseSortingType.byCourseCode) {
+        sortedCourses.sort((a, b) => a.courseCode.compareTo(b.courseCode));
+      } else if (sortBy == MoodleCourseSortingType.byLastAccessed) {
+        sortedCourses
+            .sort((a, b) => (a.lastaccess ?? -1).compareTo(b.lastaccess ?? -1));
+      } else {
+        throw Exception('Sorting type not recognized.');
+      }
+
+      // Caching
+      _sortedCoursesCache[sortBy] = sortedCourses;
+    }
+    // Filtering
+    if (showFavoriteOnly) {
+      sortedCourses =
+          sortedCourses.where((c) => c.customFavorite ?? false).toList();
+    }
+    return sortedCourses;
+  }
 
   // ----------------------Context Watch Interfaces End----------------------
 
@@ -67,6 +108,14 @@ class MoodleCourseManager with ChangeNotifier {
     }
     _courses = courses;
     _generateCourseMap();
+    _sortedCoursesCache = {};
+    notifyListeners();
+  }
+
+  /// This will be maintained by `Moodle` class ONLY. DO NOT manually set the
+  /// events elsewhere. Any custom rules go to `Moodle` class.
+  set status(MoodleManagerStatus status) {
+    _status = status;
     notifyListeners();
   }
 
@@ -75,6 +124,7 @@ class MoodleCourseManager with ChangeNotifier {
   /// For `Moodle` use ONLY. DO NOT call it elsewhere.
   void _clearAllCourses() {
     _courses = [];
+    _generateCourseMap();
   }
 
   /// Obtain a list containing IDs of all courses.
