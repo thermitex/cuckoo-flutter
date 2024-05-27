@@ -100,10 +100,12 @@ class MoodleCourseManager with ChangeNotifier {
       return;
     }
     // Check existing course map for consistent coloring
+    // and favorite status as well
     for (final course in courses) {
       final existingCourse = _courseMap[course.id];
       if (existingCourse != null) {
         course.colorHex = existingCourse.colorHex;
+        course.customFavorite = existingCourse.customFavorite;
       }
       course.fullname = course.fullname.htmlParsed;
       course.displayname = course.displayname.htmlParsed;
@@ -134,6 +136,11 @@ class MoodleCourseManager with ChangeNotifier {
   /// For `Moodle` use ONLY. DO NOT call it elsewhere.
   List<String> _allCourseIds() {
     return _courses.map((course) => course.id.toString()).toList();
+  }
+
+  /// Manually notify.
+  void _notifyManually() {
+    notifyListeners();
   }
 
   /// Generate course map for faster random access.

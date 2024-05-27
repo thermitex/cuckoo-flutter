@@ -1,6 +1,7 @@
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
+import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/common/widgets/login_required.dart';
 import 'package:cuckoo/src/routes/courses/courses_collection.dart';
@@ -15,13 +16,14 @@ class CoursesPage extends StatefulWidget {
 
 class _CoursesPageState extends State<CoursesPage> {
   /// Show favorite courses only.
-  bool _showFavorite = false;
+  late bool _showFavorite;
 
   /// Build the course page according to the current state.
   Widget _buildCoursePage() {
     if (context.loginStatusManager.isUserLoggedIn) {
       return MoodleCourseCollectionView(
         showFavoriteOnly: _showFavorite,
+        cancelFavoriteAction: () => _toggleFavorite(),
       );
     }
     return const LoginRequiredView();
@@ -30,6 +32,9 @@ class _CoursesPageState extends State<CoursesPage> {
   /// Show only favorite courses.
   void _toggleFavorite() {
     setState(() => _showFavorite = !_showFavorite);
+    Settings().set<bool>(
+        SettingsKey.showFavoriteCoursesByDefault, _showFavorite,
+        notify: false);
   }
 
   /// Action routine for opening "more" panel.
@@ -71,6 +76,13 @@ class _CoursesPageState extends State<CoursesPage> {
           ));
     }
     return actionItems;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _showFavorite =
+        falseSettingsValue(SettingsKey.showFavoriteCoursesByDefault);
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
@@ -32,12 +33,26 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
   /// If error trying to fetch the content.
   bool _contentError = false;
 
-  void _openCourseInBrowser() {}
+  void _openCourseInBrowser() {
+    Moodle.openMoodleUrl(
+        'https://moodle.hku.hk/course/view.php?id=${_course.id}',
+        internal: true);
+  }
 
   void _toggleSetCourseFavorite() {
     bool target = !_isFavoriteCourse;
+    _course.favoriteMark = target;
     // Set local state
     setState(() => _isFavoriteCourse = target);
+    // Show toast
+    CuckooToast(
+        target ? Constants.kSetCourseFavorite : Constants.kUnsetCourseFavorite,
+        icon: Icon(
+          target ? Icons.star_rounded : Icons.star_border_rounded,
+          color: target
+              ? ColorPresets.positivePrimary
+              : ColorPresets.negativePrimary,
+        )).show(delayInMillisec: 200, haptic: true);
   }
 
   CuckooAppBar _pageAppBar() {
@@ -91,7 +106,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
 
   void _requestCourseContent() {
     // Reset states
-    if (_contentReady || _contentError) {
+    if (mounted && (_contentReady || _contentError)) {
       setState(() {
         _contentError = false;
         _contentReady = false;
@@ -99,7 +114,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
     }
     Moodle.getCourseContent(_course).then((content) {
       final isCleanMode =
-          Settings().get<bool>(SettingsKey.onlyShowResourcesInCourses) ?? true;
+          trueSettingsValue(SettingsKey.onlyShowResourcesInCourses);
       if (content != null) {
         // Filter sections
         if (isCleanMode) {
@@ -170,6 +185,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
   void initState() {
     super.initState();
     _requestCourseContent();
+    _isFavoriteCourse = _course.customFavorite ?? false;
   }
 
   @override

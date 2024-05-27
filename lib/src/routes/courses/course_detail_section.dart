@@ -7,6 +7,7 @@ import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -94,6 +95,18 @@ class CourseDetailSection extends StatelessWidget {
             : FontAwesomeIcons.circleQuestion);
   }
 
+  void _moduleAction(MoodleCourseModule module) {
+    // Check if to download content or directly open Moodle url
+    if ((module.downloadcontent ?? 0) > 0 &&
+        module.contentsinfo != null &&
+        module.modname == 'resource') {
+      // Download resource and open
+    } else {
+      // Open url
+      Moodle.openMoodleUrl(module.url, internal: true);
+    }
+  }
+
   List<Widget> _sectionChildren(BuildContext context) {
     final children = [
       _sectionTitle(),
@@ -109,13 +122,17 @@ class CourseDetailSection extends StatelessWidget {
     // Modules
     section.modules.forEachIndexed((index, module) {
       final indent = module.indent?.toInt() ?? 0;
-      children.add(CourseDetailItem(
-        module.name.htmlParsed,
-        indentLevel: indent,
-        icon: FaIcon(
-          _moduleIcon(module),
-          color: context.cuckooTheme.primaryText,
-          size: 20,
+      children.add(GestureDetector(
+        onTap: () => _moduleAction(module),
+        behavior: HitTestBehavior.translucent,
+        child: CourseDetailItem(
+          module.name.htmlParsed,
+          indentLevel: indent,
+          icon: FaIcon(
+            _moduleIcon(module),
+            color: context.cuckooTheme.primaryText,
+            size: 20,
+          ),
         ),
       ));
       if (index < section.modules.length - 1) {

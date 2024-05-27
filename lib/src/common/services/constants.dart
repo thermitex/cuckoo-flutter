@@ -66,4 +66,11 @@ class Constants {
       'Cannot create a custom event with due date earlier than now.';
   static const kCreateEventPageTitle = 'New Custom Event';
   static const kCustomEventSavedPrompt = 'Custom Event Saved';
+  static const kNoCoursesPrompt =
+      'All the courses you have enrolled on Moodle will appear here.';
+  static const kNoFavoriteCoursesPrompt =
+      'Set your courses as favorite and they will appear here.';
+  static const kShowAllCoursesButton = 'Show All Courses';
+  static const kSetCourseFavorite = 'Course Set As Favorite';
+  static const kUnsetCourseFavorite = 'Course Unset As Favorite';
 }

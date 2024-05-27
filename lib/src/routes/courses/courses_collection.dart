@@ -1,10 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
+import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:cuckoo/src/routes/courses/course_detail.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 const double kSpacingBetweenCourseTiles = 18.0;
@@ -14,10 +16,16 @@ const double kCourseTileMaxWidth = 200.0;
 const double kCourseTileMinWidth = 150.0;
 
 class MoodleCourseCollectionView extends StatefulWidget {
-  const MoodleCourseCollectionView({super.key, required this.showFavoriteOnly});
+  const MoodleCourseCollectionView(
+      {super.key,
+      required this.showFavoriteOnly,
+      required this.cancelFavoriteAction});
 
   /// Only show favorite courses.
   final bool showFavoriteOnly;
+
+  /// Cancel favorite action.
+  final Function cancelFavoriteAction;
 
   @override
   State<MoodleCourseCollectionView> createState() =>
@@ -43,6 +51,44 @@ class _MoodleCourseCollectionViewState
     // Subscribe to course changes
     courses = context.courseManager
         .sortedCourses(showFavoriteOnly: widget.showFavoriteOnly);
+
+    if (courses.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(50.0),
+        child: Center(
+            child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 500.0),
+          child: CuckooFullPageView(
+            SvgPicture.asset(
+              widget.showFavoriteOnly
+                  ? 'images/illus/page_look_into.svg'
+                  : 'images/illus/page_enter.svg',
+              width: 300,
+              height: 300,
+            ),
+            darkModeImage: SvgPicture.asset(
+              widget.showFavoriteOnly
+                  ? 'images/illus/dark/page_look_into.svg'
+                  : 'images/illus/dark/page_enter.svg',
+              width: 300,
+              height: 300,
+            ),
+            message: widget.showFavoriteOnly
+                ? Constants.kNoFavoriteCoursesPrompt
+                : Constants.kNoCoursesPrompt,
+            buttons: widget.showFavoriteOnly
+                ? [
+                    CuckooButton(
+                      text: Constants.kShowAllCoursesButton,
+                      action: () => widget.cancelFavoriteAction(),
+                    )
+                  ]
+                : null,
+            bottomOffset: 65.0,
+          ),
+        )),
+      );
+    }
 
     return SingleChildScrollView(
       child: Padding(

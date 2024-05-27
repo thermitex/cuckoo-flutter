@@ -175,6 +175,13 @@ extension MoodleCourseExtension on MoodleCourse {
       HexColor.fromHex(colorHex) ??
       ColorRegistry().colorForCourse(this) ??
       ColorPresets.primary;
+
+  /// Set the course as favorite.
+  set favoriteMark(bool fav) {
+    customFavorite = fav;
+    Moodle().courseManager._notifyManually();
+    Moodle()._save();
+  }
 }
 
 /// Shortcuts for Moodle Course Section

@@ -443,7 +443,8 @@ class Moodle {
   ///
   /// Returns false if [privatetoken] is missing, or failed obtaining
   /// [autoLoginKey] to perform the login.
-  static Future<bool> openMoodleUrl(String? url) async {
+  static Future<bool> openMoodleUrl(String? url,
+      {bool internal = false}) async {
     final moodle = Moodle();
     if (!isUserLoggedIn || url == null) return false;
     // First check if auto login key exists
@@ -462,7 +463,10 @@ class Moodle {
           'key': moodle._autoLoginKey!,
           'urltogo': url
         });
-    return await launchUrl(finalUrl, mode: LaunchMode.externalApplication);
+    return await launchUrl(finalUrl,
+        mode: internal
+            ? LaunchMode.inAppBrowserView
+            : LaunchMode.externalApplication);
   }
 
   // ------------Private Utilities------------
