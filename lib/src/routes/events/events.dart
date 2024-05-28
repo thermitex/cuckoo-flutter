@@ -3,14 +3,17 @@ import 'dart:async';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
+import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/common/widgets/login_required.dart';
+import 'package:cuckoo/src/common/widgets/more_panel.dart';
+import 'package:cuckoo/src/routes/events/create/create.dart';
 import 'package:cuckoo/src/routes/events/events_list.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:cuckoo/src/routes/events/more_panel.dart';
 import 'package:cuckoo/src/routes/events/reminders/reminders.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class EventsPage extends StatefulWidget {
   const EventsPage({super.key});
@@ -137,7 +140,61 @@ class _EventsPageState extends State<EventsPage> {
           borderRadius: BorderRadius.vertical(top: Radius.circular(30.0))),
       backgroundColor: context.cuckooTheme.popUpBackground,
       builder: (context) {
-        return const EventsMorePanel();
+        return MorePanel(children: <MorePanelElement>[
+          MorePanelElement(
+            title: Constants.kMorePanelGrouping,
+            icon: const Icon(Icons.view_stream_outlined),
+            extendedView: Padding(
+              padding: const EdgeInsets.only(bottom: 3.0),
+              child: SizedBox(
+                height: 35,
+                width: double.infinity,
+                child: ToggleSwitch(
+                  minWidth: double.infinity,
+                  customTextStyles: [TextStylePresets.body()],
+                  initialLabelIndex: context
+                          .settingsValue<int>(SettingsKey.eventGroupingType) ??
+                      0,
+                  dividerColor: Colors.transparent,
+                  activeBgColor: const [ColorPresets.primary],
+                  activeFgColor: Colors.white,
+                  inactiveBgColor: context.cuckooTheme.secondaryTransBg,
+                  inactiveFgColor: context.cuckooTheme.primaryText,
+                  totalSwitches: 3,
+                  radiusStyle: true,
+                  cornerRadius: 10.0,
+                  labels: const ['Time', 'Course', 'None'],
+                  onToggle: (index) {
+                    if (index != null) {
+                      Settings().set<int>(SettingsKey.eventGroupingType, index);
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+          MorePanelElement(
+            title: Constants.kMorePanelSync,
+            icon: const Icon(Icons.sync_rounded),
+            action: () {
+              Moodle.fetchEvents(force: true);
+              Navigator.of(context, rootNavigator: true).pop();
+            },
+          ),
+          MorePanelElement(
+            title: Constants.kMorePanelAddEvent,
+            icon: const Icon(Icons.add_rounded),
+            action: () {
+              Navigator.of(context, rootNavigator: true)
+                ..pop()
+                ..push(MaterialPageRoute(
+                  fullscreenDialog: true,
+                  builder: (context) =>
+                      CreateEventPage(MoodleEventExtension.custom()),
+                ));
+            },
+          ),
+        ]);
       },
     );
   }

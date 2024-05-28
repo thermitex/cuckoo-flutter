@@ -11,6 +11,7 @@ bool trueSettingsValue(String key) => Settings().get<bool>(key) ?? true;
 class SettingsKey {
   static const String deadlineDisplay = 'settings_deadline_display';
   static const String eventGroupingType = 'settings_event_grouping';
+  static const String courseSortingType = 'settings_course_sorting';
   static const String onlyShowResourcesInCourses =
       'settings_only_show_resources';
   static const String showFavoriteCoursesByDefault =

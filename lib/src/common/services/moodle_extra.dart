@@ -182,6 +182,12 @@ extension MoodleCourseExtension on MoodleCourse {
     Moodle().courseManager._notifyManually();
     Moodle()._save();
   }
+
+  /// Mark the access to the course.
+  void markAccess() {
+    lastaccess = DateTime.now().secondEpoch;
+    Moodle().courseManager._notifyManually(flushCache: true);
+  }
 }
 
 /// Shortcuts for Moodle Course Section

@@ -33,6 +33,7 @@ class Constants {
   static const kUnmarkCompleteToast = 'Event Unmarked as Completed';
   static const kMoodleUrlOpenLoading = 'Launching Moodle website...';
   static const kMorePanelGrouping = 'Group By';
+  static const kMorePanelSorting = 'Sort By';
   static const kMorePanelSync = 'Sync With Moodle';
   static const kMorePanelAddEvent = 'Add Custom Event';
   static const kAddReminder = 'Add Reminder';

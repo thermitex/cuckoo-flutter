@@ -72,7 +72,7 @@ class MoodleCourseManager with ChangeNotifier {
         sortedCourses.sort((a, b) => a.courseCode.compareTo(b.courseCode));
       } else if (sortBy == MoodleCourseSortingType.byLastAccessed) {
         sortedCourses
-            .sort((a, b) => (a.lastaccess ?? -1).compareTo(b.lastaccess ?? -1));
+            .sort((a, b) => (b.lastaccess ?? -1).compareTo(a.lastaccess ?? -1));
       } else {
         throw Exception('Sorting type not recognized.');
       }
@@ -139,7 +139,8 @@ class MoodleCourseManager with ChangeNotifier {
   }
 
   /// Manually notify.
-  void _notifyManually() {
+  void _notifyManually({bool flushCache = false}) {
+    if (flushCache) _sortedCoursesCache = {};
     notifyListeners();
   }
 
@@ -189,11 +190,11 @@ class MoodleEventManager with ChangeNotifier {
   /// Used for showing loading indicator / error on the page.
   MoodleManagerStatus get status => _status;
 
-  /// Notify all event subscribers to rebuold their views.
+  /// Notify all event subscribers to rebuild their views.
   ///
   /// Used for asking the views to call `groupedEvents` once in order to sync
   /// any possible updates.
-  void rebuildNow() => _notifyManually();
+  void rebuildNow() => _notifyManually(flushCache: true);
 
   /// Grouped events given a grouping type.
   ///
@@ -350,7 +351,8 @@ class MoodleEventManager with ChangeNotifier {
   }
 
   /// Manually notify.
-  void _notifyManually() {
+  void _notifyManually({bool flushCache = false}) {
+    if (flushCache) _groupedEventsCache = {};
     notifyListeners();
   }
 

@@ -4,8 +4,10 @@ import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/common/widgets/login_required.dart';
+import 'package:cuckoo/src/common/widgets/more_panel.dart';
 import 'package:cuckoo/src/routes/courses/courses_collection.dart';
 import 'package:flutter/material.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class CoursesPage extends StatefulWidget {
   const CoursesPage({super.key});
@@ -38,7 +40,60 @@ class _CoursesPageState extends State<CoursesPage> {
   }
 
   /// Action routine for opening "more" panel.
-  void _openMorePanel() {}
+  void _openMorePanel() {
+    showModalBottomSheet<void>(
+      context: context,
+      useRootNavigator: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30.0))),
+      backgroundColor: context.cuckooTheme.popUpBackground,
+      builder: (context) {
+        return MorePanel(children: <MorePanelElement>[
+          MorePanelElement(
+            title: Constants.kMorePanelSorting,
+            icon: const Icon(Icons.sort_rounded),
+            extendedView: Padding(
+              padding: const EdgeInsets.only(bottom: 3.0),
+              child: SizedBox(
+                height: 35,
+                width: double.infinity,
+                child: ToggleSwitch(
+                  minWidth: double.infinity,
+                  customTextStyles: [TextStylePresets.body()],
+                  initialLabelIndex: context
+                          .settingsValue<int>(SettingsKey.courseSortingType) ??
+                      0,
+                  dividerColor: Colors.transparent,
+                  activeBgColor: const [ColorPresets.primary],
+                  activeFgColor: Colors.white,
+                  inactiveBgColor: context.cuckooTheme.secondaryTransBg,
+                  inactiveFgColor: context.cuckooTheme.primaryText,
+                  totalSwitches: 2,
+                  radiusStyle: true,
+                  cornerRadius: 10.0,
+                  labels: const ['Name', 'Last Accessed'],
+                  onToggle: (index) {
+                    if (index != null) {
+                      Settings().set<int>(SettingsKey.courseSortingType, index);
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+          MorePanelElement(
+            title: Constants.kMorePanelSync,
+            icon: const Icon(Icons.sync_rounded),
+            action: () {
+              Moodle.fetchCourses();
+              Navigator.of(context, rootNavigator: true).pop();
+            },
+          ),
+        ]);
+      },
+    );
+  }
 
   /// Build app bar action items.
   List<CuckooAppBarActionItem> _appBarActionItems() {

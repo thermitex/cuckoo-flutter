@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
+import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:cuckoo/src/routes/courses/course_detail.dart';
@@ -49,8 +50,10 @@ class _MoodleCourseCollectionViewState
   @override
   Widget build(BuildContext context) {
     // Subscribe to course changes
-    courses = context.courseManager
-        .sortedCourses(showFavoriteOnly: widget.showFavoriteOnly);
+    courses = context.courseManager.sortedCourses(
+        sortBy: MoodleCourseSortingType.values[
+            context.settingsValue<int>(SettingsKey.courseSortingType) ?? 0],
+        showFavoriteOnly: widget.showFavoriteOnly);
 
     if (courses.isEmpty) {
       return Padding(

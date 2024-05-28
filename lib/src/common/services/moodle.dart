@@ -313,7 +313,7 @@ class Moodle {
           .toList();
     } catch (_) {}
     // Update last accessed property locally first
-    course.lastaccess = DateTime.now().secondEpoch;
+    course.markAccess();
     return content;
   }
 
