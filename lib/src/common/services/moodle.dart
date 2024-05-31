@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/color_registry.dart';
@@ -10,6 +11,7 @@ import 'package:cuckoo/src/models/index.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dio/dio.dart';
@@ -292,7 +294,7 @@ class Moodle {
         "courseid": course.id,
         "options": [
           {"name": "excludemodules", "value": "0"},
-          {"name": "excludecontents", "value": "1"},
+          {"name": "excludecontents", "value": "0"},
           {"name": "includestealthmodules", "value": "1"}
         ]
       }),
@@ -315,6 +317,50 @@ class Moodle {
     // Update last accessed property locally first
     course.markAccess();
     return content;
+  }
+
+  /// Download a file associated with the course module.
+  ///
+  /// Returns the downloaded path if the download is successful and returns null
+  /// otherwise.
+  static Future<String?> downloadModuleFile(MoodleCourseModule module) async {
+    final moodle = Moodle();
+    // First check if module has downloadable file
+    if (!module.hasDownloadableFile) return null;
+    // Parse file Url
+    final fileUrl = module.contents!.first['fileurl'] as String?;
+    final fileName = module.contents!.first['filename'] as String?;
+    if (fileUrl != null && fileName != null && moodle._privatetoken != null) {
+      final downloadPath = (await getTemporaryDirectory()).path + fileName;
+      // First check if the file is already there
+      if (File(downloadPath).existsSync()) return downloadPath;
+      // Prepare url for download
+      var fileUri = Uri.parse(fileUrl);
+      final segs = fileUri.pathSegments.toList();
+      // Update parts
+      // As a mobile app, we are using token to access the file,
+      // so we need to replace the original entry point with tokenpluginfile.php
+      // and pass token as a path parameter
+      segs[0] = 'tokenpluginfile.php';
+      segs[1] = moodle._siteInfo.userprivateaccesskey;
+      // Re-construct url
+      fileUri = fileUri.replace(
+        pathSegments: segs,
+        queryParameters: {'forcedownload': '1', 'offline': '1'},
+      );
+      // Start file download
+      try {
+        await Dio().download(
+          fileUri.toString(),
+          downloadPath,
+        );
+      } catch (_) {
+        return null;
+      }
+      // Return path
+      return downloadPath;
+    }
+    return null;
   }
 
   // ------------Event Interfaces------------

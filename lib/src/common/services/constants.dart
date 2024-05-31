@@ -74,4 +74,5 @@ class Constants {
   static const kShowAllCoursesButton = 'Show All Courses';
   static const kSetCourseFavorite = 'Course Set As Favorite';
   static const kUnsetCourseFavorite = 'Course Unset As Favorite';
+  static const kDownloadFileLoading = 'Downloading file...';
 }

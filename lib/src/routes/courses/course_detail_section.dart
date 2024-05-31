@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
+import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:open_file/open_file.dart';
 
 class CourseDetailSection extends StatelessWidget {
   const CourseDetailSection(this.course, this.section, {super.key});
@@ -97,10 +99,14 @@ class CourseDetailSection extends StatelessWidget {
 
   void _moduleAction(MoodleCourseModule module) {
     // Check if to download content or directly open Moodle url
-    if ((module.downloadcontent ?? 0) > 0 &&
-        module.contentsinfo != null &&
-        module.modname == 'resource') {
+    if (module.hasDownloadableFile) {
       // Download resource and open
+      CuckooFullScreenIndicator()
+          .startLoading(message: Constants.kDownloadFileLoading);
+      Moodle.downloadModuleFile(module).then((path) {
+        if (path != null) OpenFile.open(path);
+        CuckooFullScreenIndicator().stopLoading();
+      });
     } else {
       // Open url
       Moodle.openMoodleUrl(module.url, internal: true);

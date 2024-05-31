@@ -39,6 +39,7 @@ dependencies:
   flutter_timezone: ^1.0.8
   timezone: ^0.9.3
   html: ^0.15.4
+  open_file: ^3.3.2
 
 dev_dependencies:
   json_model: ^1.0.0

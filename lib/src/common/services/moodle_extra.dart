@@ -198,3 +198,13 @@ extension MoodleCourseSectionExtension on MoodleCourseSection {
   /// If a section is visible.
   bool get isVisible => visible == 1 && (uservisible ?? false);
 }
+
+/// Shortcuts for Moodle Module Section
+extension MoodleCourseModuleExtension on MoodleCourseModule {
+  /// If the module is associated with a downloadable file.
+  bool get hasDownloadableFile =>
+      (downloadcontent ?? 0) > 0 &&
+      contents != null &&
+      contentsinfo != null &&
+      modname == 'resource';
+}
