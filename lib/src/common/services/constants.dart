@@ -78,4 +78,26 @@ class Constants {
   static const kEventsClearPrompt =
       'Amazing! There is currently no upcoming events for you.';
   static const kCalendarNoEventsFound = 'No events found for the selected day.';
+  static const kLogOutConfirmation =
+      'Are you sure to sign out current Moodle account?';
+  static const kSettingsGeneral = 'General';
+  static const kSettingsGeneralDefaultTab = 'Default Tab';
+  static const kSettingsGeneralDefaultTabDesc =
+      'The default tab displayed every time Cuckoo is launched.';
+  static const kSettingsGeneralTheme = 'App Theme';
+  static const kSettingsGeneralClearCache = 'Clear Cache';
+  static const kSettingsClearCacheLoading = 'Clearing cached files...';
+  static const kSettingsClearCachePrompt = 'Cache Successfully Cleared';
+  static const kSettingsEventsDeadlineDisplay = 'Deadline Display Format';
+  static const kSettingsEventsDeadlineDisplayDesc =
+      'How deadline is displayed at each row of the events list.';
+  static const kSettingsEventsSyncCompletion = 'Sync Completion Status';
+  static const kSettingsEventsSyncCompletionDesc =
+      'Sync event completion status with Moodle, including fetching status from Moodle and updating status to Moodle.';
+  static const kSettingsEventsGreyOutComleted = 'Grey Out Completed Events';
+  static const kSettingsEventsGreyOutComletedDesc =
+      'When this option is turned on, completed events will be greyed out in the event list with strikethrough.';
+  static const kSettingsEventsDiffCustom = 'Differentiate Custom Events';
+  static const kSettingsEventsDiffCustomDesc =
+      'Add stripes to the custom events on the event list to differentiate them from Moodle events.';
 }

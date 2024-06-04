@@ -58,7 +58,7 @@ class CuckooButton extends StatefulWidget {
   final IconData? icon;
 
   /// Action of the button.
-  final Function? action;
+  final void Function()? action;
 
   @override
   State<CuckooButton> createState() => _CuckooButtonState();

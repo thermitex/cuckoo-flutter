@@ -115,8 +115,11 @@ class MoodleEventListTile extends StatelessWidget {
 
   final bool displayDeadline;
 
+  bool _canShowCompleted(BuildContext context) =>
+      context.settingsValue<bool>(SettingsKey.greyOutCompleted) ?? true;
+
   Color _eventTintColor(BuildContext context) {
-    if (event.isCompleted) {
+    if (event.isCompleted && _canShowCompleted(context)) {
       return context.cuckooTheme.tertiaryText;
     }
     return event.color ?? context.cuckooTheme.tertiaryText;
@@ -136,11 +139,12 @@ class MoodleEventListTile extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         style: TextStylePresets.body(size: 15, weight: FontWeight.normal)
             .copyWith(
-                color: event.isCompleted
+                color: event.isCompleted && _canShowCompleted(context)
                     ? context.cuckooTheme.tertiaryText
                     : context.cuckooTheme.primaryText,
-                decoration:
-                    event.isCompleted ? TextDecoration.lineThrough : null,
+                decoration: event.isCompleted && _canShowCompleted(context)
+                    ? TextDecoration.lineThrough
+                    : null,
                 decorationColor: context.cuckooTheme.tertiaryText)));
     return Expanded(
       child: Column(
@@ -190,7 +194,7 @@ class MoodleEventListTile extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStylePresets.body(size: 11).copyWith(
               fontWeight: FontWeight.w600,
-              color: event.isCompleted
+              color: event.isCompleted && _canShowCompleted(context)
                   ? context.cuckooTheme.tertiaryText
                   : context.cuckooTheme.primaryText,
               height: 1.3),
@@ -226,7 +230,8 @@ class MoodleEventListTile extends StatelessWidget {
     Color baseColor = _eventTintColor(context);
 
     late Color stripeColor;
-    if (event.color == null || event.isCompleted) {
+    if (event.color == null ||
+        (event.isCompleted && _canShowCompleted(context))) {
       stripeColor = context.isDarkMode
           ? const Color.fromARGB(100, 91, 91, 95)
           : const Color.fromARGB(80, 187, 187, 191);
@@ -260,6 +265,8 @@ class MoodleEventListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool canAddStripes =
+        context.settingsValue<bool>(SettingsKey.differentiateCustom) ?? true;
     return SizedBox(
       height: kEventTileHeight,
       child: Padding(
@@ -277,11 +284,13 @@ class MoodleEventListTile extends StatelessWidget {
                     height: kEventTileHeight - 2 * 8.0,
                     width: 10.0,
                     decoration: BoxDecoration(
-                        color: event.eventtype == MoodleEventTypes.custom
+                        color: (event.eventtype == MoodleEventTypes.custom &&
+                                canAddStripes)
                             ? null
                             : _eventTintColor(context),
                         borderRadius: BorderRadius.circular(10.0),
-                        gradient: event.eventtype == MoodleEventTypes.custom
+                        gradient: (event.eventtype == MoodleEventTypes.custom &&
+                                canAddStripes)
                             ? _customEventGradient(context)
                             : null),
                   ),

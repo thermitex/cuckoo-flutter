@@ -4,16 +4,30 @@ import 'package:flutter/material.dart';
 
 class InputSelectorAccessory extends StatelessWidget {
   const InputSelectorAccessory(this.description,
-      {super.key, this.icon, this.onPressed});
+      {super.key,
+      this.icon,
+      this.onPressed,
+      this.backgroundColor,
+      this.fontSize = 12.0,
+      this.borderRadius = 10.0});
 
   /// Icon to the right of the description.
   final IconData? icon;
+
+  /// Background color of the selector.
+  final Color? backgroundColor;
+
+  /// Size of the font.
+  final double fontSize;
+
+  /// Border radius of the container.
+  final double borderRadius;
 
   /// Selector current description.
   final String description;
 
   /// Action after being pressed.
-  final Function? onPressed;
+  final void Function()? onPressed;
 
   List<Widget> _rowChildren() {
     final children = <Widget>[];
@@ -33,7 +47,7 @@ class InputSelectorAccessory extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 0.5),
         child: Text(
           description,
-          style: TextStylePresets.body(size: 12, weight: FontWeight.w500)
+          style: TextStylePresets.body(size: fontSize, weight: FontWeight.w500)
               .copyWith(color: ColorPresets.primary),
         ),
       ),
@@ -55,8 +69,8 @@ class InputSelectorAccessory extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(11.0, 3.5, 8.0, 3.5),
         decoration: BoxDecoration(
-          color: context.cuckooTheme.primaryBackground,
-          borderRadius: BorderRadius.circular(10.0),
+          color: backgroundColor ?? context.cuckooTheme.primaryBackground,
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

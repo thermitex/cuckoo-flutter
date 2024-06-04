@@ -139,7 +139,9 @@ extension MoodleEventExtension on MoodleEvent {
     completed = c;
     Moodle().eventManager._notifyManually(flushCache: true);
     Moodle()._save();
-    Moodle.syncEventCompletion();
+    bool shouldSync =
+        Settings().get<bool>(SettingsKey.syncCompletionStatus) ?? true;
+    if (shouldSync) Moodle.syncEventCompletion();
   }
 
   /// Event associated color.

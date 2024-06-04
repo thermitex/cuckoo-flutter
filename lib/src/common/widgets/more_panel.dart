@@ -41,7 +41,7 @@ class MorePanelElement extends StatelessWidget {
   final String title;
   final Widget icon;
   final Widget? extendedView;
-  final Function? action;
+  final void Function()? action;
 
   Widget _mainView() {
     return Row(

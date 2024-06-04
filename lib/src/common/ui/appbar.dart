@@ -240,5 +240,5 @@ class CuckooAppBarActionItem {
   final EdgeInsetsGeometry backgroundPadding;
 
   /// Routine to be executed when pressed.
-  final Function? onPressed;
+  final void Function()? onPressed;
 }

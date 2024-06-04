@@ -8,8 +8,13 @@ import 'package:provider/provider.dart';
 extension BuildContextExtensions on BuildContext {
   /// Check if dark mode is currently enabled.
   bool get isDarkMode {
-    final brightness = MediaQuery.of(this).platformBrightness;
-    return brightness == Brightness.dark;
+    final theme = settingsValue<int>(SettingsKey.themeMode) ?? 0;
+    if (theme == 0) {
+      final brightness = MediaQuery.of(this).platformBrightness;
+      return brightness == Brightness.dark;
+    } else {
+      return theme == 2;
+    }
   }
 
   /// Shortcut for getting current theme.

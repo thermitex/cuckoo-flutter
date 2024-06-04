@@ -194,7 +194,7 @@ class _ReminderPageState extends State<ReminderPage> {
       ),
       body: SafeArea(
           child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: context.reminders.isEmpty
             ? _emptyReminderView()
             : _reminderListView(),

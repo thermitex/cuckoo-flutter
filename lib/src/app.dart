@@ -1,3 +1,5 @@
+import 'package:cuckoo/src/common/extensions/extensions.dart';
+import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'common/ui/ui.dart';
@@ -18,7 +20,8 @@ class CuckooApp extends StatelessWidget {
       builder: FToastBuilder(),
       theme: CuckooTheme.light,
       darkTheme: CuckooTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode
+          .values[context.settingsValue<int>(SettingsKey.themeMode) ?? 0],
       home: const Root(),
       navigatorKey: navigatorKey,
     );

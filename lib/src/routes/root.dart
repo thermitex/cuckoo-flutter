@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
+import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/routes/events/events.dart';
 import 'package:cuckoo/src/routes/courses/courses.dart';
 import 'package:cuckoo/src/routes/calendar/calendar.dart';
@@ -29,8 +30,7 @@ class Root extends StatefulWidget {
 
 class RootState extends State<Root> with WidgetsBindingObserver {
   /// A controller to be used later in PersistentTabView.
-  final PersistentTabController _controller =
-      PersistentTabController(initialIndex: 0);
+  late final PersistentTabController _controller;
 
   /// Subscription for listening to incoming deep links.
   StreamSubscription? _linkSub;
@@ -97,6 +97,9 @@ class RootState extends State<Root> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    // Set default tab
+    _controller = PersistentTabController(
+        initialIndex: Settings().get<int>(SettingsKey.defaultTab) ?? 0);
     // Init custom scheme listener
     _handleIncomingLinks();
     // Init resume from background observer
@@ -161,16 +164,7 @@ class RootState extends State<Root> with WidgetsBindingObserver {
       ),
       popAllScreensOnTapOfSelectedTab: true,
       popActionScreens: PopActionScreensType.all,
-      itemAnimationProperties: const ItemAnimationProperties(
-        duration: Duration(milliseconds: 200),
-        curve: Curves.ease,
-      ),
-      screenTransitionAnimation: const ScreenTransitionAnimation(
-        animateTabTransition: true,
-        curve: Curves.ease,
-        duration: Duration(milliseconds: 200),
-      ),
-      navBarStyle: NavBarStyle.style9,
+      navBarStyle: NavBarStyle.style5,
     );
   }
 

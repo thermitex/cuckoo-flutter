@@ -176,7 +176,8 @@ class MoodleEventManager with ChangeNotifier {
   final Map<int, double> _workloadCache = {};
 
   /// Cache for holding sorted events.
-  final Map<MoodleEventGroupingType, GroupedMoodleEvents> _groupedEventsCache = {};
+  final Map<MoodleEventGroupingType, GroupedMoodleEvents> _groupedEventsCache =
+      {};
 
   // ---------------------Context Watch Interfaces Start---------------------
   // ONLY use the methods below when you are interacting with the manager

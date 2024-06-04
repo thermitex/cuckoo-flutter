@@ -9,6 +9,7 @@ bool falseSettingsValue(String key) => Settings().get<bool>(key) ?? false;
 bool trueSettingsValue(String key) => Settings().get<bool>(key) ?? true;
 
 class SettingsKey {
+  static const String none = '';
   static const String deadlineDisplay = 'settings_deadline_display';
   static const String eventGroupingType = 'settings_event_grouping';
   static const String courseSortingType = 'settings_course_sorting';
@@ -17,6 +18,11 @@ class SettingsKey {
   static const String showFavoriteCoursesByDefault =
       'settings_show_fav_courses';
   static const String calendarFormat = 'settings_calendar_format';
+  static const String syncCompletionStatus = 'settings_sync_completion';
+  static const String greyOutCompleted = 'settings_grey_out_completed';
+  static const String differentiateCustom = 'settings_differentiate_custom';
+  static const String defaultTab = 'settings_default_tab';
+  static const String themeMode = 'settings_theme_mode';
 }
 
 /// Settings service for Cuckoo.

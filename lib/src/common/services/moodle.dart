@@ -6,6 +6,7 @@ import 'package:cuckoo/src/common/services/color_registry.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/global.dart';
 import 'package:cuckoo/src/common/services/reminders.dart';
+import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:flutter/foundation.dart';
@@ -720,15 +721,19 @@ class Moodle {
     }
     // Fetch completion status
     // Gather courses with outstanding events
-    final coursesToCheck = eventManager._events
-        .where((event) => event.eventtype != MoodleEventTypes.custom)
-        .map((event) => event.course)
-        .toSet();
-    // Add to request list
-    for (final course in coursesToCheck) {
-      if (course != null) {
-        requests.add(_callMoodleFunction(MoodleFunctions.getCompletionStatus,
-            params: {'userid': _userId, 'courseid': course.id}));
+    bool shouldCheckCompletion =
+        Settings().get<bool>(SettingsKey.syncCompletionStatus) ?? true;
+    if (shouldCheckCompletion) {
+      final coursesToCheck = eventManager._events
+          .where((event) => event.eventtype != MoodleEventTypes.custom)
+          .map((event) => event.course)
+          .toSet();
+      // Add to request list
+      for (final course in coursesToCheck) {
+        if (course != null) {
+          requests.add(_callMoodleFunction(MoodleFunctions.getCompletionStatus,
+              params: {'userid': _userId, 'courseid': course.id}));
+        }
       }
     }
     // Fire all requests and listen to reponses

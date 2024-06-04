@@ -70,13 +70,19 @@ class _CalendarPageState extends State<CalendarPage> {
       return Color.lerp(colorStops[i], colorStops[i + 1],
           (wl - i * stopInterval) / stopInterval)!;
     }
+
     Gradient indicatorGradient(DateTime day) {
       final prev = workloadColor(DateTime(day.year, day.month, day.day - 1));
       final curr = workloadColor(day);
       final next = workloadColor(DateTime(day.year, day.month, day.day + 1));
 
       return LinearGradient(
-        colors: [Color.lerp(prev, curr, 0.5)!, curr, curr, Color.lerp(curr, next, 0.5)!],
+        colors: [
+          Color.lerp(prev, curr, 0.5)!,
+          curr,
+          curr,
+          Color.lerp(curr, next, 0.5)!
+        ],
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
         stops: const [0.0, 0.2, 0.8, 1.0],
@@ -249,7 +255,11 @@ class _CalendarPageState extends State<CalendarPage> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.event_available_rounded, color: context.cuckooTheme.tertiaryText, size: 50,),
+                              Icon(
+                                Icons.event_available_rounded,
+                                color: context.cuckooTheme.tertiaryText,
+                                size: 50,
+                              ),
                               const SizedBox(height: 10.0),
                               Text(
                                 Constants.kCalendarNoEventsFound,
