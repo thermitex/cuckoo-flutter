@@ -76,6 +76,7 @@ class _CuckooButtonState extends State<CuckooButton> {
   double get _buttonIconSize =>
       {
         CuckooButtonSize.medium: 22.0,
+        CuckooButtonSize.large: 28.0,
       }[widget.sizeVariant] ??
       22.0;
 

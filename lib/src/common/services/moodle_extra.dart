@@ -137,7 +137,7 @@ extension MoodleEventExtension on MoodleEvent {
   /// Mark event as completed.
   set completionMark(bool c) {
     completed = c;
-    Moodle().eventManager._notifyManually();
+    Moodle().eventManager._notifyManually(flushCache: true);
     Moodle()._save();
     Moodle.syncEventCompletion();
   }

@@ -65,6 +65,7 @@ class CourseDetailSection extends StatelessWidget {
       'quiz': FontAwesomeIcons.scroll,
       'lti': FontAwesomeIcons.puzzlePiece,
       'journal': FontAwesomeIcons.penToSquare,
+      'others': FontAwesomeIcons.circleQuestion,
     };
     // Key transformation
     var key = module.modname ?? 'others';
@@ -77,24 +78,25 @@ class CourseDetailSection extends StatelessWidget {
     // Supplementary checks
     if (icon == null) {
       if (key.startsWith('image')) {
-        icon = FontAwesomeIcons.fileImage;
+        icon = iconMapping['image/jpeg'];
       } else if (key.startsWith('video')) {
-        icon = FontAwesomeIcons.fileVideo;
+        icon = iconMapping['video/mp4'];
       } else if (key.contains('word')) {
-        icon = FontAwesomeIcons.fileWord;
+        icon = iconMapping['application/msword'];
       } else if (key.contains('powerpoint')) {
-        icon = FontAwesomeIcons.filePowerpoint;
+        icon = iconMapping['application/vnd.ms-powerpoint'];
       } else if (key.contains('excel')) {
-        icon = FontAwesomeIcons.fileExcel;
+        icon = iconMapping[
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
       } else if (key.startsWith('text')) {
-        icon = FontAwesomeIcons.fileLines;
+        icon = iconMapping['text/plain'];
       }
     }
     // if (icon == null) print(key);
     return icon ??
         (module.modname == 'resource'
-            ? FontAwesomeIcons.file
-            : FontAwesomeIcons.circleQuestion);
+            ? iconMapping['resource']!
+            : iconMapping['others']!);
   }
 
   void _moduleAction(MoodleCourseModule module) {

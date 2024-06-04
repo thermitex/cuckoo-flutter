@@ -170,10 +170,13 @@ class MoodleEventManager with ChangeNotifier {
   MoodleManagerStatus _status = MoodleManagerStatus.idle;
 
   /// Mapping of eventId -> MoodleEvent for faster access through ID.
-  Map<num, MoodleEvent> _eventMap = {};
+  final Map<num, MoodleEvent> _eventMap = {};
+
+  /// Cache of workload heatmap.
+  final Map<int, double> _workloadCache = {};
 
   /// Cache for holding sorted events.
-  Map<MoodleEventGroupingType, GroupedMoodleEvents> _groupedEventsCache = {};
+  final Map<MoodleEventGroupingType, GroupedMoodleEvents> _groupedEventsCache = {};
 
   // ---------------------Context Watch Interfaces Start---------------------
   // ONLY use the methods below when you are interacting with the manager
@@ -267,6 +270,32 @@ class MoodleEventManager with ChangeNotifier {
     return events;
   }
 
+  /// Obtain events due on a specific date.
+  ///
+  /// Used for displaying events on calendar page.
+  List<MoodleEvent> eventsforDate(DateTime date) =>
+      events.where((event) => isSameDay(event.time, date)).toList();
+
+  /// Obtain a number to evaluate the workload on a specific date.
+  ///
+  /// Used for displaying heatmap on calendar page.
+  double workloadOnDate(DateTime date, {double maxWl = 4}) {
+    final cacheKey = date.year * 366 + date.month * 31 + date.day;
+    var cachedWl = _workloadCache[cacheKey];
+    if (cachedWl != null) return cachedWl;
+
+    double wl = 0;
+    for (final event in events) {
+      final daysLater = date.daysTo(event.time);
+      if (daysLater < 0 || event.isCompleted) continue;
+      if (daysLater > 60) break;
+      wl += 0.2 * (1 / (daysLater + 1)) + 0.8 * (30 - daysLater) / 30;
+    }
+    wl = wl.clamp(0, maxWl);
+    _workloadCache[cacheKey] = wl;
+    return wl;
+  }
+
   // ----------------------Context Watch Interfaces End----------------------
 
   /// Timestamp where events are last updated.
@@ -345,20 +374,24 @@ class MoodleEventManager with ChangeNotifier {
   /// Event has been updated.
   void _eventsUpdated({bool notify = true}) {
     _generateEventMap();
-    _groupedEventsCache = {};
+    _groupedEventsCache.clear();
+    _workloadCache.clear();
     Reminders().rescheduleAll();
     if (notify) notifyListeners();
   }
 
   /// Manually notify.
   void _notifyManually({bool flushCache = false}) {
-    if (flushCache) _groupedEventsCache = {};
+    if (flushCache) {
+      _groupedEventsCache.clear();
+      _workloadCache.clear();
+    }
     notifyListeners();
   }
 
   /// Generate event map for faster random access.
   void _generateEventMap() {
-    _eventMap = {};
+    _eventMap.clear();
     for (final event in _events) {
       _eventMap[event.id] = event;
     }

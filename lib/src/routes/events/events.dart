@@ -12,6 +12,7 @@ import 'package:cuckoo/src/routes/events/events_list.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cuckoo/src/routes/events/reminders/reminders.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
@@ -185,13 +186,8 @@ class _EventsPageState extends State<EventsPage> {
             title: Constants.kMorePanelAddEvent,
             icon: const Icon(Icons.add_rounded),
             action: () {
-              Navigator.of(context, rootNavigator: true)
-                ..pop()
-                ..push(MaterialPageRoute(
-                  fullscreenDialog: true,
-                  builder: (context) =>
-                      CreateEventPage(MoodleEventExtension.custom()),
-                ));
+              Navigator.of(context, rootNavigator: true).pop();
+              _startCreateEvent();
             },
           ),
         ]);
@@ -199,10 +195,61 @@ class _EventsPageState extends State<EventsPage> {
     );
   }
 
+  /// Start creating a new custom event.
+  void _startCreateEvent() {
+    Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+      fullscreenDialog: true,
+      builder: (context) => CreateEventPage(MoodleEventExtension.custom()),
+    ));
+  }
+
   /// Build the event page according to the current state.
   Widget _buildEventPage() {
     if (context.loginStatusManager.isUserLoggedIn) {
-      return const MoodleEventListView();
+      return Stack(
+        children: [
+          if (context.eventManager.events.isNotEmpty)
+            const MoodleEventListView()
+          else
+            Padding(
+              padding: const EdgeInsets.all(50.0),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 500.0),
+                  child: CuckooFullPageView(
+                    SvgPicture.asset(
+                      'images/illus/page_celebrate.svg',
+                      width: 300,
+                      height: 300,
+                    ),
+                    darkModeImage: SvgPicture.asset(
+                      'images/illus/dark/page_celebrate.svg',
+                      width: 300,
+                      height: 300,
+                    ),
+                    message: Constants.kEventsClearPrompt,
+                    bottomOffset: 65.0,
+                  ),
+                ),
+              ),
+            ),
+          // Add event button
+          Positioned(
+            right: 24.0,
+            bottom: 24.0,
+            child: SizedBox(
+              width: 56.0,
+              child: CuckooButton(
+                sizeVariant: CuckooButtonSize.large,
+                height: 56.0,
+                borderRadius: 28.0,
+                icon: Icons.add_rounded,
+                action: () => _startCreateEvent(),
+              ),
+            ),
+          )
+        ],
+      );
     }
     return const LoginRequiredView();
   }

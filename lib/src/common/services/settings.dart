@@ -16,6 +16,7 @@ class SettingsKey {
       'settings_only_show_resources';
   static const String showFavoriteCoursesByDefault =
       'settings_show_fav_courses';
+  static const String calendarFormat = 'settings_calendar_format';
 }
 
 /// Settings service for Cuckoo.

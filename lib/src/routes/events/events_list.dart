@@ -17,7 +17,7 @@ const kEventTileHeight = 60.0;
 const kGapBetweenSections = 5.0;
 const kSidePaddings = 18.0;
 const kEventTileBorderRadius = 12.0;
-const kBottomOffset = 20.0;
+const kBottomOffset = 75.0;
 
 /// Display stye of deadlines on the events page.
 enum DeadlineDisplayStyle {
@@ -108,9 +108,12 @@ class MoodleEventListTile extends StatelessWidget {
   const MoodleEventListTile(
     this.event, {
     super.key,
+    this.displayDeadline = true,
   });
 
   final MoodleEvent event;
+
+  final bool displayDeadline;
 
   Color _eventTintColor(BuildContext context) {
     if (event.isCompleted) {
@@ -154,14 +157,7 @@ class MoodleEventListTile extends StatelessWidget {
       final date = DateFormat.MMMd().format(eventTime);
       final time = DateFormat.Hm().format(eventTime);
 
-      int daysBetween(DateTime from, DateTime to) {
-        from = DateTime(from.year, from.month, from.day);
-        to = DateTime(to.year, to.month, to.day);
-        return (to.difference(from).inHours / 24).round();
-      }
-
-      final daysRemaining =
-          daysBetween(DateTime.now(), eventTime).clamp(0, 999);
+      final daysRemaining = DateTime.now().daysTo(eventTime).clamp(0, 999);
       final daysStr = daysRemaining == 0
           ? 'Today'
           : '$daysRemaining day${daysRemaining > 1 ? "s" : ""}';
@@ -292,7 +288,7 @@ class MoodleEventListTile extends StatelessWidget {
                   const SizedBox(width: 9.0),
                   _eventContent(context),
                   const SizedBox(width: 9.0),
-                  _eventDeadline(context)
+                  if (displayDeadline) _eventDeadline(context)
                 ],
               ),
             ),
