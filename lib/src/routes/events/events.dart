@@ -9,11 +9,9 @@ import 'package:cuckoo/src/common/widgets/login_required.dart';
 import 'package:cuckoo/src/common/widgets/more_panel.dart';
 import 'package:cuckoo/src/routes/events/create/create.dart';
 import 'package:cuckoo/src/routes/events/events_list.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cuckoo/src/routes/events/reminders/reminders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class EventsPage extends StatefulWidget {
@@ -71,7 +69,7 @@ class _EventsPageState extends State<EventsPage> {
                 Icons.warning_rounded,
                 color: ColorPresets.negativePrimary,
               ),
-              onPressed: () => _showErrorDetails()));
+              onPressed: () => showMoodleConnectionErrorDetails(context)));
     }
     return actionItems;
   }
@@ -82,53 +80,6 @@ class _EventsPageState extends State<EventsPage> {
       fullscreenDialog: true,
       builder: (context) => const ReminderPage(),
     ));
-  }
-
-  /// Action routine for error.
-  void _showErrorDetails() async {
-    final connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult.contains(ConnectivityResult.none) && mounted) {
-      // No internet connection
-      ErrorPanel(
-        title: Constants.kNoConnectivityErr,
-        description: Constants.kNoConnectivityErrDesc,
-        buttons: [
-          CuckooButton(
-            text: Constants.kTryAgain,
-            icon: Symbols.refresh_rounded,
-            action: () {
-              Navigator.of(context, rootNavigator: true).pop();
-              Moodle.fetchEvents(force: true);
-            },
-          )
-        ],
-      ).show(context);
-    } else if (mounted) {
-      // Invalid session / connected but no internet
-      ErrorPanel(
-        title: Constants.kSessionInvalidErr,
-        description: Constants.kSessionInvalidErrDesc,
-        buttons: [
-          CuckooButton(
-            text: Constants.kLoginMoodleButton,
-            icon: Symbols.login_rounded,
-            action: () {
-              Navigator.of(context, rootNavigator: true).pop();
-              Moodle.startAuth(force: true);
-            },
-          ),
-          CuckooButton(
-            text: Constants.kTryAgain,
-            icon: Symbols.refresh_rounded,
-            style: CuckooButtonStyle.secondary,
-            action: () {
-              Navigator.of(context, rootNavigator: true).pop();
-              Moodle.fetchEvents(force: true);
-            },
-          )
-        ],
-      ).show(context);
-    }
   }
 
   /// Action routine for opening "more" panel.

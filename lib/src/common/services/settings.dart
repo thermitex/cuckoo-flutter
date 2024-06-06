@@ -23,6 +23,11 @@ class SettingsKey {
   static const String differentiateCustom = 'settings_differentiate_custom';
   static const String defaultTab = 'settings_default_tab';
   static const String themeMode = 'settings_theme_mode';
+  static const String openResourceInBrowser = 'settings_open_res_in_browser';
+  static const String showWorkloadIndicator = 'settings_show_wl_indicator';
+  static const String reminderIgnoreCompleted =
+      'settings_reminder_ignore_completed';
+  static const String reminderIgnoreCustom = 'settings_reminder_ignore_custom';
 }
 
 /// Settings service for Cuckoo.

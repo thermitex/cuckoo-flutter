@@ -91,6 +91,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
     LayoutBuilder calendarDayBuilder(DateTime day,
         {Color? color, TextStyle? textStyle, bool showIndicator = true}) {
+      bool canShowIndicator =
+          Settings().get<bool>(SettingsKey.showWorkloadIndicator) ?? true;
       bool isFirst = day.day == 1;
       bool isLast = DateTime(day.year, day.month, day.day + 1).day == 1;
       return LayoutBuilder(builder: (context, constraints) {
@@ -107,7 +109,7 @@ class _CalendarPageState extends State<CalendarPage> {
               ),
             ),
           ),
-          if (showIndicator)
+          if (showIndicator && canShowIndicator)
             Positioned(
               bottom: 0.0,
               child: Container(

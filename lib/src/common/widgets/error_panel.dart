@@ -1,8 +1,12 @@
 import 'dart:math';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
+import 'package:cuckoo/src/common/services/constants.dart';
+import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class ErrorPanel extends StatelessWidget {
   const ErrorPanel(
@@ -77,5 +81,54 @@ class ErrorPanel extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// Show standard error details of moodle connection.
+void showMoodleConnectionErrorDetails(BuildContext context) async {
+  final connectivityResult = await Connectivity().checkConnectivity();
+  if (connectivityResult.contains(ConnectivityResult.none)) {
+    // No internet connection
+    ErrorPanel(
+      title: Constants.kNoConnectivityErr,
+      description: Constants.kNoConnectivityErrDesc,
+      buttons: [
+        CuckooButton(
+          text: Constants.kTryAgain,
+          icon: Symbols.refresh_rounded,
+          action: () {
+            Navigator.of(context, rootNavigator: true).pop();
+            Moodle.fetchEvents(force: true);
+          },
+        )
+      ],
+      // ignore: use_build_context_synchronously
+    ).show(context);
+  } else {
+    // Invalid session / connected but no internet
+    ErrorPanel(
+      title: Constants.kSessionInvalidErr,
+      description: Constants.kSessionInvalidErrDesc,
+      buttons: [
+        CuckooButton(
+          text: Constants.kLoginMoodleButton,
+          icon: Symbols.login_rounded,
+          action: () {
+            Navigator.of(context, rootNavigator: true).pop();
+            Moodle.startAuth(force: true);
+          },
+        ),
+        CuckooButton(
+          text: Constants.kTryAgain,
+          icon: Symbols.refresh_rounded,
+          style: CuckooButtonStyle.secondary,
+          action: () {
+            Navigator.of(context, rootNavigator: true).pop();
+            Moodle.fetchEvents(force: true);
+          },
+        )
+      ],
+      // ignore: use_build_context_synchronously
+    ).show(context);
   }
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/global.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
+import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -161,11 +162,10 @@ class Reminders with ChangeNotifier {
   Future<void> _scheduleNotification(EventReminder reminder) async {
     await _initTimezoneIfNeeded();
     reminder.scheduledNotifications.clear();
-    var notificationId = DateTime.now().secondEpoch;
+    var notificationId =
+        (DateTime.now().secondEpoch + reminder.hashCode) & ((1 << 31) - 1);
     for (final event in Moodle().eventManager.events) {
-      if (!event.expired &&
-          !event.isCompleted &&
-          reminder.applicableToEvent(event)) {
+      if (reminder.applicableToEvent(event)) {
         final content = event.course == null
             ? event.name
             : '${event.course!.courseCode} ${event.name}';
@@ -278,7 +278,18 @@ extension EventReminderExtenson on EventReminder {
       }
       relation = rule.relationWithNext ?? 0;
     }
-    return ret!;
+    bool r = ret!;
+    // Event can't expire
+    r &= !event.expired;
+    // Ignore completed if required
+    if (Settings().get<bool>(SettingsKey.reminderIgnoreCompleted) ?? true) {
+      r &= !event.isCompleted;
+    }
+    // Ignore custom if required
+    if (Settings().get<bool>(SettingsKey.reminderIgnoreCustom) ?? false) {
+      r &= event.eventtype != MoodleEventTypes.custom;
+    }
+    return r;
   }
 
   /// Time to schedule notification of an event.

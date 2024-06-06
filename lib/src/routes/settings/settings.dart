@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
+import 'package:cuckoo/src/common/services/reminders.dart';
 import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
+import 'package:cuckoo/src/routes/settings/settings_account.dart';
 import 'package:cuckoo/src/routes/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
@@ -14,6 +16,84 @@ import 'settings_topbar.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
+
+  Widget _moodleAccountBar(BuildContext context) {
+    Widget accessory() {
+      if (context.loginStatusManager.isUserLoggedIn) {
+        if (context.eventManager.status == MoodleManagerStatus.idle) {
+          return const Icon(
+            Icons.check_circle_rounded,
+            color: ColorPresets.positivePrimary,
+          );
+        } else if (context.eventManager.status ==
+            MoodleManagerStatus.updating) {
+          return Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: SizedBox(
+              height: 20,
+              width: 20,
+              child: Center(
+                  child: CircularProgressIndicator(
+                color: context.cuckooTheme.quaternaryText,
+                strokeWidth: 3.0,
+              )),
+            ),
+          );
+        } else if (context.eventManager.status == MoodleManagerStatus.error) {
+          return const Icon(
+            Icons.warning_rounded,
+            color: ColorPresets.negativePrimary,
+          );
+        }
+      }
+      return Icon(
+        Icons.login_rounded,
+        color: context.cuckooTheme.secondaryText,
+      );
+    }
+
+    void accountAction() {
+      if (Moodle().loginStatusManager.isUserLoggedIn) {
+        if (Moodle().eventManager.status == MoodleManagerStatus.idle) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => const SettingsAccountPage()),
+          );
+        } else if (Moodle().eventManager.status == MoodleManagerStatus.error) {
+          showMoodleConnectionErrorDetails(context);
+        }
+      }
+      Moodle.startAuth();
+    }
+
+    return GestureDetector(
+      onTap: () => accountAction(),
+      behavior: HitTestBehavior.translucent,
+      child: Container(
+        height: 65.0,
+        decoration: BoxDecoration(
+          color: context.cuckooTheme.secondaryBackground,
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 22.0),
+          child: Row(
+            children: [
+              Expanded(
+                  child: Text(
+                context.loginStatusManager.isUserLoggedIn
+                    ? 'Moodle Account'
+                    : Constants.kLoginMoodleButton,
+                style:
+                    TextStylePresets.body(size: 15.0, weight: FontWeight.w600),
+              )),
+              accessory()
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +106,9 @@ class SettingsPage extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(height: 8.0),
+              _moodleAccountBar(context),
+              const SizedBox(height: 15.0),
               SettingsFirstLevelMenuItem(
                   icon: Symbols.settings_rounded,
                   text: Constants.kSettingsGeneral,
@@ -113,15 +196,44 @@ class SettingsPage extends StatelessWidget {
               ),
               SettingsFirstLevelMenuItem(
                 icon: Symbols.notifications_rounded,
-                text: 'Reminders',
+                text: Constants.kReminderTitle,
+                page: SettingsDetailPage(Constants.kReminderTitle, items: [
+                  SettingsItem(SettingsKey.reminderIgnoreCompleted,
+                      label: Constants.kSettingsReminderIgnoreCompleted,
+                      description:
+                          Constants.kSettingsReminderIgnoreCompletedDesc,
+                      defaultValue: true,
+                      onChanged: (_) => Reminders().rescheduleAll()),
+                  SettingsItem(SettingsKey.reminderIgnoreCustom,
+                      label: Constants.kSettingsReminderIgnoreCustom,
+                      description: Constants.kSettingsReminderIgnoreCustomDesc,
+                      defaultValue: false,
+                      onChanged: (_) => Reminders().rescheduleAll()),
+                ]),
               ),
-              SettingsFirstLevelMenuItem(
+              const SettingsFirstLevelMenuItem(
                 icon: Symbols.school_rounded,
-                text: 'Courses',
+                text: Constants.kCoursesTitle,
+                page: SettingsDetailPage(Constants.kCoursesTitle, items: [
+                  SettingsItem(SettingsKey.onlyShowResourcesInCourses,
+                      label: Constants.kSettingsCoursesOnlyResources,
+                      description: Constants.kSettingsCoursesOnlyResourcesDesc,
+                      defaultValue: true),
+                  SettingsItem(SettingsKey.openResourceInBrowser,
+                      label: Constants.kSettingsCoursesOpenInBrowser,
+                      description: Constants.kSettingsCoursesOpenInBrowserDesc,
+                      defaultValue: false),
+                ]),
               ),
-              SettingsFirstLevelMenuItem(
+              const SettingsFirstLevelMenuItem(
                 icon: Symbols.calendar_month_rounded,
-                text: 'Calendar',
+                text: Constants.kCalendarTitle,
+                page: SettingsDetailPage(Constants.kCalendarTitle, items: [
+                  SettingsItem(SettingsKey.showWorkloadIndicator,
+                      label: Constants.kSettingsCalendarShowWorkload,
+                      description: Constants.kSettingsCalendarShowWorkloadDesc,
+                      defaultValue: true),
+                ]),
               ),
               SettingsFirstLevelMenuItem(
                 icon: Symbols.info_rounded,

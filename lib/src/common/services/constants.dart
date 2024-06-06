@@ -100,4 +100,24 @@ class Constants {
   static const kSettingsEventsDiffCustom = 'Differentiate Custom Events';
   static const kSettingsEventsDiffCustomDesc =
       'Add stripes to the custom events on the event list to differentiate them from Moodle events.';
+  static const kSettingsCoursesOnlyResources = 'Only Display Resources';
+  static const kSettingsCoursesOnlyResourcesDesc =
+      'When this option is turned on, course detail page will only display course resources and hide other texts to avoid unexpected layout caused by rendering formatted content.';
+  static const kSettingsCoursesOpenInBrowser =
+      'Open Resource Modules in Browser';
+  static const kSettingsCoursesOpenInBrowserDesc =
+      'For course modules associated with a file, open the module in browser instead of directly download the associated file.';
+  static const kSettingsCalendarShowWorkload = 'Show Workload Indicator';
+  static const kSettingsCalendarShowWorkloadDesc =
+      'Show workload indicator below each date in the calendar, where green represents lighter workload and red represents heavier workload.';
+  static const kSettingsReminderIgnoreCompleted = 'Ignore Completed Events';
+  static const kSettingsReminderIgnoreCompletedDesc =
+      'When this option is turned on, reminders will not apply to events that are marked as completed.';
+  static const kSettingsReminderIgnoreCustom = 'Ignore Custom Events';
+  static const kSettingsReminderIgnoreCustomDesc =
+      'When this option is turned on, reminders will not apply to custom events.';
+  static const kSettingsAccountTitle =
+      'You have successfully connected Cuckoo with Moodle.';
+  static const kSettingsAccountDesc =
+      'Cuckoo\'s connection with Moodle is safe and follows the standard procedure of service communication, without scraping or saving cookies from browser. ';
 }

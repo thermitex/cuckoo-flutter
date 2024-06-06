@@ -512,10 +512,14 @@ class Moodle {
           'key': moodle._autoLoginKey!,
           'urltogo': url
         });
-    return await launchUrl(finalUrl,
-        mode: internal
-            ? LaunchMode.inAppBrowserView
-            : LaunchMode.externalApplication);
+    try {
+      return await launchUrl(finalUrl,
+          mode: internal
+              ? LaunchMode.inAppBrowserView
+              : LaunchMode.externalApplication);
+    } catch (_) {
+      return false;
+    }
   }
 
   // ------------Private Utilities------------
@@ -781,7 +785,12 @@ class Moodle {
       if (!ignoreFail) throw Exception();
       return;
     }
-    _siteInfo = MoodleSiteInfo.fromJson(response.data!);
+    try {
+      _siteInfo = MoodleSiteInfo.fromJson(response.data!);
+    } catch (_) {
+      if (!ignoreFail) throw Exception();
+      return;
+    }
     if (saveNow) _save();
   }
 

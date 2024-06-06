@@ -101,7 +101,8 @@ class CourseDetailSection extends StatelessWidget {
 
   void _moduleAction(MoodleCourseModule module) {
     // Check if to download content or directly open Moodle url
-    if (module.hasDownloadableFile) {
+    if (module.hasDownloadableFile &&
+        !(Settings().get<bool>(SettingsKey.openResourceInBrowser) ?? false)) {
       // Download resource and open
       CuckooFullScreenIndicator()
           .startLoading(message: Constants.kDownloadFileLoading);

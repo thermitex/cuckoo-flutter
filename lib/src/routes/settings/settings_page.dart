@@ -79,7 +79,8 @@ class SettingsItem extends StatefulWidget {
       this.defaultValue,
       this.description,
       this.choiceNames,
-      this.action});
+      this.action,
+      this.onChanged});
 
   final SettingsItemType type;
 
@@ -94,6 +95,8 @@ class SettingsItem extends StatefulWidget {
   final List<String>? choiceNames;
 
   final void Function()? action;
+
+  final ValueChanged? onChanged;
 
   @override
   State<SettingsItem> createState() => _SettingsItemState();
@@ -135,9 +138,11 @@ class _SettingsItemState extends State<SettingsItem> {
                     Switch.adaptive(
                       value: _value,
                       activeColor: ColorPresets.primary,
+                      inactiveTrackColor: context.cuckooTheme.tertiaryBackground,
                       onChanged: (value) {
                         Settings().set<bool>(widget.settingsKey, value);
                         setState(() => _value = value);
+                        widget.onChanged?.call(_value);
                       },
                     )
                   else if (widget.type == SettingsItemType.choice)
@@ -158,6 +163,7 @@ class _SettingsItemState extends State<SettingsItem> {
                           if (index != null) {
                             Settings().set<int>(widget.settingsKey, index);
                             setState(() => _value = index);
+                            widget.onChanged?.call(_value);
                           }
                         });
                       },
