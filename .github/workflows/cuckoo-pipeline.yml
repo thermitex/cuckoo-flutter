@@ -22,4 +22,4 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
       - name: Build iOS
-        run: flutter build ios --debug
+        run: flutter build ios --release --no-codesign
