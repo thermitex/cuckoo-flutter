@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  Build-Flutter-Project:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
@@ -18,7 +18,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.19.0
+          flutter-version: 3.22.2
       - run: flutter --version
       - run: flutter pub get
       - run: flutter test
