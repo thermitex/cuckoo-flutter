@@ -19,7 +19,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: 3.22.2
-      - run: flutter --version
-      - run: flutter pub get
-      # Build iOS
-      - run: flutter build ios --release --no-codesign
+      - name: Get dependencies
+        run: flutter pub get
+      - name: Build App Bundle
+        run: flutter build appbundle
