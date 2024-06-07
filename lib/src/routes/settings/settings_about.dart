@@ -20,11 +20,8 @@ class SettingsAboutPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SvgPicture.asset(
-            'images/illus/cuckoo_logo.svg',
-              width: 70,
-              height: 70
-          ),
+          SvgPicture.asset('images/illus/cuckoo_logo.svg',
+              width: 70, height: 70),
           const SizedBox(height: 6.0),
           Text(
             'Cuckoo',
@@ -147,10 +144,9 @@ class SettingsAboutPage extends StatelessWidget {
                   color: const Color.fromARGB(255, 88, 101, 242),
                   backgroundColor: const Color.fromARGB(255, 88, 101, 242)
                       .withAlpha(context.isDarkMode ? 50 : 25),
-                  content: Text(
-                    Constants.kAboutDiscordContent,
-                    style: TextStylePresets.body(size: 12.5).copyWith(height: 1.4)
-                  ),
+                  content: Text(Constants.kAboutDiscordContent,
+                      style: TextStylePresets.body(size: 12.5)
+                          .copyWith(height: 1.4)),
                   action: () => launchUrlString(Constants.kAboutDiscordUrl),
                 ),
                 const SizedBox(height: 18),

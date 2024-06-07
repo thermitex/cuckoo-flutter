@@ -5,33 +5,33 @@
   ],
   "products" : [
     {
-      "displayPrice" : "14.99",
-      "familyShareable" : false,
-      "internalID" : "6504077525",
-      "localizations" : [
-        {
-          "description" : "Giant thanks to the developers!",
-          "displayName" : "Cuckoo - Giant Tip",
-          "locale" : "en_US"
-        }
-      ],
-      "productID" : "cuckoo.giant.tip",
-      "referenceName" : "Cuckoo - Giant Tip",
-      "type" : "Consumable"
-    },
-    {
       "displayPrice" : "9.99",
       "familyShareable" : false,
       "internalID" : "6504077692",
       "localizations" : [
         {
-          "description" : "Large thanks to the developers",
-          "displayName" : "Cuckoo - Large Tip",
+          "description" : "Generous thanks to the developers",
+          "displayName" : "Generous Tip",
           "locale" : "en_US"
         }
       ],
       "productID" : "cuckoo.large.tip",
-      "referenceName" : "Cuckoo - Large Tip",
+      "referenceName" : "Generous Tip",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "14.99",
+      "familyShareable" : false,
+      "internalID" : "6504077525",
+      "localizations" : [
+        {
+          "description" : "Huge thanks to the developers!",
+          "displayName" : "Huge Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "cuckoo.giant.tip",
+      "referenceName" : "Huge Tip",
       "type" : "Consumable"
     },
     {
@@ -41,12 +41,12 @@
       "localizations" : [
         {
           "description" : "Medium thanks to the developers",
-          "displayName" : "Cuckoo - Medium Tip",
+          "displayName" : "Medium Tip",
           "locale" : "en_US"
         }
       ],
       "productID" : "cuckoo.medium.tip",
-      "referenceName" : "Cuckoo - Medium Tip",
+      "referenceName" : "Medium Tip",
       "type" : "Consumable"
     },
     {
@@ -56,12 +56,12 @@
       "localizations" : [
         {
           "description" : "Small thanks to the developers",
-          "displayName" : "Cuckoo - Small Tip",
+          "displayName" : "Small Tip",
           "locale" : "en_US"
         }
       ],
       "productID" : "cuckoo.small.tip",
-      "referenceName" : "Cuckoo - Small Tip",
+      "referenceName" : "Small Tip",
       "type" : "Consumable"
     }
   ],
@@ -69,7 +69,7 @@
     "_applicationInternalID" : "1550121476",
     "_developerTeamID" : "8FM45LWDA7",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 739434162.53989196,
+    "_lastSynchronizedDate" : 739439184.07237005,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [

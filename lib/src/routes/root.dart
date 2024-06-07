@@ -12,6 +12,7 @@ import 'package:cuckoo/src/routes/settings/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
@@ -35,6 +36,9 @@ class RootState extends State<Root> with WidgetsBindingObserver {
   /// Subscription for listening to incoming deep links.
   StreamSubscription? _linkSub;
 
+  /// Subscription for listening to store updates.
+  StreamSubscription<List<PurchaseDetails>>? _purchaseSub;
+
   /// Last state of the app.
   late AppLifecycleState _lastState;
 
@@ -51,6 +55,35 @@ class RootState extends State<Root> with WidgetsBindingObserver {
           CuckooFullScreenIndicator().stopLoading();
         });
       }
+    });
+  }
+
+  /// Handle updates from the store.
+  void _handleStoreUpdates() {
+    final purchaseUpdated = InAppPurchase.instance.purchaseStream;
+    _purchaseSub = purchaseUpdated.listen((purchaseDetailsList) {
+      // ignore: avoid_function_literals_in_foreach_calls
+      purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
+        if (purchaseDetails.status == PurchaseStatus.pending) {
+          CuckooFullScreenIndicator().startLoading();
+        } else {
+          if (purchaseDetails.status == PurchaseStatus.error ||
+              purchaseDetails.status == PurchaseStatus.canceled) {
+            CuckooFullScreenIndicator().stopLoading();
+          } else if (purchaseDetails.status == PurchaseStatus.purchased ||
+              purchaseDetails.status == PurchaseStatus.restored) {
+            // Show a thank you note
+            CuckooFullScreenIndicator().stopLoading();
+          }
+          if (purchaseDetails.pendingCompletePurchase) {
+            await InAppPurchase.instance.completePurchase(purchaseDetails);
+          }
+        }
+      });
+    }, onDone: () {
+      _purchaseSub?.cancel();
+    }, onError: (error) {
+      CuckooFullScreenIndicator().stopLoading();
     });
   }
 
@@ -102,6 +135,8 @@ class RootState extends State<Root> with WidgetsBindingObserver {
         initialIndex: Settings().get<int>(SettingsKey.defaultTab) ?? 0);
     // Init custom scheme listener
     _handleIncomingLinks();
+    // Init store updates listener
+    _handleStoreUpdates();
     // Init resume from background observer
     WidgetsBinding.instance.addObserver(this);
     // Init notifications
@@ -171,6 +206,7 @@ class RootState extends State<Root> with WidgetsBindingObserver {
   @override
   void dispose() {
     _linkSub?.cancel();
+    _purchaseSub?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

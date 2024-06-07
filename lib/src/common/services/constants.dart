@@ -133,7 +133,8 @@ class Constants {
   static const kAboutWebsiteTitle = 'Project Website';
   static const kAboutWebsiteUrl = 'https://thermitex.github.io/cuckoo/';
   static const kAboutDiscordTitle = 'Discord Community';
-  static const kAboutDiscordContent = 'Join our Discord community to leave your thoughts and receive latest updates.';
+  static const kAboutDiscordContent =
+      'Join our Discord community to leave your thoughts and receive latest updates.';
   static const kAboutDiscordUrl = 'https://discord.gg/K9scQKDF';
   static const kAboutPrivacyTitle = 'Privacy Policy';
   static const kAboutPrivacyUrl = 'https://thermitex.github.io/cuckoo/privacy/';
@@ -146,4 +147,10 @@ class Constants {
       'Donate any amount to help Cuckoo stay on App Store.';
   static const kTipJarSubtitle =
       'Although Cuckoo is a free app, it relies on your support so that it can be accessible to more users like you.';
+  static const kIAPProductIDs = <String>{
+    'cuckoo.small.tip',
+    'cuckoo.medium.tip',
+    'cuckoo.large.tip',
+    'cuckoo.giant.tip'
+  };
 }

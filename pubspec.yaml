@@ -1,12 +1,14 @@
 name: cuckoo
 description: "Cuckoo Flutter Project"
 publish_to: 'none'
-version: 0.1.0
+version: 2.0.0
 
 environment:
   sdk: '>=3.3.2 <4.0.0'
 
 dependencies:
+  flutter:
+    sdk: flutter
   persistent_bottom_nav_bar: ^5.0.2
   shared_preferences: ^2.2.3
   provider: ^6.1.2
@@ -26,8 +28,6 @@ dependencies:
   fluttertoast: ^8.2.5
   dio: ^5.4.2
   json_annotation: ^4.8.1
-  flutter:
-    sdk: flutter
   collection: ^1.18.0
   sticky_headers: ^0.3.0+2
   intl: ^0.19.0
