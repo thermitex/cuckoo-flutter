@@ -7,6 +7,7 @@ import 'package:cuckoo/src/common/widgets/login_required.dart';
 import 'package:cuckoo/src/common/widgets/more_panel.dart';
 import 'package:cuckoo/src/routes/courses/courses_collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class CoursesPage extends StatefulWidget {
@@ -37,6 +38,7 @@ class _CoursesPageState extends State<CoursesPage> {
     Settings().set<bool>(
         SettingsKey.showFavoriteCoursesByDefault, _showFavorite,
         notify: false);
+    HapticFeedback.selectionClick();
   }
 
   /// Action routine for opening "more" panel.

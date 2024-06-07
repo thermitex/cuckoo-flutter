@@ -72,8 +72,24 @@ class RootState extends State<Root> with WidgetsBindingObserver {
             CuckooFullScreenIndicator().stopLoading();
           } else if (purchaseDetails.status == PurchaseStatus.purchased ||
               purchaseDetails.status == PurchaseStatus.restored) {
-            // Show a thank you note
             CuckooFullScreenIndicator().stopLoading();
+            // Show a thank you note
+            IconDetailPanel(
+              icon: const Icon(
+                Icons.favorite_rounded,
+                color: ColorPresets.primary,
+                size: 50,
+              ),
+              title: Constants.kTipThankYouTitle,
+              description: Constants.kTipThankYouDesc,
+              buttons: [
+                CuckooButton(
+                  text: Constants.kOK,
+                  action: () =>
+                      Navigator.of(context, rootNavigator: true).pop(),
+                )
+              ],
+            ).show(context);
           }
           if (purchaseDetails.pendingCompletePurchase) {
             await InAppPurchase.instance.completePurchase(purchaseDetails);

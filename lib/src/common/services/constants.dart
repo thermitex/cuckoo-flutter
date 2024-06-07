@@ -153,4 +153,7 @@ class Constants {
     'cuckoo.large.tip',
     'cuckoo.giant.tip'
   };
+  static const kTipThankYouTitle = 'Thank you for your tip! Your support means a lot to us.';
+  static const kTipThankYouDesc =
+      'We strive to constantly improve Cuckoo for a better user experience. Don\'t forget to join the Discord community to let us know how we can further improve.';
 }
