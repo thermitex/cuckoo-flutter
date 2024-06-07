@@ -138,7 +138,8 @@ class _SettingsItemState extends State<SettingsItem> {
                     Switch.adaptive(
                       value: _value,
                       activeColor: ColorPresets.primary,
-                      inactiveTrackColor: context.cuckooTheme.tertiaryBackground,
+                      inactiveTrackColor:
+                          context.cuckooTheme.tertiaryBackground,
                       onChanged: (value) {
                         Settings().set<bool>(widget.settingsKey, value);
                         setState(() => _value = value);

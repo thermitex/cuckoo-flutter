@@ -6,10 +6,13 @@ import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/services/reminders.dart';
 import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
+import 'package:cuckoo/src/routes/settings/settings_about.dart';
 import 'package:cuckoo/src/routes/settings/settings_account.dart';
 import 'package:cuckoo/src/routes/settings/settings_page.dart';
+import 'package:cuckoo/src/routes/settings/settings_tip.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'settings_topbar.dart';
@@ -237,11 +240,29 @@ class SettingsPage extends StatelessWidget {
               ),
               SettingsFirstLevelMenuItem(
                 icon: Symbols.info_rounded,
-                text: 'About',
+                text: Constants.kAboutTitle,
+                action: () async {
+                  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context, rootNavigator: true)
+                      .push(MaterialPageRoute(
+                    fullscreenDialog: true,
+                    builder: (context) => SettingsAboutPage(
+                      version: packageInfo.version,
+                    ),
+                  ));
+                },
               ),
               SettingsFirstLevelMenuItem(
                 icon: Symbols.favorite_rounded,
-                text: 'Tip Jar',
+                text: Constants.kTipTitle,
+                action: () {
+                  Navigator.of(context, rootNavigator: true)
+                      .push(MaterialPageRoute(
+                    fullscreenDialog: true,
+                    builder: (context) => const SettingsTipPage(),
+                  ));
+                },
               ),
               const SizedBox(height: 20.0),
               if (context.loginStatusManager.isUserLoggedIn)

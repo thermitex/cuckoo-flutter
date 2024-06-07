@@ -4,6 +4,7 @@ import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsAccountPage extends StatelessWidget {
   const SettingsAccountPage({super.key});
@@ -54,11 +55,12 @@ class SettingsAccountPage extends StatelessWidget {
                             const TextSpan(
                                 text: Constants.kSettingsAccountDesc),
                             TextSpan(
-                                text: 'Learn more',
+                                text: Constants.kLearnMore,
                                 style: TextStylePresets.body().copyWith(
                                     color: ColorPresets.primary, height: 1.3),
                                 recognizer: TapGestureRecognizer()
-                                  ..onTap = () {})
+                                  ..onTap = () => launchUrlString(
+                                      Constants.kAccountLearnMoreUrl))
                           ]),
                       textAlign: TextAlign.center,
                     ),

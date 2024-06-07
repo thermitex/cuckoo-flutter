@@ -120,4 +120,30 @@ class Constants {
       'You have successfully connected Cuckoo with Moodle.';
   static const kSettingsAccountDesc =
       'Cuckoo\'s connection with Moodle is safe and follows the standard procedure of service communication, without scraping or saving cookies from browser. ';
+  static const kAboutOpenSourceTitle =
+      'Cuckoo is now an open-source project written in Flutter.';
+  static const kAboutOpenSourceDesc =
+      'Feel free to contribute to Cuckoo and add more exciting features. Let me know if you would like to be a core dev. ';
+  static const kLearnMore = 'Learn more';
+  static const kAboutTitle = 'About';
+  static const kTipTitle = 'Tip Jar';
+  static const kAccountLearnMoreUrl =
+      'https://thermitex.github.io/cuckoo/auth/';
+  static const kCheckGithub = 'Check repo on Github';
+  static const kAboutWebsiteTitle = 'Project Website';
+  static const kAboutWebsiteUrl = 'https://thermitex.github.io/cuckoo/';
+  static const kAboutDiscordTitle = 'Discord Community';
+  static const kAboutDiscordContent = 'Join our Discord community to leave your thoughts and receive latest updates.';
+  static const kAboutDiscordUrl = 'https://discord.gg/K9scQKDF';
+  static const kAboutPrivacyTitle = 'Privacy Policy';
+  static const kAboutPrivacyUrl = 'https://thermitex.github.io/cuckoo/privacy/';
+  static const kAboutSoftwareLicense = 'Software Licenses';
+  static const kAboutSoftwareLicenseUrl =
+      'https://thermitex.github.io/cuckoo/license/';
+  static const kProjectGithubUrl =
+      'https://github.com/thermitex/cuckoo-flutter';
+  static const kTipJarTitle =
+      'Donate any amount to help Cuckoo stay on App Store.';
+  static const kTipJarSubtitle =
+      'Although Cuckoo is a free app, it relies on your support so that it can be accessible to more users like you.';
 }

@@ -1,0 +1,130 @@
+{
+  "identifier" : "C8950FFD",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "14.99",
+      "familyShareable" : false,
+      "internalID" : "6504077525",
+      "localizations" : [
+        {
+          "description" : "Giant thanks to the developers!",
+          "displayName" : "Cuckoo - Giant Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "cuckoo.giant.tip",
+      "referenceName" : "Cuckoo - Giant Tip",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "6504077692",
+      "localizations" : [
+        {
+          "description" : "Large thanks to the developers",
+          "displayName" : "Cuckoo - Large Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "cuckoo.large.tip",
+      "referenceName" : "Cuckoo - Large Tip",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "6504077385",
+      "localizations" : [
+        {
+          "description" : "Medium thanks to the developers",
+          "displayName" : "Cuckoo - Medium Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "cuckoo.medium.tip",
+      "referenceName" : "Cuckoo - Medium Tip",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "6504077295",
+      "localizations" : [
+        {
+          "description" : "Small thanks to the developers",
+          "displayName" : "Cuckoo - Small Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "cuckoo.small.tip",
+      "referenceName" : "Cuckoo - Small Tip",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "1550121476",
+    "_developerTeamID" : "8FM45LWDA7",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 739434162.53989196,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}
