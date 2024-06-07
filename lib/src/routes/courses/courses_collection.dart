@@ -98,11 +98,12 @@ class _MoodleCourseCollectionViewState
         padding: const EdgeInsets.symmetric(horizontal: 18.0),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            int coursesPerRow =
-                (constraints.maxWidth / kCourseTileMinWidth).floor();
-            double tileWidth =
-                (constraints.maxWidth - kSpacingBetweenCourseTiles) /
-                    coursesPerRow;
+            int coursesPerRow = (constraints.maxWidth /
+                    (kCourseTileMinWidth + kSpacingBetweenCourseTiles))
+                .floor();
+            double tileWidth = (constraints.maxWidth -
+                    (coursesPerRow - 1) * kSpacingBetweenCourseTiles) /
+                coursesPerRow;
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [

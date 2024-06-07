@@ -294,14 +294,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_animate:
-    dependency: "direct main"
-    description:
-      name: flutter_animate
-      sha256: "7c8a6594a9252dad30cc2ef16e33270b6248c4dedc3b3d06c86c4f3f4dc05ae5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.5.0"
   flutter_cache_manager:
     dependency: transitive
     description:
@@ -358,30 +350,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.0"
-  flutter_shaders:
-    dependency: transitive
-    description:
-      name: flutter_shaders
-      sha256: "02750b545c01ff4d8e9bbe8f27a7731aa3778402506c67daa1de7f5fc3f4befe"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.2"
-  flutter_slidable:
-    dependency: "direct main"
-    description:
-      name: flutter_slidable
-      sha256: "673403d2eeef1f9e8483bd6d8d92aae73b1d8bd71f382bc3930f699c731bc27c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0"
-  flutter_staggered_grid_view:
-    dependency: transitive
-    description:
-      name: flutter_staggered_grid_view
-      sha256: "19e7abb550c96fbfeb546b23f3ff356ee7c59a019a651f8f102a4ba9b7349395"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.0"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -440,14 +408,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
-  go_router:
-    dependency: "direct main"
-    description:
-      name: go_router
-      sha256: "771c8feb40ad0ef639973d7ecf1b43d55ffcedb2207fd43fab030f5639e40446"
-      url: "https://pub.dev"
-    source: hosted
-    version: "13.2.4"
   graphs:
     dependency: transitive
     description:
@@ -528,14 +488,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.16"
-  infinite_scroll_pagination:
-    dependency: "direct main"
-    description:
-      name: infinite_scroll_pagination
-      sha256: b68bce20752fcf36c7739e60de4175494f74e99e9a69b4dd2fe3a1dd07a7f16a
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.0"
   intl:
     dependency: "direct main"
     description:
@@ -957,14 +909,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
-  sliver_tools:
-    dependency: transitive
-    description:
-      name: sliver_tools
-      sha256: eae28220badfb9d0559207badcbbc9ad5331aac829a88cb0964d330d2a4636a6
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.12"
   source_gen:
     dependency: transitive
     description:

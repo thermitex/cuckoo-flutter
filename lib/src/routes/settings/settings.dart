@@ -149,8 +149,9 @@ class SettingsPage extends StatelessWidget {
                           CuckooFullScreenIndicator().startLoading(
                               message: Constants.kSettingsClearCacheLoading);
                           Directory dir = await getTemporaryDirectory();
-                          dir.deleteSync(recursive: true);
-                          dir.create();
+                          Directory cacheDir = Directory('${dir.path}/cuckoo');
+                          cacheDir.deleteSync(recursive: true);
+                          cacheDir.create();
                           CuckooFullScreenIndicator().stopLoading();
                           CuckooToast(Constants.kSettingsClearCachePrompt,
                               icon: const Icon(

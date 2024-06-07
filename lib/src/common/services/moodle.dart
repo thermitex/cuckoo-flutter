@@ -334,7 +334,8 @@ class Moodle {
     final fileName = module.contents!.first['filename'] as String?;
     if (fileUrl != null && fileName != null && moodle._privatetoken != null) {
       var downloadPath = (await getTemporaryDirectory()).path;
-      downloadPath += (downloadPath.endsWith('/') ? '' : '/') + fileName;
+      downloadPath +=
+          (downloadPath.endsWith('/') ? 'cuckoo/' : '/cuckoo/') + fileName;
       // First check if the file is already there
       if (File(downloadPath).existsSync()) return downloadPath;
       // Prepare url for download

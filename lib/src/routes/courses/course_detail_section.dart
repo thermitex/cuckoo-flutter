@@ -107,8 +107,15 @@ class CourseDetailSection extends StatelessWidget {
       CuckooFullScreenIndicator()
           .startLoading(message: Constants.kDownloadFileLoading);
       Moodle.downloadModuleFile(module).then((path) {
-        if (path != null) OpenFile.open(path);
         CuckooFullScreenIndicator().stopLoading();
+        if (path != null) {
+          OpenFile.open(path).then((value) {
+            if (value.type != ResultType.done) {
+              // Open in browser instead
+              Moodle.openMoodleUrl(module.url, internal: true);
+            }
+          });
+        }
       });
     } else {
       // Open url
