@@ -19,6 +19,11 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: 3.19.4
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
       - name: Get dependencies
         run: flutter pub get
       - name: Check formatting
