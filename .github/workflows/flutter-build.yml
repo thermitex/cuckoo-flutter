@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
@@ -23,5 +23,5 @@ jobs:
         run: flutter pub get
       - name: Check formatting
         run: dart format . --set-exit-if-changed 
-      - name: Build iOS
-        run: flutter build ios --release --no-codesign
+      - name: Build Android
+        run: flutter build apk
