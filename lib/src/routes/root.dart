@@ -53,6 +53,12 @@ class RootState extends State<Root> with WidgetsBindingObserver {
             .startLoading(message: Constants.kLoginMoodleLoading);
         Moodle.handleAuthResult(tokenString).then((status) {
           CuckooFullScreenIndicator().stopLoading();
+          if (status == MoodleAuthStatus.incomplete) {
+            const CuckooDialog(
+                title: Constants.kAuthIncompleteDialog,
+                buttonTitles: [Constants.kOK],
+                buttonStyles: [CuckooButtonStyle.primary]).show(context);
+          }
         });
       }
     });

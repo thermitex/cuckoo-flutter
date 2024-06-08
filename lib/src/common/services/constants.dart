@@ -26,6 +26,8 @@ class Constants {
       'We are having trouble connecting to Moodle.';
   static const kSessionInvalidErrDesc =
       'Your session may have expired or your Internet connection is unstable. Please try logging into Moodle again.';
+  static const kAuthIncompleteDialog =
+      'The login is not complete. Try closing your browser and log in again.';
   static const kTryAgain = 'Try Again';
   static const kEventDetailDueItem = 'DUE IN';
   static const kEventDetailDetailItem = 'DESCRIPTION';
