@@ -35,7 +35,11 @@ MoodleCourse _$MoodleCourseFromJson(Map<String, dynamic> json) => MoodleCourse()
   ..showcompletionconditions = json['showcompletionconditions'] as bool?
   ..timemodified = json['timemodified'] as num?
   ..colorHex = json['colorHex'] as String?
-  ..customFavorite = json['customFavorite'] as bool?;
+  ..customFavorite = json['customFavorite'] as bool?
+  ..cachedContents = (json['cachedContents'] as List<dynamic>?)
+      ?.map((e) => MoodleCourseSection.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..cachedTime = json['cachedTime'] as num?;
 
 Map<String, dynamic> _$MoodleCourseToJson(MoodleCourse instance) =>
     <String, dynamic>{
@@ -68,4 +72,6 @@ Map<String, dynamic> _$MoodleCourseToJson(MoodleCourse instance) =>
       'timemodified': instance.timemodified,
       'colorHex': instance.colorHex,
       'customFavorite': instance.customFavorite,
+      'cachedContents': instance.cachedContents,
+      'cachedTime': instance.cachedTime,
     };

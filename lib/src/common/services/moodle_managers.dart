@@ -99,13 +99,22 @@ class MoodleCourseManager with ChangeNotifier {
       // Reject change
       return;
     }
-    // Check existing course map for consistent coloring
+    // Check existing course map for consistent coloring, cached contents,
     // and favorite status as well
+    final currentTimestamp = DateTime.now().secondEpoch;
     for (final course in courses) {
       final existingCourse = _courseMap[course.id];
       if (existingCourse != null) {
-        course.colorHex = existingCourse.colorHex;
-        course.customFavorite = existingCourse.customFavorite;
+        course
+          ..colorHex = existingCourse.colorHex
+          ..customFavorite = existingCourse.customFavorite
+          ..cachedContents = existingCourse.cachedContents
+          ..cachedTime = existingCourse.cachedTime;
+        // Expire cache if needed
+        if (course.cachedTime != null &&
+            currentTimestamp - course.cachedTime!.toInt() > 7 * 86400) {
+          course.cachedContents = null;
+        }
       }
       course.fullname = course.fullname.htmlParsed;
       course.displayname = course.displayname.htmlParsed;

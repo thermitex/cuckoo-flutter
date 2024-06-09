@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-
+import "moodleCourseSection.dart";
 part 'moodleCourse.g.dart';
 
 @JsonSerializable()
@@ -35,6 +35,8 @@ class MoodleCourse {
   num? timemodified;
   String? colorHex;
   bool? customFavorite;
+  List<MoodleCourseSection>? cachedContents;
+  num? cachedTime;
 
   factory MoodleCourse.fromJson(Map<String, dynamic> json) =>
       _$MoodleCourseFromJson(json);

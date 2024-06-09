@@ -50,8 +50,8 @@ class Moodle {
   /// Moodle domain.
   String _domain = kHKUMoodleDomain;
 
-  /// Auto login key.
-  String? _autoLoginKey;
+  /// Auto login info.
+  MoodleAutoLoginInfo? _autoLoginInfo;
 
   /// User ID of the Moodle user.
   String get _userId => _siteInfo.userid.toString();
@@ -126,6 +126,7 @@ class Moodle {
     moodle.loginStatusManager.status = false;
     moodle._wstoken = null;
     moodle._privatetoken = null;
+    moodle._autoLoginInfo = null;
     moodle.courseManager._clearAllCourses();
     moodle.eventManager
       .._clearEventsExceptCustom()
@@ -136,6 +137,7 @@ class Moodle {
     for (String key in [
       MoodleStorageKeys.wstoken,
       MoodleStorageKeys.privatetoken,
+      MoodleStorageKeys.autoLoginInfo,
       MoodleStorageKeys.siteInfo,
       MoodleStorageKeys.courses,
       MoodleStorageKeys.events,
@@ -279,7 +281,7 @@ class Moodle {
       moodle.courseManager.status = MoodleManagerStatus.error;
       return false;
     }
-    if (saveNow) moodle._save();
+    if (saveNow) moodle._saveCourses();
     moodle.courseManager.status = MoodleManagerStatus.idle;
     return true;
   }
@@ -318,6 +320,11 @@ class Moodle {
     } catch (_) {}
     // Update last accessed property locally first
     course.markAccess();
+    // Cache contents
+    course
+      ..cachedContents = content
+      ..cachedTime = DateTime.now().secondEpoch;
+    Moodle()._saveCourses();
     return content;
   }
 
@@ -419,7 +426,7 @@ class Moodle {
     await moodle._fetchEventDetailsAndCompletionStatus();
     moodle.eventManager._notifyManually();
     moodle.eventManager._eventsLastUpdated = DateTime.now();
-    if (saveNow) moodle._save();
+    if (saveNow) moodle._saveEvents();
     moodle.eventManager.status = MoodleManagerStatus.idle;
     return true;
   }
@@ -456,7 +463,7 @@ class Moodle {
         }));
       }
     }
-    return Future.wait(requests).then((_) => moodle._save());
+    return Future.wait(requests).then((_) => moodle._saveEvents());
   }
 
   /// Get the course info associated with the event.
@@ -477,14 +484,14 @@ class Moodle {
   static void addCustomEvent(MoodleEvent event) {
     final moodle = Moodle();
     moodle.eventManager._addCustomEvent(event);
-    moodle._save();
+    moodle._saveEvents();
   }
 
   /// Remove a custom event from the current event list.
   static void removeCustomEvent(MoodleEvent event) {
     final moodle = Moodle();
     moodle.eventManager._removeCustomEvent(event);
-    moodle._save();
+    moodle._saveEvents();
   }
 
   // ------------Moodle Web Interfaces------------
@@ -498,7 +505,7 @@ class Moodle {
     final moodle = Moodle();
     if (!isUserLoggedIn || url == null) return false;
     // First check if auto login key exists
-    if (moodle._autoLoginKey == null) {
+    if (moodle._autoLoginInfo == null) {
       CuckooFullScreenIndicator()
           .startLoading(message: Constants.kMoodleUrlOpenLoading);
       final updated = await moodle._updateAutoLoginKey();
@@ -510,7 +517,7 @@ class Moodle {
         entryPoint: 'admin/tool/mobile/autologin.php',
         params: {
           'userid': moodle._userId,
-          'key': moodle._autoLoginKey!,
+          'key': moodle._autoLoginInfo!.key,
           'urltogo': url
         });
     try {
@@ -534,6 +541,11 @@ class Moodle {
       // Tokens and site info
       _wstoken = _prefs.getString(MoodleStorageKeys.wstoken);
       _privatetoken = _prefs.getString(MoodleStorageKeys.privatetoken);
+      final autoLoginInfo = _prefs.getString(MoodleStorageKeys.autoLoginInfo);
+      if (autoLoginInfo != null) {
+        _autoLoginInfo =
+            MoodleAutoLoginInfo.fromJson(jsonDecode(autoLoginInfo));
+      }
       final siteInfo = _prefs.getString(MoodleStorageKeys.siteInfo);
       if (siteInfo != null) {
         _siteInfo = MoodleSiteInfo.fromJson(jsonDecode(siteInfo));
@@ -578,12 +590,22 @@ class Moodle {
       _prefs.setString(MoodleStorageKeys.privatetoken, _privatetoken!);
     }
     // Courses
+    _saveCourses();
+    // Events
+    _saveEvents();
+  }
+
+  /// Save courses only to local storage.
+  Future<void> _saveCourses() async {
     _prefs.setStringList(
         MoodleStorageKeys.courses,
         courseManager.courses
             .map((course) => jsonEncode(course.toJson()))
             .toList());
-    // Events
+  }
+
+  /// Save events only to local storage.
+  Future<void> _saveEvents() async {
     _prefs.setStringList(
         MoodleStorageKeys.events,
         eventManager.events
@@ -799,17 +821,37 @@ class Moodle {
 
   /// Update the auto login key of Moodle.
   Future<bool> _updateAutoLoginKey() async {
+    const kKeyValidDuration = 360;
+    void invalidateAutoLogin({required int after}) {
+      Future.delayed(Duration(seconds: after)).then((_) {
+        _prefs.remove(MoodleStorageKeys.autoLoginInfo);
+        _autoLoginInfo = null;
+      });
+    }
+
     if (_privatetoken == null) return false;
     final response = await _callMoodleFunction(MoodleFunctions.getAutoLoginKey,
         params: {'privatetoken': _privatetoken});
     if (!response.fail && response.data != null) {
-      _autoLoginKey = response.data['key'];
-      // Invalidate after 360 sec
-      Future.delayed(const Duration(seconds: 360))
-          .then((_) => _autoLoginKey = null);
+      final info = MoodleAutoLoginInfo();
+      info
+        ..key = response.data['key']
+        ..lastRequested = DateTime.now().secondEpoch;
+      _autoLoginInfo = info;
+      _prefs.setString(
+          MoodleStorageKeys.autoLoginInfo, jsonEncode(info.toJson()));
+      // Invalidate after key expired
+      invalidateAutoLogin(after: kKeyValidDuration);
       return true;
     }
-    _autoLoginKey = null;
+    // If fails, check if fallback is available
+    if (_autoLoginInfo != null) {
+      final secsElapsedFromLast =
+          DateTime.now().secondEpoch - _autoLoginInfo!.lastRequested.toInt();
+      if (secsElapsedFromLast < -5) return false;
+      invalidateAutoLogin(after: kKeyValidDuration - secsElapsedFromLast);
+      return true;
+    }
     return false;
   }
 
