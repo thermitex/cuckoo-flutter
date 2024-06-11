@@ -115,7 +115,6 @@ class Moodle {
       moodle._fetchSiteInfo();
       fetchEvents();
       fetchCourses();
-      moodle._updateAutoLoginKey();
     }
   }
 
@@ -374,6 +373,13 @@ class Moodle {
     return null;
   }
 
+  /// Clear all cached contents for all courses.
+  static void clearCourseCachedContents() {
+    final moodle = Moodle();
+    moodle.courseManager._clearCachedCourseContents();
+    moodle._saveCourses();
+  }
+
   // ------------Event Interfaces------------
 
   /// Fetch events of the logged in user.
@@ -504,14 +510,13 @@ class Moodle {
       {bool internal = false}) async {
     final moodle = Moodle();
     if (!isUserLoggedIn || url == null) return false;
-    // First check if auto login key exists
-    if (moodle._autoLoginInfo == null) {
-      CuckooFullScreenIndicator()
-          .startLoading(message: Constants.kMoodleUrlOpenLoading);
-      final updated = await moodle._updateAutoLoginKey();
-      CuckooFullScreenIndicator().stopLoading();
-      if (!updated) return false;
-    }
+    // Always request a new key
+    // If fails, fallback to existing cached key if any
+    CuckooFullScreenIndicator()
+        .startLoading(message: Constants.kMoodleUrlOpenLoading);
+    final hasKey = await moodle._updateAutoLoginKey();
+    CuckooFullScreenIndicator().stopLoading();
+    if (!hasKey) return false;
     // Construct url
     Uri finalUrl = moodle._buildMoodleUrl(
         entryPoint: 'admin/tool/mobile/autologin.php',
@@ -821,14 +826,6 @@ class Moodle {
 
   /// Update the auto login key of Moodle.
   Future<bool> _updateAutoLoginKey() async {
-    const kKeyValidDuration = 360;
-    void invalidateAutoLogin({required int after}) {
-      Future.delayed(Duration(seconds: after)).then((_) {
-        _prefs.remove(MoodleStorageKeys.autoLoginInfo);
-        _autoLoginInfo = null;
-      });
-    }
-
     if (_privatetoken == null) return false;
     final response = await _callMoodleFunction(MoodleFunctions.getAutoLoginKey,
         params: {'privatetoken': _privatetoken});
@@ -840,16 +837,15 @@ class Moodle {
       _autoLoginInfo = info;
       _prefs.setString(
           MoodleStorageKeys.autoLoginInfo, jsonEncode(info.toJson()));
-      // Invalidate after key expired
-      invalidateAutoLogin(after: kKeyValidDuration);
       return true;
     }
-    // If fails, check if fallback is available
+    // If fails, means that the key has not expired yet
+    // In that case, use the previously saved key
+    // Unless it has expired for sure
     if (_autoLoginInfo != null) {
       final secsElapsedFromLast =
           DateTime.now().secondEpoch - _autoLoginInfo!.lastRequested.toInt();
-      if (secsElapsedFromLast < -5) return false;
-      invalidateAutoLogin(after: kKeyValidDuration - secsElapsedFromLast);
+      if (secsElapsedFromLast > 600) return false;
       return true;
     }
     return false;

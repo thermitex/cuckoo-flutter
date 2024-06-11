@@ -57,7 +57,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
     return Scaffold(
       appBar: CuckooAppBar(
         title: widget.title,
-        exitButtonStyle: ExitButtonStyle.back,
+        exitButtonStyle: ExitButtonStyle.platformDependent,
         titleTransparency: _titleTrans,
       ),
       body: SafeArea(

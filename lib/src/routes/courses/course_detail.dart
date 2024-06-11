@@ -62,7 +62,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
   CuckooAppBar _pageAppBar() {
     return CuckooAppBar(
       title: _course.courseCode,
-      exitButtonStyle: ExitButtonStyle.close,
+      exitButtonStyle: ExitButtonStyle.platformDependent,
       titleTransparency: _titleTrans,
       actionItems: [
         if (_implicitLoading)
@@ -189,11 +189,14 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
           return false;
         },
         child: ListView.separated(
-          itemCount: _content.length + 1,
+          itemCount: _content.length + 2,
           itemBuilder: (context, index) {
             if (index == 0) {
               // Title block
               return _courseTitle();
+            }
+            if (index == _content.length + 1) {
+              return const SizedBox(height: 10.0);
             }
             return CourseDetailSection(_course, _content[index - 1]);
           },

@@ -12,8 +12,8 @@ class SettingsAccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          const CuckooAppBar(title: '', exitButtonStyle: ExitButtonStyle.back),
+      appBar: const CuckooAppBar(
+          title: '', exitButtonStyle: ExitButtonStyle.platformDependent),
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(

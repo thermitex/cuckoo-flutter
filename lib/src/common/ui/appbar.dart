@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'text.dart';
@@ -148,12 +150,17 @@ class CuckooAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
 
     if (exitButtonStyle != null) {
+      late IconData icon;
+      if (exitButtonStyle == ExitButtonStyle.close) {
+        icon = Icons.close_rounded;
+      } else if (exitButtonStyle == ExitButtonStyle.back) {
+        icon = Icons.arrow_back_rounded;
+      } else {
+        icon =
+            Platform.isAndroid ? Icons.close_rounded : Icons.arrow_back_rounded;
+      }
       final exit = CuckooAppBarActionItem(
-          icon: Icon(
-              exitButtonStyle == ExitButtonStyle.close
-                  ? Icons.close_rounded
-                  : Icons.arrow_back_rounded,
-              color: context.cuckooTheme.primaryText),
+          icon: Icon(icon, color: context.cuckooTheme.primaryText),
           onPressed: () => Navigator.of(context).pop());
       left.insert(0, CuckooAppBarActionWidget(item: exit));
     }
@@ -183,7 +190,7 @@ class CuckooAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 /// Style of the exit button on `CuckooAppBar`.
-enum ExitButtonStyle { close, back }
+enum ExitButtonStyle { close, back, platformDependent }
 
 /// Widget based on an app bar action item.
 ///

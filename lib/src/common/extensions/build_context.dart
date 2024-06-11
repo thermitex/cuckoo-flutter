@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/services/reminders.dart';
 import 'package:cuckoo/src/common/services/settings.dart';
@@ -15,6 +17,15 @@ extension BuildContextExtensions on BuildContext {
     } else {
       return theme == 2;
     }
+  }
+
+  // Push a new route based on the current platform.
+  Future<T?> platformDependentPush<T>({required WidgetBuilder builder}) {
+    return Navigator.of(this, rootNavigator: Platform.isAndroid)
+        .push(MaterialPageRoute(
+      fullscreenDialog: Platform.isAndroid,
+      builder: (context) => builder(context),
+    ));
   }
 
   /// Shortcut for getting current theme.

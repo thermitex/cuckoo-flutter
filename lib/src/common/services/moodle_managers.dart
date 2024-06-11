@@ -140,6 +140,15 @@ class MoodleCourseManager with ChangeNotifier {
     _generateCourseMap();
   }
 
+  /// Clear all cached course contents.
+  ///
+  /// For `Moodle` use ONLY. DO NOT call it elsewhere.
+  void _clearCachedCourseContents() {
+    for (final course in courses) {
+      course.cachedContents = null;
+    }
+  }
+
   /// Obtain a list containing IDs of all courses.
   ///
   /// For `Moodle` use ONLY. DO NOT call it elsewhere.
@@ -202,12 +211,6 @@ class MoodleEventManager with ChangeNotifier {
   ///
   /// Used for showing loading indicator / error on the page.
   MoodleManagerStatus get status => _status;
-
-  /// Notify all event subscribers to rebuild their views.
-  ///
-  /// Used for asking the views to call `groupedEvents` once in order to sync
-  /// any possible updates.
-  void rebuildNow() => _notifyManually(flushCache: true);
 
   /// Grouped events given a grouping type.
   ///
@@ -307,6 +310,12 @@ class MoodleEventManager with ChangeNotifier {
   }
 
   // ----------------------Context Watch Interfaces End----------------------
+
+  /// Notify all event subscribers to rebuild their views.
+  ///
+  /// Used for asking the views to call `groupedEvents` once in order to sync
+  /// any possible updates.
+  void rebuildNow() => _notifyManually(flushCache: true);
 
   /// Timestamp where events are last updated.
   /// Not preserved in storage.
