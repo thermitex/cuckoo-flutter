@@ -263,6 +263,10 @@ class Moodle {
   static Future<bool> fetchCourses({bool saveNow = true}) async {
     final moodle = Moodle();
     if (!isUserLoggedIn) return false;
+    // Abort if already fetching on one thread
+    if (moodle.courseManager.status == MoodleManagerStatus.updating) {
+      return false;
+    }
     moodle.courseManager.status = MoodleManagerStatus.updating;
     final response =
         await callFunction(MoodleFunctions.getEnrolledCourses, params: {
@@ -391,6 +395,10 @@ class Moodle {
     final moodle = Moodle();
 
     if (!isUserLoggedIn) return false;
+    // Abort if already fetching on one thread
+    if (moodle.eventManager.status == MoodleManagerStatus.updating) {
+      return false;
+    }
     // Check if fetches are too close
     if (!force && moodle.eventManager._eventsLastUpdated != null) {
       final diff =

@@ -40,7 +40,7 @@ class SettingsTopBar extends StatelessWidget implements PreferredSizeWidget {
       minFontSize: 22,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: TextStylePresets.title(size: 30).copyWith(height: 1.1),
+      style: TextStylePresets.title(size: 29).copyWith(height: 1.1),
     );
 
     final username = Container(

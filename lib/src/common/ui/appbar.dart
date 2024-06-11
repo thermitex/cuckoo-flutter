@@ -47,7 +47,7 @@ class CuckooLargeAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget _titleWidget() {
     return Text(
       title,
-      style: TextStylePresets.title(size: 32),
+      style: TextStylePresets.title(size: 31.5),
     );
   }
 

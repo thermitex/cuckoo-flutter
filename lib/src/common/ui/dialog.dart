@@ -41,70 +41,75 @@ class CuckooDialog {
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
         backgroundColor: context.cuckooTheme.popUpBackground,
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: 85.0),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  child: Center(
-                    child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      Text(
-                        title,
-                        textAlign: TextAlign.center,
-                        style: TextStylePresets.popUpDisplayBody(
-                            weight: FontWeight.w500),
-                      ),
-                      if (description != null) const SizedBox(height: 10.0),
-                      if (description != null)
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 350),
+          child: Container(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 85.0),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Center(
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
                         Text(
-                          description!,
-                          style: TextStylePresets.body(),
+                          title,
+                          textAlign: TextAlign.center,
+                          style: TextStylePresets.popUpDisplayBody(
+                              weight: FontWeight.w500),
                         ),
-                    ]),
+                        if (description != null) const SizedBox(height: 10.0),
+                        if (description != null)
+                          Text(
+                            description!,
+                            style: TextStylePresets.body(),
+                          ),
+                      ]),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 15.0),
-              if (buttonAlignment == DialogButtonAlignment.horizontal)
-                Row(
-                  children: List.generate(buttonTitles.length * 2 - 1, (index) {
-                    if (index % 2 == 1) {
-                      return const SizedBox(width: 18.0);
-                    } else {
-                      final i = index ~/ 2;
-                      return Expanded(
-                        child: CuckooButton(
+                const SizedBox(height: 15.0),
+                if (buttonAlignment == DialogButtonAlignment.horizontal)
+                  Row(
+                    children:
+                        List.generate(buttonTitles.length * 2 - 1, (index) {
+                      if (index % 2 == 1) {
+                        return const SizedBox(width: 18.0);
+                      } else {
+                        final i = index ~/ 2;
+                        return Expanded(
+                          child: CuckooButton(
+                            text: buttonTitles[i],
+                            style: buttonStyles[i],
+                            height: 44.0,
+                            action: () => Navigator.of(context).pop(i),
+                          ),
+                        );
+                      }
+                    }),
+                  )
+                else
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children:
+                        List.generate(buttonTitles.length * 2 - 1, (index) {
+                      if (index % 2 == 1) {
+                        return const SizedBox(width: 18.0);
+                      } else {
+                        final i = index ~/ 2;
+                        return CuckooButton(
                           text: buttonTitles[i],
                           style: buttonStyles[i],
                           height: 44.0,
                           action: () => Navigator.of(context).pop(i),
-                        ),
-                      );
-                    }
-                  }),
-                )
-              else
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(buttonTitles.length * 2 - 1, (index) {
-                    if (index % 2 == 1) {
-                      return const SizedBox(width: 18.0);
-                    } else {
-                      final i = index ~/ 2;
-                      return CuckooButton(
-                        text: buttonTitles[i],
-                        style: buttonStyles[i],
-                        height: 44.0,
-                        action: () => Navigator.of(context).pop(i),
-                      );
-                    }
-                  }),
-                )
-            ],
+                        );
+                      }
+                    }),
+                  )
+              ],
+            ),
           ),
         ),
       );
