@@ -99,13 +99,22 @@ class MoodleCourseManager with ChangeNotifier {
       // Reject change
       return;
     }
-    // Check existing course map for consistent coloring
+    // Check existing course map for consistent coloring, cached contents,
     // and favorite status as well
+    final currentTimestamp = DateTime.now().secondEpoch;
     for (final course in courses) {
       final existingCourse = _courseMap[course.id];
       if (existingCourse != null) {
-        course.colorHex = existingCourse.colorHex;
-        course.customFavorite = existingCourse.customFavorite;
+        course
+          ..colorHex = existingCourse.colorHex
+          ..customFavorite = existingCourse.customFavorite
+          ..cachedContents = existingCourse.cachedContents
+          ..cachedTime = existingCourse.cachedTime;
+        // Expire cache if needed
+        if (course.cachedTime != null &&
+            currentTimestamp - course.cachedTime!.toInt() > 7 * 86400) {
+          course.cachedContents = null;
+        }
       }
       course.fullname = course.fullname.htmlParsed;
       course.displayname = course.displayname.htmlParsed;
@@ -129,6 +138,15 @@ class MoodleCourseManager with ChangeNotifier {
   void _clearAllCourses() {
     _courses = [];
     _generateCourseMap();
+  }
+
+  /// Clear all cached course contents.
+  ///
+  /// For `Moodle` use ONLY. DO NOT call it elsewhere.
+  void _clearCachedCourseContents() {
+    for (final course in courses) {
+      course.cachedContents = null;
+    }
   }
 
   /// Obtain a list containing IDs of all courses.
@@ -193,12 +211,6 @@ class MoodleEventManager with ChangeNotifier {
   ///
   /// Used for showing loading indicator / error on the page.
   MoodleManagerStatus get status => _status;
-
-  /// Notify all event subscribers to rebuild their views.
-  ///
-  /// Used for asking the views to call `groupedEvents` once in order to sync
-  /// any possible updates.
-  void rebuildNow() => _notifyManually(flushCache: true);
 
   /// Grouped events given a grouping type.
   ///
@@ -298,6 +310,12 @@ class MoodleEventManager with ChangeNotifier {
   }
 
   // ----------------------Context Watch Interfaces End----------------------
+
+  /// Notify all event subscribers to rebuild their views.
+  ///
+  /// Used for asking the views to call `groupedEvents` once in order to sync
+  /// any possible updates.
+  void rebuildNow() => _notifyManually(flushCache: true);
 
   /// Timestamp where events are last updated.
   /// Not preserved in storage.

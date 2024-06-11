@@ -27,5 +27,7 @@
     "showcompletionconditions?": true,
     "timemodified?": 1578359661,
     "colorHex?": "",
-    "customFavorite?": false
+    "customFavorite?": false,
+    "cachedContents?": "$[]moodleCourseSection",
+    "cachedTime?": 1
 }

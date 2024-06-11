@@ -58,10 +58,8 @@ class SettingsPage extends StatelessWidget {
     void accountAction() {
       if (Moodle().loginStatusManager.isUserLoggedIn) {
         if (Moodle().eventManager.status == MoodleManagerStatus.idle) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-                builder: (context) => const SettingsAccountPage()),
-          );
+          context.platformDependentPush(
+              builder: (context) => const SettingsAccountPage());
         } else if (Moodle().eventManager.status == MoodleManagerStatus.error) {
           showMoodleConnectionErrorDetails(context);
         }
@@ -148,10 +146,13 @@ class SettingsPage extends StatelessWidget {
                         action: () async {
                           CuckooFullScreenIndicator().startLoading(
                               message: Constants.kSettingsClearCacheLoading);
+                          // Clean downloads
                           Directory dir = await getTemporaryDirectory();
                           Directory cacheDir = Directory('${dir.path}/cuckoo');
                           cacheDir.deleteSync(recursive: true);
                           cacheDir.create();
+                          // Clean course cached contents
+                          Moodle.clearCourseCachedContents();
                           CuckooFullScreenIndicator().stopLoading();
                           CuckooToast(Constants.kSettingsClearCachePrompt,
                               icon: const Icon(
@@ -323,9 +324,7 @@ class SettingsFirstLevelMenuItem extends StatelessWidget {
         if (action != null) action!();
         if (page != null) {
           // Push a new page
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => page!),
-          );
+          context.platformDependentPush(builder: (context) => page!);
         }
       },
       child: Padding(

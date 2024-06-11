@@ -160,12 +160,8 @@ class MoodleCourseTile extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(20.0),
       child: GestureDetector(
-        onTap: () {
-          Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-            fullscreenDialog: true,
-            builder: (context) => CourseDetailPage(course),
-          ));
-        },
+        onTap: () => context.platformDependentPush(
+            builder: (context) => CourseDetailPage(course)),
         child: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(

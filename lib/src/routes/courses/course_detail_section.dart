@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:open_file/open_file.dart';
+import 'package:open_filex/open_filex.dart';
 
 class CourseDetailSection extends StatelessWidget {
   const CourseDetailSection(this.course, this.section, {super.key});
@@ -109,7 +109,7 @@ class CourseDetailSection extends StatelessWidget {
       Moodle.downloadModuleFile(module).then((path) {
         CuckooFullScreenIndicator().stopLoading();
         if (path != null) {
-          OpenFile.open(path).then((value) {
+          OpenFilex.open(path).then((value) {
             if (value.type != ResultType.done) {
               // Open in browser instead
               Moodle.openMoodleUrl(module.url, internal: true);

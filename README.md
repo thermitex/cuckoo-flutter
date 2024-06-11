@@ -67,6 +67,10 @@ All contributions are welcome from bug fixes to new features and extensions. I w
 
 Please also let me know if you would like to be a maintainer of the repo.
 
+Support Cuckoo's development and help Cuckoo stay on app stores:
+
+<a href="https://www.buymeacoffee.com/jerryli" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
 ## License
 
 Cuckoo uses MIT License.

@@ -78,7 +78,7 @@ class Constants {
   static const kUnsetCourseFavorite = 'Course Unmarked As Favorite';
   static const kDownloadFileLoading = 'Downloading file...';
   static const kEventsClearPrompt =
-      'Amazing! There is currently no upcoming events for you.';
+      'Amazing! There are currently no upcoming events for you.';
   static const kCalendarNoEventsFound = 'No events found for the selected day.';
   static const kLogOutConfirmation =
       'Are you sure to sign out current Moodle account?';

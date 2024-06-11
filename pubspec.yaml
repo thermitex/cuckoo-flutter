@@ -1,7 +1,7 @@
 name: cuckoo
 description: "Cuckoo - HKU Moodle Tracker"
 publish_to: 'none'
-version: 2.0.0
+version: 2.0.0+1
 
 environment:
   sdk: '>=3.3.2 <4.0.0'
@@ -35,7 +35,7 @@ dependencies:
   flutter_timezone: ^1.0.8
   timezone: ^0.9.3
   html: ^0.15.4
-  open_file: ^3.3.2
+  open_filex: ^4.4.0
   table_calendar: ^3.1.1
   package_info_plus: ^8.0.0
   in_app_purchase: ^3.2.0

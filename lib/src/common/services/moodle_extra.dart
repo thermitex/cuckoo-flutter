@@ -16,6 +16,7 @@ enum MoodleCourseSortingType { byCourseCode, byLastAccessed }
 class MoodleStorageKeys {
   static const wstoken = 'moodle_wstoken';
   static const privatetoken = 'moodle_privatetoken';
+  static const autoLoginInfo = 'moodle_autologininfo';
   static const siteInfo = 'moodle_site_info';
   static const courses = 'moodle_courses';
   static const events = 'moodle_events';
@@ -138,7 +139,7 @@ extension MoodleEventExtension on MoodleEvent {
   set completionMark(bool c) {
     completed = c;
     Moodle().eventManager._notifyManually(flushCache: true);
-    Moodle()._save();
+    Moodle()._saveEvents();
     bool shouldSync =
         Settings().get<bool>(SettingsKey.syncCompletionStatus) ?? true;
     if (shouldSync) Moodle.syncEventCompletion();
@@ -182,7 +183,7 @@ extension MoodleCourseExtension on MoodleCourse {
   set favoriteMark(bool fav) {
     customFavorite = fav;
     Moodle().courseManager._notifyManually();
-    Moodle()._save();
+    Moodle()._saveCourses();
   }
 
   /// Mark the access to the course.
