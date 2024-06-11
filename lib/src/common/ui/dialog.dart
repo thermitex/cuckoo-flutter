@@ -73,7 +73,8 @@ class CuckooDialog {
                 const SizedBox(height: 15.0),
                 if (buttonAlignment == DialogButtonAlignment.horizontal)
                   Row(
-                    children: List.generate(buttonTitles.length * 2 - 1, (index) {
+                    children:
+                        List.generate(buttonTitles.length * 2 - 1, (index) {
                       if (index % 2 == 1) {
                         return const SizedBox(width: 18.0);
                       } else {
@@ -92,7 +93,8 @@ class CuckooDialog {
                 else
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: List.generate(buttonTitles.length * 2 - 1, (index) {
+                    children:
+                        List.generate(buttonTitles.length * 2 - 1, (index) {
                       if (index % 2 == 1) {
                         return const SizedBox(width: 18.0);
                       } else {
