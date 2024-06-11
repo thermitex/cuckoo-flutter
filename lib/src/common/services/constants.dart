@@ -129,20 +129,18 @@ class Constants {
   static const kLearnMore = 'Learn more';
   static const kAboutTitle = 'About';
   static const kTipTitle = 'Tip Jar';
-  static const kAccountLearnMoreUrl =
-      'https://thermitex.github.io/cuckoo/auth/';
+  static const kAccountLearnMoreUrl = 'https://cuckoo-hku.xyz/safety/';
   static const kCheckGithub = 'Check repo on Github';
   static const kAboutWebsiteTitle = 'Project Website';
-  static const kAboutWebsiteUrl = 'https://thermitex.github.io/cuckoo/';
+  static const kAboutWebsiteUrl = 'https://cuckoo-hku.xyz/';
   static const kAboutDiscordTitle = 'Discord Community';
   static const kAboutDiscordContent =
       'Join our Discord community to leave your thoughts and receive latest updates.';
   static const kAboutDiscordUrl = 'https://discord.gg/K9scQKDF';
   static const kAboutPrivacyTitle = 'Privacy Policy';
-  static const kAboutPrivacyUrl = 'https://thermitex.github.io/cuckoo/privacy/';
+  static const kAboutPrivacyUrl = 'https://cuckoo-hku.xyz/privacy/';
   static const kAboutSoftwareLicense = 'Software Licenses';
-  static const kAboutSoftwareLicenseUrl =
-      'https://thermitex.github.io/cuckoo/license/';
+  static const kAboutSoftwareLicenseUrl = 'https://cuckoo-hku.xyz/license/';
   static const kProjectGithubUrl =
       'https://github.com/thermitex/cuckoo-flutter';
   static const kTipJarTitle =

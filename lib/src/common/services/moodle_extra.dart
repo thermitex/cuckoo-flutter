@@ -158,7 +158,7 @@ extension MoodleEventExtension on MoodleEvent {
       ..id = DateTime.now().secondEpoch
       ..name = ''
       ..description = ''
-      ..timestart = DateTime.now().secondEpoch
+      ..timestart = DateTime.now().secondEpoch + 3600
       ..eventtype = MoodleEventTypes.custom
       ..hascompletion = false;
     return event;
