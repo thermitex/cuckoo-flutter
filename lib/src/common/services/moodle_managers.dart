@@ -92,8 +92,16 @@ class MoodleCourseManager with ChangeNotifier {
       for (final course in sortedCourses) {
         var groups =
             RegExp(r'^(.*)_(\w{0,3})_(\d{4})$').firstMatch(course.idnumber);
-        final sem = int.tryParse(groups?.group(2)?[0] ?? "0");
+
         final year = int.tryParse(groups?.group(3) ?? "0");
+
+        String? semString = groups?.group(2)?[0];
+        // Check if it is summer semester
+        if (semString != null && semString.toLowerCase() == "s") {
+          semString = "3";
+        }
+
+        final sem = int.tryParse(semString ?? "0");
 
         if (year != null && sem != null) {
           coursesYearAndSemester[course.id] = [year, sem];
