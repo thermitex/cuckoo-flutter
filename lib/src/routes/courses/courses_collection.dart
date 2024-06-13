@@ -53,6 +53,8 @@ class _MoodleCourseCollectionViewState
     courses = context.courseManager.sortedCourses(
         sortBy: MoodleCourseSortingType.values[
             context.settingsValue<int>(SettingsKey.courseSortingType) ?? 0],
+        filterBy: MoodleCourseFilteringType.values[
+            context.settingsValue<int>(SettingsKey.courseFilteringType) ?? 0],
         showFavoriteOnly: widget.showFavoriteOnly);
 
     if (courses.isEmpty) {
