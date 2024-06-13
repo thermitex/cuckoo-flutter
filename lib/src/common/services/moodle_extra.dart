@@ -12,6 +12,9 @@ enum MoodleEventGroupingType { byTime, byCourse, none }
 /// Moodle courses sorting type.
 enum MoodleCourseSortingType { byCourseCode, byLastAccessed }
 
+/// Moodle courses filtering type.
+enum MoodleCourseFilteringType { none, byLatestSemester }
+
 /// Moodle storage keys.
 class MoodleStorageKeys {
   static const wstoken = 'moodle_wstoken';

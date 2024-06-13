@@ -61,6 +61,7 @@ class MoodleCourseManager with ChangeNotifier {
   /// Sorted courses given a sorting type.
   List<MoodleCourse> sortedCourses(
       {MoodleCourseSortingType sortBy = MoodleCourseSortingType.byCourseCode,
+      MoodleCourseFilteringType filterBy = MoodleCourseFilteringType.none,
       bool showFavoriteOnly = false}) {
     late List<MoodleCourse> sortedCourses;
     if (_sortedCoursesCache[sortBy] != null) {
@@ -84,7 +85,39 @@ class MoodleCourseManager with ChangeNotifier {
     if (showFavoriteOnly) {
       sortedCourses =
           sortedCourses.where((c) => c.customFavorite ?? false).toList();
+    } else if (filterBy == MoodleCourseFilteringType.byLatestSemester) {
+      int? latestYear, latestSemester;
+      Map<num, List<int>> coursesYearAndSemester = {};
+
+      for (final course in sortedCourses) {
+        var groups =
+            RegExp(r'^(.*)_(\w{0,3})_(\d{4})$').firstMatch(course.idnumber);
+        final sem = int.tryParse(groups?.group(2)?[0] ?? "0");
+        final year = int.tryParse(groups?.group(3) ?? "0");
+
+        if (year != null && sem != null) {
+          coursesYearAndSemester[course.id] = [year, sem];
+
+          if (latestYear == null || year > latestYear) {
+            latestYear = year;
+            latestSemester = sem;
+          } else if (year == latestYear && sem > latestSemester!) {
+            latestSemester = sem;
+          }
+        }
+      }
+
+      // TODO should this be cached ?
+      if (latestYear != null) {
+        sortedCourses = sortedCourses
+            .where((c) =>
+                coursesYearAndSemester.containsKey(c.id) &&
+                coursesYearAndSemester[c.id]!.first == latestYear &&
+                coursesYearAndSemester[c.id]!.last == latestSemester)
+            .toList();
+      }
     }
+
     return sortedCourses;
   }
 

@@ -84,6 +84,40 @@ class _CoursesPageState extends State<CoursesPage> {
               ),
             ),
           ),
+          if (!_showFavorite)
+            MorePanelElement(
+              title: Constants.kMorePanelFiltering,
+              icon: const Icon(Icons.filter_alt_outlined),
+              extendedView: Padding(
+                padding: const EdgeInsets.only(bottom: 3.0),
+                child: SizedBox(
+                  height: 35,
+                  width: double.infinity,
+                  child: ToggleSwitch(
+                    minWidth: double.infinity,
+                    customTextStyles: [TextStylePresets.body()],
+                    initialLabelIndex: context.settingsValue<int>(
+                            SettingsKey.courseFilteringType) ??
+                        0,
+                    dividerColor: Colors.transparent,
+                    activeBgColor: const [ColorPresets.primary],
+                    activeFgColor: Colors.white,
+                    inactiveBgColor: context.cuckooTheme.secondaryTransBg,
+                    inactiveFgColor: context.cuckooTheme.primaryText,
+                    totalSwitches: 2,
+                    radiusStyle: true,
+                    cornerRadius: 10.0,
+                    labels: const ['None', 'Latest Semester'],
+                    onToggle: (index) {
+                      if (index != null) {
+                        Settings()
+                            .set<int>(SettingsKey.courseFilteringType, index);
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ),
           MorePanelElement(
             title: Constants.kMorePanelSync,
             icon: const Icon(Icons.sync_rounded),

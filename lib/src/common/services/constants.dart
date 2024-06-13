@@ -36,6 +36,7 @@ class Constants {
   static const kMoodleUrlOpenLoading = 'Launching Moodle website...';
   static const kMorePanelGrouping = 'Group By';
   static const kMorePanelSorting = 'Sort By';
+  static const kMorePanelFiltering = 'Filter By';
   static const kMorePanelSync = 'Sync With Moodle';
   static const kMorePanelAddEvent = 'Add Custom Event';
   static const kAddReminder = 'Add Reminder';
