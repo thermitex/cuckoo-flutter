@@ -27,7 +27,8 @@ class Constants {
   static const kSessionInvalidErrDesc =
       'Your session may have expired or your Internet connection is unstable. Please try logging into Moodle again.';
   static const kAuthIncompleteDialog =
-      'The login is not complete. Try closing your browser and log in again.';
+      'The login is not complete. Try restarting the app and log in again if this keeps happening.';
+  static const kAuthTryAgainButton = 'Try Again in External Browser';
   static const kTryAgain = 'Try Again';
   static const kEventDetailDueItem = 'DUE IN';
   static const kEventDetailDetailItem = 'DESCRIPTION';
@@ -129,18 +130,18 @@ class Constants {
   static const kLearnMore = 'Learn more';
   static const kAboutTitle = 'About';
   static const kTipTitle = 'Tip Jar';
-  static const kAccountLearnMoreUrl = 'https://cuckoo-hku.xyz/safety/';
+  static const kAccountLearnMoreUrl = 'https://cuckoo-hku.xyz/safety';
   static const kCheckGithub = 'Check repo on Github';
   static const kAboutWebsiteTitle = 'Project Website';
-  static const kAboutWebsiteUrl = 'https://cuckoo-hku.xyz/';
+  static const kAboutWebsiteUrl = 'https://cuckoo-hku.xyz';
   static const kAboutDiscordTitle = 'Discord Community';
   static const kAboutDiscordContent =
       'Join our Discord community to leave your thoughts and receive latest updates.';
   static const kAboutDiscordUrl = 'https://discord.gg/K9scQKDF';
   static const kAboutPrivacyTitle = 'Privacy Policy';
-  static const kAboutPrivacyUrl = 'https://cuckoo-hku.xyz/privacy/';
+  static const kAboutPrivacyUrl = 'https://cuckoo-hku.xyz/privacy';
   static const kAboutSoftwareLicense = 'Software Licenses';
-  static const kAboutSoftwareLicenseUrl = 'https://cuckoo-hku.xyz/license/';
+  static const kAboutSoftwareLicenseUrl = 'https://cuckoo-hku.xyz/license';
   static const kProjectGithubUrl =
       'https://github.com/thermitex/cuckoo-flutter';
   static const kTipJarTitle =

@@ -16,6 +16,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Root widget of the entire Cuckoo app.
 ///
@@ -49,6 +50,10 @@ class RootState extends State<Root> with WidgetsBindingObserver {
       if (!mounted) return;
       if (link != null) {
         var tokenString = link.split('//').last;
+        // Close in-app browser for logging in
+        try {
+          closeInAppWebView();
+        } catch (_) {}
         CuckooFullScreenIndicator()
             .startLoading(message: Constants.kLoginMoodleLoading);
         Moodle.handleAuthResult(tokenString).then((status) {
@@ -56,8 +61,19 @@ class RootState extends State<Root> with WidgetsBindingObserver {
           if (status == MoodleAuthStatus.incomplete) {
             const CuckooDialog(
                 title: Constants.kAuthIncompleteDialog,
-                buttonTitles: [Constants.kOK],
-                buttonStyles: [CuckooButtonStyle.primary]).show(context);
+                buttonAlignment: DialogButtonAlignment.vertical,
+                buttonTitles: [
+                  Constants.kAuthTryAgainButton,
+                  Constants.kOK
+                ],
+                buttonStyles: [
+                  CuckooButtonStyle.primary,
+                  CuckooButtonStyle.secondary
+                ]).show(context).then((index) {
+              if (index != null && index == 0) {
+                Moodle.startAuth(internal: false);
+              }
+            });
           }
         });
       }

@@ -175,10 +175,14 @@ class Moodle {
   /// This method will check if a user has logged in. It will not prompt another
   /// authentication process if there is already a logged-in user unless `force`
   /// is set to true.
-  static Future<bool> startAuth({bool force = false}) async {
+  static Future<bool> startAuth(
+      {bool force = false, bool internal = true}) async {
     if (!force && isUserLoggedIn) return false;
     final authUrl = Moodle()._buildLaunchUrl();
-    return await launchUrl(authUrl, mode: LaunchMode.externalApplication);
+    return await launchUrl(authUrl,
+        mode: internal
+            ? LaunchMode.inAppBrowserView
+            : LaunchMode.externalApplication);
   }
 
   /// Handle the authentication result.
