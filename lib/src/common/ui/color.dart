@@ -10,9 +10,11 @@ class ColorPresets {
   static const Color black = Colors.black;
 
   static const Color negativePrimary = Color.fromARGB(255, 255, 91, 91);
-  static const Color negativeTertiary = Color.fromARGB(26, 255, 91, 91);
+  static const Color negativeTertiary = Color.fromARGB(30, 255, 91, 91);
+  static const Color warningPrimary = Color.fromARGB(255, 234, 187, 0);
+  static const Color warningTertiary = Color.fromARGB(30, 255, 204, 0);
   static const Color positivePrimary = Color.fromARGB(255, 105, 240, 174);
-  static const Color positiveTertiary = Color.fromARGB(26, 105, 240, 174);
+  static const Color positiveTertiary = Color.fromARGB(30, 105, 240, 174);
 
   // ******* Light *******
 

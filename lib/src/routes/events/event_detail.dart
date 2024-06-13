@@ -2,9 +2,11 @@ import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/services/reminders.dart';
+import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:cuckoo/src/routes/events/create/create.dart';
+import 'package:cuckoo/src/routes/events/reminders/reminder_detail.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -16,23 +18,61 @@ class EventDetailView extends StatelessWidget {
   final MoodleEvent event;
 
   Widget _buildEventHeader(BuildContext context) {
+    Color headerTint =
+        event.color == null ? context.cuckooTheme.secondaryText : event.color!;
+    Color? badgeForegroundColor = Color.lerp(
+        context.cuckooTheme.popUpBackground,
+        event.color == null
+            ? context.cuckooTheme.popUpBackground
+            : event.color!,
+        0.15);
+    bool canShowCustomBadge = event.eventtype == MoodleEventTypes.custom &&
+        trueSettingsValue(SettingsKey.differentiateCustom);
+    bool shouldShowTextHeader =
+        event.course != null || (event.course == null && !canShowCustomBadge);
+
     return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 80),
+      constraints: BoxConstraints(
+          minHeight:
+              80 + ((canShowCustomBadge && shouldShowTextHeader) ? 20.0 : 0.0)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            event.course == null
-                ? (event.eventtype == MoodleEventTypes.user
-                    ? 'Moodle User Event'
-                    : 'Custom Event')
-                : event.course!.displayname,
-            style: TextStylePresets.body(weight: FontWeight.w600).copyWith(
+          if (canShowCustomBadge)
+            Container(
+              margin: const EdgeInsets.only(bottom: 7.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15.0),
                 color: event.color == null
-                    ? context.cuckooTheme.secondaryText
-                    : event.color!),
-          ),
-          const SizedBox(height: 3.0),
+                    ? headerTint
+                    : headerTint.withAlpha(200),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.event_rounded,
+                      size: 15, color: badgeForegroundColor),
+                  const SizedBox(width: 4.0),
+                  Text('Custom Event',
+                      style: TextStylePresets.body(
+                              size: 12, weight: FontWeight.w500)
+                          .copyWith(color: badgeForegroundColor))
+                ],
+              ),
+            ),
+          if (shouldShowTextHeader)
+            Text(
+              event.course == null
+                  ? (event.eventtype == MoodleEventTypes.user
+                      ? 'Moodle User Event'
+                      : 'Custom Event')
+                  : event.course!.displayname,
+              style: TextStylePresets.body(weight: FontWeight.w600)
+                  .copyWith(color: headerTint),
+            ),
+          if (shouldShowTextHeader) const SizedBox(height: 3.0),
           Text(
             event.name,
             maxLines: 4,
@@ -76,7 +116,7 @@ class EventDetailView extends StatelessWidget {
     if (event.description.isNotEmpty) {
       // Add desc item
       children
-        ..add(const SizedBox(height: 18.0))
+        ..add(const SizedBox(height: 20.0))
         ..add(Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
             Constants.kEventDetailDetailItem,
@@ -101,6 +141,87 @@ class EventDetailView extends StatelessWidget {
           ),
         ]));
     }
+
+    // Add reminder item
+    final appliedReminders = Reminders().remindersAppliedToEvent(event);
+    children
+      ..add(const SizedBox(height: 20.0))
+      ..add(Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            Constants.kEventDetailReminderItem,
+            style: TextStylePresets.body(size: 10, weight: FontWeight.bold)
+                .copyWith(color: context.cuckooTheme.secondaryText),
+          ),
+          const SizedBox(height: 1.5),
+          if (falseSettingsValue(SettingsKey.reminderIgnoreCustom) &&
+              event.eventtype == MoodleEventTypes.custom)
+            Text(
+              Constants.kEventDetailMutedRemindersCustom,
+              style: TextStylePresets.body()
+                  .copyWith(color: context.cuckooTheme.tertiaryText),
+            )
+          else if (trueSettingsValue(SettingsKey.reminderIgnoreCompleted) &&
+              event.isCompleted)
+            Text(
+              Constants.kEventDetailMutedRemindersCompleted,
+              style: TextStylePresets.body()
+                  .copyWith(color: context.cuckooTheme.tertiaryText),
+            )
+          else if (appliedReminders.isEmpty)
+            Text(
+              Constants.kEventDetailNoReminders,
+              style: TextStylePresets.body()
+                  .copyWith(color: context.cuckooTheme.tertiaryText),
+            )
+          else
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(appliedReminders.length, (index) {
+                final reminder = appliedReminders[index];
+                return Builder(builder: (context) {
+                  final reminderExpired = reminder.scheduleTimePassed(event);
+                  final tint = reminderExpired
+                      ? context.cuckooTheme.tertiaryText
+                      : context.cuckooTheme.primaryText;
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context, rootNavigator: true)
+                        ..pop()
+                        ..push(
+                          MaterialPageRoute(
+                              fullscreenDialog: true,
+                              builder: (context) => ReminderDetailPage(reminder,
+                                  fullscreen: true)),
+                        );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 2.0),
+                      child: RichText(
+                          text: TextSpan(
+                        style: TextStylePresets.body().copyWith(color: tint),
+                        children: [
+                          TextSpan(text: reminder.title ?? ''),
+                          WidgetSpan(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 1.0),
+                              child: Icon(Icons.chevron_right_rounded,
+                                  size: 16, color: tint),
+                            ),
+                          ),
+                        ],
+                      )),
+                    ),
+                  );
+                });
+              }),
+            )
+        ],
+      ));
 
     // To avoid overlapping with fade out effect
     children.add(const SizedBox(height: 20.0));

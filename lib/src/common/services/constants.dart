@@ -32,6 +32,12 @@ class Constants {
   static const kTryAgain = 'Try Again';
   static const kEventDetailDueItem = 'DUE IN';
   static const kEventDetailDetailItem = 'DESCRIPTION';
+  static const kEventDetailReminderItem = 'REMINDERS';
+  static const kEventDetailMutedRemindersCompleted =
+      'Reminders are muted for completed events.';
+  static const kEventDetailMutedRemindersCustom =
+      'Reminders are muted for custom events.';
+  static const kEventDetailNoReminders = 'No reminders applied to this event.';
   static const kMarkCompleteToast = 'Event Marked as Completed';
   static const kUnmarkCompleteToast = 'Event Unmarked as Completed';
   static const kMoodleUrlOpenLoading = 'Launching Moodle website...';
@@ -158,4 +164,6 @@ class Constants {
       'Thank you for your tip! Your support means a lot to us.';
   static const kTipThankYouDesc =
       'We strive to constantly improve Cuckoo for a better user experience. Don\'t forget to join the Discord community to let us know how we can further improve.';
+  static const kNotiPermissionWarning =
+      'Cuckoo currently does not have the permission to display notifications, and therfore the reminders here may not work as expected. Please go to Settings and allow notifications from Cuckoo.';
 }
