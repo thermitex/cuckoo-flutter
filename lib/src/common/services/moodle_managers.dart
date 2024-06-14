@@ -95,7 +95,7 @@ class MoodleCourseManager with ChangeNotifier {
 
         // One semester course
         final oneSemesterGroups =
-            RegExp(r'^(.*)_(\w{1,3})_(\d{4})$').firstMatch(course.idnumber);
+            RegExp(r'^(.*)_(\w{1,4})_(\d{4})$').firstMatch(course.idnumber);
         if (oneSemesterGroups != null) {
           yearString = oneSemesterGroups.group(3);
           semString = oneSemesterGroups.group(2)?[0];
