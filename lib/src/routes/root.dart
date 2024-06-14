@@ -179,7 +179,7 @@ class RootState extends State<Root> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     // Init notifications
     FlutterLocalNotificationsPlugin().initialize(const InitializationSettings(
-        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        android: AndroidInitializationSettings('@drawable/notification'),
         iOS: DarwinInitializationSettings()));
     // Request permissions for android
     if (Platform.isAndroid) {
