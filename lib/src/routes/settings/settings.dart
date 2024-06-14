@@ -255,18 +255,20 @@ class SettingsPage extends StatelessWidget {
                   ));
                 },
               ),
+
               /// Keep tip jar within iOS for now
-              if (Platform.isIOS) SettingsFirstLevelMenuItem(
-                icon: Symbols.favorite_rounded,
-                text: Constants.kTipTitle,
-                action: () {
-                  Navigator.of(context, rootNavigator: true)
-                      .push(MaterialPageRoute(
-                    fullscreenDialog: true,
-                    builder: (context) => const SettingsTipPage(),
-                  ));
-                },
-              ),
+              if (Platform.isIOS)
+                SettingsFirstLevelMenuItem(
+                  icon: Symbols.favorite_rounded,
+                  text: Constants.kTipTitle,
+                  action: () {
+                    Navigator.of(context, rootNavigator: true)
+                        .push(MaterialPageRoute(
+                      fullscreenDialog: true,
+                      builder: (context) => const SettingsTipPage(),
+                    ));
+                  },
+                ),
               const SizedBox(height: 20.0),
               if (context.loginStatusManager.isUserLoggedIn)
                 SettingsFirstLevelMenuItem(
