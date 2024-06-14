@@ -199,7 +199,7 @@ class EventDetailView extends StatelessWidget {
                         );
                     },
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 2.0),
+                      padding: const EdgeInsets.only(top: 3.0),
                       child: RichText(
                           text: TextSpan(
                         style: TextStylePresets.body().copyWith(color: tint),
