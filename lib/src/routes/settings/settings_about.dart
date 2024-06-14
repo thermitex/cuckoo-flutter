@@ -34,14 +34,30 @@ class SettingsAboutPage extends StatelessWidget {
                 .copyWith(height: 1.1),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 3.0),
-            child: Text(
-              'Developed by Jerry Li',
-              style: TextStylePresets.body(size: 12, weight: FontWeight.w500)
-                  .copyWith(
-                      color: context.cuckooTheme.secondaryText, height: 1.3),
-            ),
-          )
+              padding: const EdgeInsets.only(top: 3.0),
+              child: RichText(
+                text: TextSpan(
+                  style:
+                      TextStylePresets.body(size: 12, weight: FontWeight.w500)
+                          .copyWith(
+                              color: context.cuckooTheme.secondaryText,
+                              height: 1.3),
+                  children: [
+                    const TextSpan(
+                      text: 'Developed by Jerry Li\nAnd ',
+                    ),
+                    TextSpan(
+                        text: 'Contributors',
+                        style: TextStylePresets.body(
+                                size: 12, weight: FontWeight.w500)
+                            .copyWith(color: ColorPresets.primary, height: 1.3),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            launchUrlString(Constants.kProjectContributorsUrl);
+                          })
+                  ],
+                ),
+              ))
         ],
       ),
     );

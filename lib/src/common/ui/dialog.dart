@@ -96,7 +96,7 @@ class CuckooDialog {
                     children:
                         List.generate(buttonTitles.length * 2 - 1, (index) {
                       if (index % 2 == 1) {
-                        return const SizedBox(width: 18.0);
+                        return const SizedBox(height: 10.0);
                       } else {
                         final i = index ~/ 2;
                         return CuckooButton(

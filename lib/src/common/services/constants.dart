@@ -27,10 +27,17 @@ class Constants {
   static const kSessionInvalidErrDesc =
       'Your session may have expired or your Internet connection is unstable. Please try logging into Moodle again.';
   static const kAuthIncompleteDialog =
-      'The login is not complete. Try closing your browser and log in again.';
+      'The login is not complete. Try restarting the app and log in again if this keeps happening.';
+  static const kAuthTryAgainButton = 'Try Again in External Browser';
   static const kTryAgain = 'Try Again';
   static const kEventDetailDueItem = 'DUE IN';
   static const kEventDetailDetailItem = 'DESCRIPTION';
+  static const kEventDetailReminderItem = 'REMINDERS';
+  static const kEventDetailMutedRemindersCompleted =
+      'Reminders are muted for completed events.';
+  static const kEventDetailMutedRemindersCustom =
+      'Reminders are muted for custom events.';
+  static const kEventDetailNoReminders = 'No reminders applied to this event.';
   static const kMarkCompleteToast = 'Event Marked as Completed';
   static const kUnmarkCompleteToast = 'Event Unmarked as Completed';
   static const kMoodleUrlOpenLoading = 'Launching Moodle website...';
@@ -130,20 +137,22 @@ class Constants {
   static const kLearnMore = 'Learn more';
   static const kAboutTitle = 'About';
   static const kTipTitle = 'Tip Jar';
-  static const kAccountLearnMoreUrl = 'https://cuckoo-hku.xyz/safety/';
+  static const kAccountLearnMoreUrl = 'https://cuckoo-hku.xyz/safety';
   static const kCheckGithub = 'Check repo on Github';
   static const kAboutWebsiteTitle = 'Project Website';
-  static const kAboutWebsiteUrl = 'https://cuckoo-hku.xyz/';
+  static const kAboutWebsiteUrl = 'https://cuckoo-hku.xyz';
   static const kAboutDiscordTitle = 'Discord Community';
   static const kAboutDiscordContent =
       'Join our Discord community to leave your thoughts and receive latest updates.';
   static const kAboutDiscordUrl = 'https://discord.gg/K9scQKDF';
   static const kAboutPrivacyTitle = 'Privacy Policy';
-  static const kAboutPrivacyUrl = 'https://cuckoo-hku.xyz/privacy/';
+  static const kAboutPrivacyUrl = 'https://cuckoo-hku.xyz/privacy';
   static const kAboutSoftwareLicense = 'Software Licenses';
-  static const kAboutSoftwareLicenseUrl = 'https://cuckoo-hku.xyz/license/';
+  static const kAboutSoftwareLicenseUrl = 'https://cuckoo-hku.xyz/license';
   static const kProjectGithubUrl =
       'https://github.com/thermitex/cuckoo-flutter';
+  static const kProjectContributorsUrl =
+      'https://github.com/thermitex/cuckoo-flutter/graphs/contributors';
   static const kTipJarTitle =
       'Donate any amount to help Cuckoo stay on App Store.';
   static const kTipJarSubtitle =
@@ -158,4 +167,6 @@ class Constants {
       'Thank you for your tip! Your support means a lot to us.';
   static const kTipThankYouDesc =
       'We strive to constantly improve Cuckoo for a better user experience. Don\'t forget to join the Discord community to let us know how we can further improve.';
+  static const kNotiPermissionWarning =
+      'Cuckoo currently does not have the permission to display notifications, and therfore the reminders here may not work as expected. Please go to Settings and allow notifications from Cuckoo.';
 }

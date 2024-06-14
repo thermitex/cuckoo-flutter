@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/reminders.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:cuckoo/src/routes/events/reminders/reminder_detail.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
@@ -18,6 +22,9 @@ class ReminderPage extends StatefulWidget {
 class _ReminderPageState extends State<ReminderPage> {
   // Transparency of the title.
   double _titleTrans = 0.0;
+
+  // If a permission warning should be displayed at the top.
+  bool _shouldShowPermissionWarning = false;
 
   final title = Padding(
     padding: const EdgeInsets.only(bottom: 8.0),
@@ -89,6 +96,22 @@ class _ReminderPageState extends State<ReminderPage> {
     );
   }
 
+  Widget _permissionWarning() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+      margin: const EdgeInsets.symmetric(vertical: 7.0),
+      decoration: BoxDecoration(
+          color: ColorPresets.warningTertiary,
+          borderRadius: BorderRadius.circular(17.0),
+          border: Border.all(color: ColorPresets.warningPrimary)),
+      child: Text(
+        Constants.kNotiPermissionWarning,
+        style: TextStylePresets.body(weight: FontWeight.w500, size: 12)
+            .copyWith(color: ColorPresets.warningPrimary),
+      ),
+    );
+  }
+
   Widget _reminderTile(EventReminder reminder) {
     bool disabled = reminder.disabled ?? false;
     return GestureDetector(
@@ -156,15 +179,23 @@ class _ReminderPageState extends State<ReminderPage> {
         return false;
       },
       child: ListView.builder(
-          itemCount: Reminders().numReminders + 2,
+          itemCount:
+              Reminders().numReminders + (_shouldShowPermissionWarning ? 3 : 2),
           itemBuilder: (context, index) {
             if (index == 0) {
               // Title
               return title;
             }
-            if (index <= Reminders().numReminders) {
+            if (index == 1 && _shouldShowPermissionWarning) {
+              // Warning
+              return _permissionWarning();
+            }
+            if (index <=
+                Reminders().numReminders +
+                    (_shouldShowPermissionWarning ? 1 : 0)) {
               // Show reminder tiles
-              return _reminderTile(Reminders().reminderAtIndex(index - 1));
+              return _reminderTile(Reminders().reminderAtIndex(
+                  index - (_shouldShowPermissionWarning ? 2 : 1)));
             }
             return _addReminderItem();
           }),
@@ -181,6 +212,38 @@ class _ReminderPageState extends State<ReminderPage> {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => ReminderDetailPage(reminder)),
     );
+  }
+
+  void _checkNotificationPermission() async {
+    if (Platform.isIOS) {
+      final result = await FlutterLocalNotificationsPlugin()
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+      setState(() => _shouldShowPermissionWarning = !(result ?? false));
+    } else if (Platform.isAndroid) {
+      final androidPlugin = FlutterLocalNotificationsPlugin()
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()!;
+      var result =
+          await androidPlugin.requestNotificationsPermission() ?? false;
+      final info = await DeviceInfoPlugin().androidInfo;
+      if (info.version.sdkInt >= 33) {
+        result &= await androidPlugin.requestExactAlarmsPermission() ?? false;
+      }
+      setState(() => _shouldShowPermissionWarning = !result);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Check notification permission
+    _checkNotificationPermission();
   }
 
   @override

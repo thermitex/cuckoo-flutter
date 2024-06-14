@@ -13,10 +13,13 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 /// Will be pushed into the navigator when tapping on a reminder tile or
 /// creating a new reminder.
 class ReminderDetailPage extends StatefulWidget {
-  const ReminderDetailPage(this.reminder, {super.key});
+  const ReminderDetailPage(this.reminder, {super.key, this.fullscreen = false});
 
   /// The reminder to show details.
   final EventReminder reminder;
+
+  /// Open reminder detail in fullscreen.
+  final bool fullscreen;
 
   @override
   State<ReminderDetailPage> createState() => _ReminderDetailPageState();
@@ -153,7 +156,8 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
     return Scaffold(
       appBar: CuckooAppBar(
         title: widget.reminder.title ?? Constants.kNewReminderTitle,
-        exitButtonStyle: ExitButtonStyle.back,
+        exitButtonStyle:
+            widget.fullscreen ? ExitButtonStyle.close : ExitButtonStyle.back,
         actionItems: [
           CuckooAppBarActionItem(
               icon: Icon(

@@ -58,6 +58,7 @@ class Reminders with ChangeNotifier {
     final reminders = Reminders();
     reminders._prefs = Global.prefs;
     reminders._load();
+    reminders._initTimezoneIfNeeded();
   }
 
   // ------------Common interfaces------------
@@ -70,6 +71,11 @@ class Reminders with ChangeNotifier {
 
   // Get reminder at a specific index.
   EventReminder reminderAtIndex(int index) => _reminders[index];
+
+  /// Reminders applied to a specific event.
+  List<EventReminder> remindersAppliedToEvent(MoodleEvent event) => _reminders
+      .where((reminder) => reminder.applicableToEvent(event))
+      .toList();
 
   /// Create a new reminder for configuration.
   static EventReminder create() {
@@ -181,7 +187,7 @@ class Reminders with ChangeNotifier {
             const NotificationDetails(
                 android: AndroidNotificationDetails(
               'reminder_noti',
-              'Reminder notifications',
+              'Reminders',
               importance: Importance.max,
               priority: Priority.high,
             )),
@@ -322,5 +328,14 @@ extension EventReminderExtenson on EventReminder {
           minutes: min!.toInt() - eventTime.minute));
     }
     return eventTime;
+  }
+
+  /// If the schedule time has passed for an event.
+  bool scheduleTimePassed(MoodleEvent event) {
+    try {
+      return scheduleTime(event).isBefore(tz.TZDateTime.now(tz.local));
+    } catch (_) {
+      return false;
+    }
   }
 }
