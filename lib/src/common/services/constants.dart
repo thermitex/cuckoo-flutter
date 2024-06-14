@@ -150,6 +150,8 @@ class Constants {
   static const kAboutSoftwareLicenseUrl = 'https://cuckoo-hku.xyz/license';
   static const kProjectGithubUrl =
       'https://github.com/thermitex/cuckoo-flutter';
+  static const kProjectContributorsUrl =
+      'https://github.com/thermitex/cuckoo-flutter/graphs/contributors';
   static const kTipJarTitle =
       'Donate any amount to help Cuckoo stay on App Store.';
   static const kTipJarSubtitle =

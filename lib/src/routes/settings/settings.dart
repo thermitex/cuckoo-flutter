@@ -255,7 +255,8 @@ class SettingsPage extends StatelessWidget {
                   ));
                 },
               ),
-              SettingsFirstLevelMenuItem(
+              /// Keep tip jar within iOS for now
+              if (Platform.isIOS) SettingsFirstLevelMenuItem(
                 icon: Symbols.favorite_rounded,
                 text: Constants.kTipTitle,
                 action: () {
