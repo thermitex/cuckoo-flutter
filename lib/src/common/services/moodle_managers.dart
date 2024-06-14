@@ -87,29 +87,42 @@ class MoodleCourseManager with ChangeNotifier {
           sortedCourses.where((c) => c.customFavorite ?? false).toList();
     } else if (filterBy == MoodleCourseFilteringType.byLatestSemester) {
       int? latestYear, latestSemester;
-      Map<num, List<int>> coursesYearAndSemester = {};
+      Map<num, List<int?>> coursesYearAndSemester = {};
 
       for (final course in sortedCourses) {
-        var groups =
-            RegExp(r'^(.*)_(\w{0,3})_(\d{4})$').firstMatch(course.idnumber);
+        int? year, sem;
+        String? yearString, semString;
 
-        final year = int.tryParse(groups?.group(3) ?? "0");
-
-        String? semString = groups?.group(2)?[0];
-        // Check if it is summer semester
-        if (semString != null && semString.toLowerCase() == "s") {
-          semString = "3";
+        // One semester course
+        final oneSemesterGroups =
+            RegExp(r'^(.*)_(\w{1,4})_(\d{4})$').firstMatch(course.idnumber);
+        if (oneSemesterGroups != null) {
+          yearString = oneSemesterGroups.group(3);
+          semString = oneSemesterGroups.group(2)?[0];
+        } else {
+          // Full year course
+          final fullYearGroups =
+              RegExp(r'^(.*)_(\d{4})$').firstMatch(course.idnumber);
+          if (fullYearGroups != null) yearString = fullYearGroups.group(2);
         }
 
-        final sem = int.tryParse(semString ?? "0");
+        if (yearString != null) year = int.tryParse(yearString);
+        if (semString != null) {
+          // Special case for summer semester
+          if (semString.toLowerCase() == "s") semString = "3";
 
-        if (year != null && sem != null) {
+          sem = int.tryParse(semString);
+        }
+
+        if (year != null) {
           coursesYearAndSemester[course.id] = [year, sem];
 
           if (latestYear == null || year > latestYear) {
             latestYear = year;
             latestSemester = sem;
-          } else if (year == latestYear && sem > latestSemester!) {
+          } else if (year == latestYear &&
+              sem != null &&
+              (latestSemester == null || sem > latestSemester)) {
             latestSemester = sem;
           }
         }
@@ -121,7 +134,8 @@ class MoodleCourseManager with ChangeNotifier {
             .where((c) =>
                 coursesYearAndSemester.containsKey(c.id) &&
                 coursesYearAndSemester[c.id]!.first == latestYear &&
-                coursesYearAndSemester[c.id]!.last == latestSemester)
+                (coursesYearAndSemester[c.id]!.last == null ||
+                    coursesYearAndSemester[c.id]!.last == latestSemester))
             .toList();
       }
     }
