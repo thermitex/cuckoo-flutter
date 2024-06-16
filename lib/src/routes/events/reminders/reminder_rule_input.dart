@@ -11,22 +11,6 @@ import 'package:flutter/services.dart';
 
 typedef EventReminderRules = List<EventReminderRule>;
 
-const List<String> kSubjectChoices = [
-  'Course Code',
-  'Course Name',
-  'Event Title',
-];
-
-const List<IconData> kSubjectChoiceIcons = [
-  Icons.data_array_rounded,
-  Icons.school_rounded,
-  Icons.event_rounded
-];
-
-const List<String> kActionChoices = ['Contains', 'Does Not Contain', 'Matches'];
-
-const List<String> kRelationChoices = ['AND', 'OR'];
-
 class ReminderRuleInput extends CuckooFormInput<EventReminderRules> {
   ReminderRuleInput({
     super.key,
@@ -123,15 +107,18 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
               runSpacing: 4.0,
               alignment: WrapAlignment.start,
               children: [
-                InputSelectorAccessory(
-                  kSubjectChoices[rule.subject.toInt()],
-                  icon: kSubjectChoiceIcons[rule.subject.toInt()],
+                CuckooSelector(
+                  Constants.kReminderSubjectChoices[rule.subject.toInt()],
+                  icon: Constants
+                      .kReminderSubjectChoiceIcons[rule.subject.toInt()],
                   onPressed: () {
                     SelectionPanel(
                       items: List.generate(
-                          kSubjectChoices.length,
-                          (index) => SelectionPanelItem(kSubjectChoices[index],
-                              icon: kSubjectChoiceIcons[index],
+                          Constants.kReminderSubjectChoices.length,
+                          (index) => SelectionPanelItem(
+                              Constants.kReminderSubjectChoices[index],
+                              icon:
+                                  Constants.kReminderSubjectChoiceIcons[index],
                               description: [
                                 Constants.kRuleSubjectCourseCodeDesc,
                                 Constants.kRuleSubjectCourseNameDesc,
@@ -146,13 +133,14 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
                     });
                   },
                 ),
-                InputSelectorAccessory(
-                  kActionChoices[rule.action.toInt()],
+                CuckooSelector(
+                  Constants.kReminderActionChoices[rule.action.toInt()],
                   onPressed: () {
                     SelectionPanel(
                       items: List.generate(
-                          kActionChoices.length,
-                          (index) => SelectionPanelItem(kActionChoices[index],
+                          Constants.kReminderActionChoices.length,
+                          (index) => SelectionPanelItem(
+                              Constants.kReminderActionChoices[index],
                               icon: [
                                 Icons.search_rounded,
                                 Icons.search_off_rounded,
@@ -253,7 +241,7 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
               ),
               child: Center(
                   child: Text(
-                kRelationChoices[
+                Constants.kReminderRelationChoices[
                     (rule.relationWithNext ?? ReminderRuleRelation.and)
                         .toInt()],
                 style: TextStylePresets.body(size: 10, weight: FontWeight.w600)

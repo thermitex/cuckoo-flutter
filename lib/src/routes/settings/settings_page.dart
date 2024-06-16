@@ -147,7 +147,7 @@ class _SettingsItemState extends State<SettingsItem> {
                       },
                     )
                   else if (widget.type == SettingsItemType.choice)
-                    InputSelectorAccessory(
+                    CuckooSelector(
                       widget.choiceNames![_value],
                       backgroundColor: ColorPresets.primary
                           .withAlpha(context.isDarkMode ? 70 : 30),

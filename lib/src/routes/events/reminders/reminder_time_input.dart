@@ -129,7 +129,7 @@ class _ReminderRelativeTimingInputViewState
               contentPadding: const EdgeInsets.fromLTRB(0, -2, 0, 2)),
         )),
         const SizedBox(width: 10.0),
-        InputSelectorAccessory(
+        CuckooSelector(
           kUnitChoices[_data.unit],
           onPressed: () {
             SelectionPanel(

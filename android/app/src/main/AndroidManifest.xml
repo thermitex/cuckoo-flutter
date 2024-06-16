@@ -58,6 +58,7 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Permissions for local notifications -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>

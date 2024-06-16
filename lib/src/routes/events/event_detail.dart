@@ -116,7 +116,7 @@ class EventDetailView extends StatelessWidget {
     if (event.description.isNotEmpty) {
       // Add desc item
       children
-        ..add(const SizedBox(height: 20.0))
+        ..add(const SizedBox(height: 24.0))
         ..add(Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
             Constants.kEventDetailDetailItem,
@@ -145,7 +145,7 @@ class EventDetailView extends StatelessWidget {
     // Add reminder item
     final appliedReminders = Reminders().remindersAppliedToEvent(event);
     children
-      ..add(const SizedBox(height: 20.0))
+      ..add(const SizedBox(height: 24.0))
       ..add(Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

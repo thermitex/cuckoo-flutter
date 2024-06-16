@@ -2,11 +2,12 @@ import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:flutter/material.dart';
 
-class InputSelectorAccessory extends StatelessWidget {
-  const InputSelectorAccessory(this.description,
+class CuckooSelector extends StatelessWidget {
+  const CuckooSelector(this.description,
       {super.key,
       this.icon,
       this.onPressed,
+      this.color,
       this.backgroundColor,
       this.fontSize = 12.0,
       this.borderRadius = 10.0});
@@ -16,6 +17,9 @@ class InputSelectorAccessory extends StatelessWidget {
 
   /// Background color of the selector.
   final Color? backgroundColor;
+
+  /// Color of the display.
+  final Color? color;
 
   /// Size of the font.
   final double fontSize;
@@ -36,7 +40,7 @@ class InputSelectorAccessory extends StatelessWidget {
       children
         ..add(Icon(
           icon,
-          color: ColorPresets.primary,
+          color: color ?? ColorPresets.primary,
           size: 16.0,
         ))
         ..add(const SizedBox(width: 4.0));
@@ -48,13 +52,13 @@ class InputSelectorAccessory extends StatelessWidget {
         child: Text(
           description,
           style: TextStylePresets.body(size: fontSize, weight: FontWeight.w500)
-              .copyWith(color: ColorPresets.primary),
+              .copyWith(color: color ?? ColorPresets.primary),
         ),
       ),
       const SizedBox(width: 2.0),
-      const Icon(
+      Icon(
         Icons.expand_more_rounded,
-        color: ColorPresets.primary,
+        color: color ?? ColorPresets.primary,
         size: 15.0,
       )
     ]);
