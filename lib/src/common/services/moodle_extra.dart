@@ -39,6 +39,7 @@ class MoodleFunctions {
       'core_completion_update_activity_completion_status_manually';
   static const getCourseContents = 'core_course_get_contents';
   static const recordCourseView = 'core_course_view_course';
+  static const getGradesTable = 'gradereport_user_get_grades_table';
 }
 
 /// Types of Moodle events.
@@ -143,8 +144,7 @@ extension MoodleEventExtension on MoodleEvent {
     completed = c;
     Moodle().eventManager._notifyManually(flushCache: true);
     Moodle()._saveEvents();
-    bool shouldSync =
-        Settings().get<bool>(SettingsKey.syncCompletionStatus) ?? true;
+    bool shouldSync = trueSettingsValue(SettingsKey.syncCompletionStatus);
     if (shouldSync) Moodle.syncEventCompletion();
   }
 
@@ -213,4 +213,45 @@ extension MoodleCourseModuleExtension on MoodleCourseModule {
       contents != null &&
       contentsinfo != null &&
       modname == 'resource';
+}
+
+/// Shortcuts for Moodle Course Grades
+extension MoodleCourseGradeExtension on MoodleCourseGrade {
+  /// Get the double value of the grade.
+  double? get gradeValue => double.tryParse(grade);
+
+  /// Get the grade string.
+  String get gradeStr => gradeValue?.toStringAsFixed(1) ?? grade;
+
+  /// Get both ends of the range.
+  List<int>? get rangeEnds {
+    final comps = range.split('&ndash;');
+    if (comps.length == 2) {
+      final ends = comps.map((c) => int.tryParse(c)).toList();
+      if (ends.first != null && ends.last != null) {
+        return [ends.first!, ends.last!];
+      }
+    }
+    return null;
+  }
+
+  /// Parse the title of the grade.
+  String get title {
+    final document = parse(itemname);
+    final titles = document.getElementsByClassName('gradeitemheader');
+    if (titles.isNotEmpty) {
+      return titles.first.text;
+    }
+    return 'Unkown Grade Item';
+  }
+
+  /// Get url of the grade.
+  String? get itemUrl {
+    final document = parse(itemname);
+    final links = document.getElementsByTagName('a');
+    if (links.isNotEmpty) {
+      return links.first.attributes['href'];
+    }
+    return null;
+  }
 }

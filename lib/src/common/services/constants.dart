@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 /// Constants used in Cuckoo.
 class Constants {
   static const kEventsTitle = 'Events';
@@ -64,6 +66,22 @@ class Constants {
       'Reminder will apply to events that does not contain the content, case-insensitive.';
   static const kRuleActionMatchedDesc =
       'Reminder will apply to events that matches the content as a regular expression pattern.';
+  static const kReminderSubjectChoices = [
+    'Course Code',
+    'Course Name',
+    'Event Title',
+  ];
+  static const kReminderSubjectChoiceIcons = [
+    Icons.data_array_rounded,
+    Icons.school_rounded,
+    Icons.event_rounded
+  ];
+  static const kReminderActionChoices = [
+    'Contains',
+    'Does Not Contain',
+    'Matches'
+  ];
+  static const kReminderRelationChoices = ['AND', 'OR'];
   static const kReminderSavedPrompt = 'Reminder Saved';
   static const kReminderDeletedPrompt = 'Reminder Deleted';
   static const kCustomEventDeletedPrompt = 'Custom Event Deleted';
@@ -84,6 +102,11 @@ class Constants {
   static const kShowAllCoursesButton = 'Show All Courses';
   static const kSetCourseFavorite = 'Course Marked As Favorite';
   static const kUnsetCourseFavorite = 'Course Unmarked As Favorite';
+  static const kCourseViewTypeDisplayTexts = ['Course Contents', 'Grades'];
+  static const kCourseViewTypeIcons = [
+    Icons.format_list_bulleted_rounded,
+    Icons.assessment_outlined,
+  ];
   static const kDownloadFileLoading = 'Downloading file...';
   static const kEventsClearPrompt =
       'Amazing! There are currently no upcoming events for you.';

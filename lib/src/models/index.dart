@@ -1,3 +1,4 @@
+export 'moodleCourseGrade.dart';
 export 'moodleAutoLoginInfo.dart';
 export 'moodleSiteInfo.dart';
 export 'moodleEvent.dart';

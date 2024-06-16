@@ -12,6 +12,7 @@ import 'package:cuckoo/src/models/index.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:html/parser.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -333,6 +334,35 @@ class Moodle {
       ..cachedTime = DateTime.now().secondEpoch;
     Moodle()._saveCourses();
     return content;
+  }
+
+  /// Get grades of a course by accessing the grades table.
+  ///
+  /// Note that the hierarchy of the grades table is not preserved here.
+  /// Only returns a plain lists of valid grade items.
+  static Future<List<MoodleCourseGrade>?> getCourseGrades(
+      MoodleCourse course) async {
+    final response =
+        await callFunction(MoodleFunctions.getGradesTable, params: {
+      'courseid': course.id,
+      'userid': Moodle()._userId,
+    });
+    if (response.fail || response.data == null) return null;
+
+    // Convert data to grades
+    final grades = <MoodleCourseGrade>[];
+    final data = response.data as Map;
+    final gradeItems = data['tables'].first['tabledata'] as List?;
+    if (gradeItems != null) {
+      for (final gradeItem in gradeItems) {
+        try {
+          final grade = MoodleCourseGrade.fromJson(gradeItem);
+          grades.add(grade);
+        } catch (_) {}
+      }
+    }
+
+    return grades;
   }
 
   /// Download a file associated with the course module.

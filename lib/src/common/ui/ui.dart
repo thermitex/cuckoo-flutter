@@ -12,7 +12,7 @@ export '../widgets/error_panel.dart';
 export 'toast.dart';
 export 'form.dart';
 export 'form_field.dart';
-export 'input_selector.dart';
+export 'selector.dart';
 export 'selection_panel.dart';
 export 'date_picker.dart';
 export 'dialog.dart';

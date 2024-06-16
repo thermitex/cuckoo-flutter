@@ -45,7 +45,7 @@ class MoodleCourseManager with ChangeNotifier {
 
   // ---------------------Context Watch Interfaces Start---------------------
   // ONLY use the methods below when you are interacting with the manager
-  // outside `moodle.dart` using `context.eventManager`.
+  // outside `moodle.dart` using `context.courseManager`.
 
   /// Enrolled courses of current Moodle user.
   ///
