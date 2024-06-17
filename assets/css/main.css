@@ -15,16 +15,21 @@ body {
 }
 
 #cuckoo {
-    margin-bottom: 70px;
+    margin-bottom: 68px;
     display: block;
 }
 
 #icon-list {
     list-style-type: none;
+    padding-left: 0;
 }
 
 .icon-item {
-    margin-top: 13px;
+    margin-top: 14px;
+}
+
+.icon-item img {
+    display: block;
     margin-left: auto;
     margin-right: auto;
 }
