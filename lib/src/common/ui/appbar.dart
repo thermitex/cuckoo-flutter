@@ -130,9 +130,10 @@ class CuckooAppBar extends StatelessWidget implements PreferredSizeWidget {
         title,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: TextStylePresets.body(weight: FontWeight.w600, size: 16).copyWith(
-            color: context.cuckooTheme.primaryText
-                .withAlpha((255 * titleTransparency).round())),
+        style: TextStylePresets.body(weight: FontWeight.w600, size: 16)
+            .copyWith(
+                color: context.cuckooTheme.primaryText
+                    .withAlpha((255 * titleTransparency).round())),
       ),
     );
   }
