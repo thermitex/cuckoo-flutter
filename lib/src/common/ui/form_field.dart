@@ -60,7 +60,7 @@ class CuckooFormTextField extends CuckooFormInput<String> {
                     disabledBorder: InputBorder.none,
                     hintText: placeholder,
                     hintStyle: TextStylePresets.textFieldBody(),
-                    contentPadding: const EdgeInsets.fromLTRB(0, 12, 0, 15)),
+                    contentPadding: const EdgeInsets.fromLTRB(0, 12, 10, 15)),
               );
             });
 
