@@ -124,11 +124,17 @@ class CuckooAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   /// App bar title.
   Widget _titleWidget(BuildContext context) {
-    return Text(
-      title,
-      style: TextStylePresets.body(weight: FontWeight.w600, size: 16).copyWith(
-          color: context.cuckooTheme.primaryText
-              .withAlpha((255 * titleTransparency).round())),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 45.0),
+      child: Text(
+        title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStylePresets.body(weight: FontWeight.w600, size: 16)
+            .copyWith(
+                color: context.cuckooTheme.primaryText
+                    .withAlpha((255 * titleTransparency).round())),
+      ),
     );
   }
 
@@ -174,12 +180,12 @@ class CuckooAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: Padding(
         padding: kCuckooAppBarPadding,
         child: Stack(children: [
+          Center(
+            child: _titleWidget(context),
+          ),
           Row(
             children: _buildRowChildren(context),
           ),
-          Center(
-            child: _titleWidget(context),
-          )
         ]),
       ),
     );
