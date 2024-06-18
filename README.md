@@ -58,7 +58,7 @@ For contributors, you are highly suggested to follow the same design style in yo
 
 ## Contributing
 
-Please let me know if you encounter a bug or have any suggestions by [filing an issue](https://github.com/thermitex/cuckoo-flutter/issues), or post it in [Discord community](https://discord.gg/Z7KWUuEyyG).
+Please let me know if you encounter a bug or have any suggestions by [filing an issue](https://github.com/thermitex/cuckoo-flutter/issues), or post it in [Discord community](https://cuckoo-hku.xyz/discord).
 
 All contributions are welcome from bug fixes to new features and extensions. I would expect all contributions discussed in the issue tracker and going through PRs. Currently PR has two status checks:
 
