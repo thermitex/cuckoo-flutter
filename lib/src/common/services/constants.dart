@@ -167,7 +167,7 @@ class Constants {
   static const kAboutDiscordTitle = 'Discord Community';
   static const kAboutDiscordContent =
       'Join our Discord community to leave your thoughts and receive latest updates.';
-  static const kAboutDiscordUrl = 'https://discord.gg/K9scQKDF';
+  static const kAboutDiscordUrl = 'https://cuckoo-hku.xyz/discord';
   static const kAboutPrivacyTitle = 'Privacy Policy';
   static const kAboutPrivacyUrl = 'https://cuckoo-hku.xyz/privacy';
   static const kAboutSoftwareLicense = 'Software Licenses';
