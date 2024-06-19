@@ -6,44 +6,44 @@ class CuckooTheme {
   // Light color scheme
   static const ColorScheme _lightColorScheme = ColorScheme(
     brightness: Brightness.light,
-    primary: ColorPresets.primary,
-    onPrimary: ColorPresets.white,
-    secondary: ColorPresets.secondary,
-    onSecondary: ColorPresets.white,
-    error: ColorPresets.negativePrimary,
-    onError: ColorPresets.white,
-    background: ColorPresets.lightPrimaryBackground,
-    onBackground: ColorPresets.black,
-    surface: ColorPresets.primary,
-    onSurface: ColorPresets.white,
+    primary: CuckooColors.primary,
+    onPrimary: CuckooColors.white,
+    secondary: CuckooColors.secondary,
+    onSecondary: CuckooColors.white,
+    error: CuckooColors.negativePrimary,
+    onError: CuckooColors.white,
+    background: CuckooColors.lightPrimaryBackground,
+    onBackground: CuckooColors.black,
+    surface: CuckooColors.primary,
+    onSurface: CuckooColors.white,
   );
 
   // Dark color scheme
   static const ColorScheme _darkColorScheme = ColorScheme(
     brightness: Brightness.dark,
-    primary: ColorPresets.primary,
-    onPrimary: ColorPresets.white,
-    secondary: ColorPresets.secondary,
-    onSecondary: ColorPresets.black,
-    error: ColorPresets.negativePrimary,
-    onError: ColorPresets.white,
-    background: ColorPresets.darkPrimaryBackground,
-    onBackground: ColorPresets.white,
-    surface: ColorPresets.primary,
-    onSurface: ColorPresets.white,
+    primary: CuckooColors.primary,
+    onPrimary: CuckooColors.white,
+    secondary: CuckooColors.secondary,
+    onSecondary: CuckooColors.black,
+    error: CuckooColors.negativePrimary,
+    onError: CuckooColors.white,
+    background: CuckooColors.darkPrimaryBackground,
+    onBackground: CuckooColors.white,
+    surface: CuckooColors.primary,
+    onSurface: CuckooColors.white,
   );
 
   // Common text scheme
   static final TextTheme _commonTextTheme = TextTheme(
-    displayLarge: TextStylePresets.title(size: 30),
-    displayMedium: TextStylePresets.title(size: 20),
-    displaySmall: TextStylePresets.title(size: 16),
-    titleLarge: TextStylePresets.body(size: 24, weight: FontWeight.bold),
-    titleMedium: TextStylePresets.body(size: 20, weight: FontWeight.bold),
-    titleSmall: TextStylePresets.body(size: 16, weight: FontWeight.bold),
-    bodyLarge: TextStylePresets.body(size: 18),
-    bodyMedium: TextStylePresets.body(size: 14),
-    bodySmall: TextStylePresets.body(size: 12),
+    displayLarge: CuckooTextStyles.title(size: 30),
+    displayMedium: CuckooTextStyles.title(size: 20),
+    displaySmall: CuckooTextStyles.title(size: 16),
+    titleLarge: CuckooTextStyles.body(size: 24, weight: FontWeight.bold),
+    titleMedium: CuckooTextStyles.body(size: 20, weight: FontWeight.bold),
+    titleSmall: CuckooTextStyles.body(size: 16, weight: FontWeight.bold),
+    bodyLarge: CuckooTextStyles.body(size: 18),
+    bodyMedium: CuckooTextStyles.body(size: 14),
+    bodySmall: CuckooTextStyles.body(size: 12),
   );
 
   /// Light theme data.
@@ -51,8 +51,8 @@ class CuckooTheme {
     useMaterial3: true,
     brightness: Brightness.light,
     textTheme: _commonTextTheme.apply(
-      bodyColor: ColorPresets.lightPrimaryText,
-      displayColor: ColorPresets.lightPrimaryText,
+      bodyColor: CuckooColors.lightPrimaryText,
+      displayColor: CuckooColors.lightPrimaryText,
     ),
     colorScheme: _lightColorScheme,
     extensions: const <ThemeExtension<dynamic>>[
@@ -65,8 +65,8 @@ class CuckooTheme {
     useMaterial3: true,
     brightness: Brightness.dark,
     textTheme: _commonTextTheme.apply(
-      bodyColor: ColorPresets.darkPrimaryText,
-      displayColor: ColorPresets.darkPrimaryText,
+      bodyColor: CuckooColors.darkPrimaryText,
+      displayColor: CuckooColors.darkPrimaryText,
     ),
     colorScheme: _darkColorScheme,
     extensions: const <ThemeExtension<dynamic>>[
@@ -94,55 +94,55 @@ class CuckooThemeExtension extends ThemeExtension<CuckooThemeExtension> {
   const CuckooThemeExtension.fromBrightness(
       {Brightness brightness = Brightness.light})
       : primaryText = brightness == Brightness.light
-            ? ColorPresets.lightPrimaryText
-            : ColorPresets.darkPrimaryText,
+            ? CuckooColors.lightPrimaryText
+            : CuckooColors.darkPrimaryText,
         primaryInverseText = brightness == Brightness.light
-            ? ColorPresets.lightPrimaryInverseText
-            : ColorPresets.darkPrimaryInverseText,
+            ? CuckooColors.lightPrimaryInverseText
+            : CuckooColors.darkPrimaryInverseText,
         secondaryText = brightness == Brightness.light
-            ? ColorPresets.lightSecondaryText
-            : ColorPresets.darkSecondaryText,
+            ? CuckooColors.lightSecondaryText
+            : CuckooColors.darkSecondaryText,
         tertiaryText = brightness == Brightness.light
-            ? ColorPresets.lightTertiaryText
-            : ColorPresets.darkTertiaryText,
+            ? CuckooColors.lightTertiaryText
+            : CuckooColors.darkTertiaryText,
         quaternaryText = brightness == Brightness.light
-            ? ColorPresets.lightQuaternaryText
-            : ColorPresets.darkQuaternaryText,
+            ? CuckooColors.lightQuaternaryText
+            : CuckooColors.darkQuaternaryText,
         separator = brightness == Brightness.light
-            ? ColorPresets.lightSeparator
-            : ColorPresets.darkSeparator,
+            ? CuckooColors.lightSeparator
+            : CuckooColors.darkSeparator,
         primaryBackground = brightness == Brightness.light
-            ? ColorPresets.lightPrimaryBackground
-            : ColorPresets.darkPrimaryBackground,
+            ? CuckooColors.lightPrimaryBackground
+            : CuckooColors.darkPrimaryBackground,
         primaryInverseBackground = brightness == Brightness.light
-            ? ColorPresets.lightPrimaryInverseBackground
-            : ColorPresets.darkPrimaryInverseBackground,
+            ? CuckooColors.lightPrimaryInverseBackground
+            : CuckooColors.darkPrimaryInverseBackground,
         secondaryBackground = brightness == Brightness.light
-            ? ColorPresets.lightSecondaryBackground
-            : ColorPresets.darkSecondaryBackground,
+            ? CuckooColors.lightSecondaryBackground
+            : CuckooColors.darkSecondaryBackground,
         secondaryTransBg = brightness == Brightness.light
-            ? ColorPresets.lightSecondaryTransBg
-            : ColorPresets.darkSecondaryTransBg,
+            ? CuckooColors.lightSecondaryTransBg
+            : CuckooColors.darkSecondaryTransBg,
         popUpBackground = brightness == Brightness.light
-            ? ColorPresets.lightPrimaryBackground
-            : ColorPresets.darkSecondaryBackground,
+            ? CuckooColors.lightPrimaryBackground
+            : CuckooColors.darkSecondaryBackground,
         tertiaryBackground = brightness == Brightness.light
-            ? ColorPresets.lightTertiaryBackground
-            : ColorPresets.darkTertiaryBackground;
+            ? CuckooColors.lightTertiaryBackground
+            : CuckooColors.darkTertiaryBackground;
 
   const CuckooThemeExtension({
-    this.primaryText = ColorPresets.lightPrimaryText,
-    this.primaryInverseText = ColorPresets.lightPrimaryInverseText,
-    this.secondaryText = ColorPresets.lightSecondaryText,
-    this.tertiaryText = ColorPresets.lightTertiaryText,
-    this.quaternaryText = ColorPresets.lightQuaternaryText,
-    this.separator = ColorPresets.lightSeparator,
-    this.primaryBackground = ColorPresets.lightPrimaryBackground,
-    this.primaryInverseBackground = ColorPresets.lightPrimaryInverseBackground,
-    this.secondaryBackground = ColorPresets.lightSecondaryBackground,
-    this.tertiaryBackground = ColorPresets.lightTertiaryBackground,
-    this.popUpBackground = ColorPresets.lightPrimaryBackground,
-    this.secondaryTransBg = ColorPresets.lightSecondaryTransBg,
+    this.primaryText = CuckooColors.lightPrimaryText,
+    this.primaryInverseText = CuckooColors.lightPrimaryInverseText,
+    this.secondaryText = CuckooColors.lightSecondaryText,
+    this.tertiaryText = CuckooColors.lightTertiaryText,
+    this.quaternaryText = CuckooColors.lightQuaternaryText,
+    this.separator = CuckooColors.lightSeparator,
+    this.primaryBackground = CuckooColors.lightPrimaryBackground,
+    this.primaryInverseBackground = CuckooColors.lightPrimaryInverseBackground,
+    this.secondaryBackground = CuckooColors.lightSecondaryBackground,
+    this.tertiaryBackground = CuckooColors.lightTertiaryBackground,
+    this.popUpBackground = CuckooColors.lightPrimaryBackground,
+    this.secondaryTransBg = CuckooColors.lightSecondaryTransBg,
   });
 
   @override

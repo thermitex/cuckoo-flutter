@@ -32,9 +32,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
   DaysOfWeekStyle _daysOfWeekStyle() {
     return DaysOfWeekStyle(
-      weekdayStyle: TextStylePresets.body(),
-      weekendStyle: TextStylePresets.body()
-          .copyWith(color: context.cuckooTheme.secondaryText),
+      weekdayStyle: CuckooTextStyles.body(),
+      weekendStyle: CuckooTextStyles.body(color: context.theme.secondaryText),
     );
   }
 
@@ -45,9 +44,9 @@ class _CalendarPageState extends State<CalendarPage> {
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(12.0),
             border: const Border.fromBorderSide(
-                BorderSide(color: ColorPresets.primary))),
+                BorderSide(color: CuckooColors.primary))),
         titleTextStyle:
-            TextStylePresets.body(size: 17.0, weight: FontWeight.w600));
+            CuckooTextStyles.body(size: 17.0, weight: FontWeight.w600));
   }
 
   CalendarBuilders<MoodleEvent> _builders() {
@@ -61,10 +60,10 @@ class _CalendarPageState extends State<CalendarPage> {
     Color workloadColor(DateTime day) {
       DateTime now = DateTime.now();
       if (day.isBefore(DateTime(now.year, now.month, now.day))) {
-        return context.cuckooTheme.tertiaryBackground;
+        return context.theme.tertiaryBackground;
       }
       final wl = context.eventManager.workloadOnDate(day, maxWl: maxWl);
-      if (wl < 0.0001) return context.cuckooTheme.tertiaryBackground;
+      if (wl < 0.0001) return context.theme.tertiaryBackground;
       final stopInterval = maxWl / (colorStops.length - 1);
       final i = (wl ~/ stopInterval).clamp(0, colorStops.length - 2);
       return Color.lerp(colorStops[i], colorStops[i + 1],
@@ -147,40 +146,38 @@ class _CalendarPageState extends State<CalendarPage> {
                       color: isSameDay(day, _selectedDay)
                           ? Colors.white
                           : (events[index].color ??
-                              context.cuckooTheme.tertiaryText)),
+                              context.theme.tertiaryText)),
                 ),
               );
             });
       },
       defaultBuilder: (context, day, focusedDay) {
         return calendarDayBuilder(day,
-            textStyle: TextStylePresets.body().copyWith(
+            textStyle: CuckooTextStyles.body(
                 color: (day.weekday == DateTime.sunday ||
                         day.weekday == DateTime.saturday)
-                    ? context.cuckooTheme.secondaryText
-                    : context.cuckooTheme.primaryText));
+                    ? context.theme.secondaryText
+                    : context.theme.primaryText));
       },
       todayBuilder: (context, day, focusedDay) {
         return calendarDayBuilder(day,
-            color: ColorPresets.primary.withAlpha(context.isDarkMode ? 50 : 25),
-            textStyle:
-                TextStylePresets.body().copyWith(color: ColorPresets.primary));
+            color: CuckooColors.primary.withAlpha(context.isDarkMode ? 50 : 25),
+            textStyle: CuckooTextStyles.body(color: CuckooColors.primary));
       },
       selectedBuilder: (context, day, focusedDay) {
         return calendarDayBuilder(day,
             color: day.month == focusedDay.month
-                ? ColorPresets.primary
-                : context.cuckooTheme.tertiaryBackground,
+                ? CuckooColors.primary
+                : context.theme.tertiaryBackground,
             showIndicator: day.month == focusedDay.month,
-            textStyle:
-                TextStylePresets.body(size: 16.0, weight: FontWeight.w500)
-                    .copyWith(color: Colors.white));
+            textStyle: CuckooTextStyles.body(
+                size: 16.0, weight: FontWeight.w500, color: Colors.white));
       },
       outsideBuilder: (context, day, focusedDay) {
         return calendarDayBuilder(day,
             showIndicator: false,
-            textStyle: TextStylePresets.body()
-                .copyWith(color: context.cuckooTheme.tertiaryText));
+            textStyle:
+                CuckooTextStyles.body(color: context.theme.tertiaryText));
       },
     );
   }
@@ -198,17 +195,17 @@ class _CalendarPageState extends State<CalendarPage> {
     final today = DateTime.now();
 
     return Scaffold(
-      backgroundColor: context.cuckooTheme.primaryBackground,
+      backgroundColor: context.theme.primaryBackground,
       appBar: CuckooLargeAppBar(
         title: Constants.kCalendarTitle,
         actionItems: [
           CuckooAppBarActionItem(
             icon: const Icon(
               Icons.today_rounded,
-              color: ColorPresets.primary,
+              color: CuckooColors.primary,
               size: 20,
             ),
-            backgroundColor: context.cuckooTheme.secondaryBackground,
+            backgroundColor: context.theme.secondaryBackground,
             backgroundPadding: const EdgeInsets.all(5.0),
             onPressed: () => _onDaySelected(today, today, enforce: true),
           )
@@ -259,14 +256,14 @@ class _CalendarPageState extends State<CalendarPage> {
                             children: [
                               Icon(
                                 Icons.event_available_rounded,
-                                color: context.cuckooTheme.tertiaryText,
+                                color: context.theme.tertiaryText,
                                 size: 50,
                               ),
                               const SizedBox(height: 10.0),
                               Text(
                                 Constants.kCalendarNoEventsFound,
-                                style: TextStylePresets.body().copyWith(
-                                    color: context.cuckooTheme.secondaryText),
+                                style: CuckooTextStyles.body(
+                                    color: context.theme.secondaryText),
                               ),
                             ],
                           ),

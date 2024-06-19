@@ -55,7 +55,7 @@ class _SettingsTipPageState extends State<SettingsTipPage> {
                     const SizedBox(height: 33.0),
                     const Icon(
                       Symbols.savings_rounded,
-                      color: ColorPresets.primary,
+                      color: CuckooColors.primary,
                       weight: 500,
                       size: 80,
                     ),
@@ -64,18 +64,16 @@ class _SettingsTipPageState extends State<SettingsTipPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 22.0),
                       child: Text(
                         Constants.kTipJarTitle,
-                        style: TextStylePresets.body(
-                                size: 20, weight: FontWeight.bold)
-                            .copyWith(height: 1.3),
+                        style: CuckooTextStyles.body(
+                            size: 20, weight: FontWeight.bold, height: 1.3),
                         textAlign: TextAlign.center,
                       ),
                     ),
                     const SizedBox(height: 30.0),
                     Text(
                       Constants.kTipJarSubtitle,
-                      style: TextStylePresets.body().copyWith(
-                          height: 1.3,
-                          color: context.cuckooTheme.secondaryText),
+                      style: CuckooTextStyles.body(
+                          height: 1.3, color: context.theme.secondaryText),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 33.0),
@@ -88,7 +86,7 @@ class _SettingsTipPageState extends State<SettingsTipPage> {
                             width: 50,
                             height: 50,
                             child: CircularProgressIndicator(
-                              color: ColorPresets.primary,
+                              color: CuckooColors.primary,
                               strokeWidth: 6.0,
                             ),
                           ),
@@ -111,13 +109,12 @@ class _SettingsTipPageState extends State<SettingsTipPage> {
                                 width: blockWidth,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15.0),
-                                  color:
-                                      context.cuckooTheme.secondaryBackground,
+                                  color: context.theme.secondaryBackground,
                                 ),
                                 child: Center(
                                   child: Text(
                                     product.price,
-                                    style: TextStylePresets.body(
+                                    style: CuckooTextStyles.body(
                                         size: 18.0, weight: FontWeight.w500),
                                   ),
                                 ),

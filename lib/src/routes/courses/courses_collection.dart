@@ -199,24 +199,25 @@ class MoodleCourseTile extends StatelessWidget {
                       course.courseCode,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStylePresets.title(
-                              size: 18.5, weight: FontWeight.w600)
-                          .copyWith(color: Colors.white, height: 1.05),
+                      style: CuckooTextStyles.title(
+                              size: 18.5,
+                              weight: FontWeight.w600,
+                              color: Colors.white)
+                          .copyWith(height: 1.05),
                     ),
                   ),
                   // Title
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.fromLTRB(12.0, 6.0, 12.0, 8.0),
-                    color: context.cuckooTheme.primaryInverseText
+                    color: context.theme.primaryInverseText
                         .withAlpha(context.isDarkMode ? 140 : 180),
                     child: Text(
                       course.nameWithoutCode,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStylePresets.body(
-                              size: 13, weight: FontWeight.w500)
-                          .copyWith(height: 1.4),
+                      style: CuckooTextStyles.body(
+                          size: 13, weight: FontWeight.w500, height: 1.4),
                     ),
                   )
                 ],

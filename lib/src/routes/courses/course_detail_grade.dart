@@ -41,7 +41,7 @@ class CourseDetailGradeItem extends StatelessWidget {
       borderRadius: BorderRadius.circular(15.0),
       child: Stack(children: [
         Container(
-            color: context.cuckooTheme.tertiaryBackground,
+            color: context.theme.tertiaryBackground,
             height: outerSize,
             width: outerSize,
             child: CustomPaint(
@@ -57,13 +57,12 @@ class CourseDetailGradeItem extends StatelessWidget {
               width: innerSize,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
-                  color: context.cuckooTheme.primaryBackground),
+                  color: context.theme.primaryBackground),
               child: Center(
                 child: Text(
                   grade.gradeStr,
-                  style:
-                      TextStylePresets.body(size: 15, weight: FontWeight.bold)
-                          .copyWith(color: course.color),
+                  style: CuckooTextStyles.body(
+                      size: 15, weight: FontWeight.bold, color: course.color),
                 ),
               ),
             ),
@@ -84,7 +83,7 @@ class CourseDetailGradeItem extends StatelessWidget {
       child: Container(
         height: 78,
         decoration: BoxDecoration(
-          color: context.cuckooTheme.secondaryBackground,
+          color: context.theme.secondaryBackground,
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: Padding(
@@ -100,7 +99,7 @@ class CourseDetailGradeItem extends StatelessWidget {
                   children: [
                     Text(
                       grade.title,
-                      style: TextStylePresets.body(
+                      style: CuckooTextStyles.body(
                           size: 15, weight: FontWeight.w600),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -116,8 +115,8 @@ class CourseDetailGradeItem extends StatelessWidget {
                             grade.contributiontocoursetotal!.length > 1)
                           '\nCourse Contribution ${grade.contributiontocoursetotal!.replaceAll(" ", "")}'
                       ].join(),
-                      style: TextStylePresets.body(size: 11.5)
-                          .copyWith(color: context.cuckooTheme.secondaryText),
+                      style: CuckooTextStyles.body(
+                          size: 11.5, color: context.theme.secondaryText),
                     ),
                   ],
                 ),

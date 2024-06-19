@@ -28,17 +28,8 @@ extension BuildContextExtensions on BuildContext {
     ));
   }
 
-  /// Shortcut for getting current theme.
-  ThemeData get theme => Theme.of(this);
-
-  /// Shortcut for getting current text theme.
-  TextTheme get textTheme => theme.textTheme;
-
-  /// Shortcut for getting current color scheme.
-  ColorScheme get colorScheme => theme.colorScheme;
-
-  /// Get Shipshape specific theme.
-  CuckooThemeExtension get cuckooTheme =>
+  /// Get Cuckoo specific theme.
+  CuckooThemeExtension get theme =>
       Theme.of(this).extension<CuckooThemeExtension>()!;
 
   /// Shortcut for getting navigator.

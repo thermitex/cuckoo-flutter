@@ -28,7 +28,7 @@ class TimePickerPanel extends StatelessWidget {
   void show(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: context.cuckooTheme.popUpBackground,
+      backgroundColor: context.theme.popUpBackground,
       useRootNavigator: true,
       useSafeArea: true,
       shape: const RoundedRectangleBorder(

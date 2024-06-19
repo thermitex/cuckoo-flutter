@@ -47,8 +47,8 @@ class CuckooFormTextField extends CuckooFormInput<String> {
                 minLines: minLines,
                 inputFormatters: inputFormatters,
                 onChanged: onChangedHandler,
-                style: TextStylePresets.textFieldBody(),
-                cursorColor: ColorPresets.primary,
+                style: CuckooTextStyles.textFieldBody(),
+                cursorColor: CuckooColors.primary,
                 onTapOutside: (_) =>
                     FocusManager.instance.primaryFocus?.unfocus(),
                 decoration: InputDecoration(
@@ -59,7 +59,7 @@ class CuckooFormTextField extends CuckooFormInput<String> {
                     errorBorder: InputBorder.none,
                     disabledBorder: InputBorder.none,
                     hintText: placeholder,
-                    hintStyle: TextStylePresets.textFieldBody(),
+                    hintStyle: CuckooTextStyles.textFieldBody(),
                     contentPadding: const EdgeInsets.fromLTRB(0, 12, 10, 15)),
               );
             });
@@ -215,7 +215,7 @@ class _CuckooFormSelectionFieldViewState<T>
           child: Center(
             child: Icon(
               widget.icon,
-              color: context.cuckooTheme.secondaryText,
+              color: context.theme.secondaryText,
             ),
           ),
         ),
@@ -239,10 +239,10 @@ class _CuckooFormSelectionFieldViewState<T>
               : (widget.valueFormatter == null
                   ? _value!.toString()
                   : widget.valueFormatter!(_value as T)),
-          style: TextStylePresets.textFieldBody().copyWith(
+          style: CuckooTextStyles.textFieldBody(
               color: _value == null
-                  ? context.cuckooTheme.secondaryText
-                  : context.cuckooTheme.primaryText),
+                  ? context.theme.secondaryText
+                  : context.theme.primaryText),
         ),
       )),
       // Clear button
@@ -260,7 +260,7 @@ class _CuckooFormSelectionFieldViewState<T>
                 : Center(
                     child: Icon(
                     Icons.cancel_rounded,
-                    color: context.cuckooTheme.quaternaryText,
+                    color: context.theme.quaternaryText,
                     size: 20,
                   )),
           ),

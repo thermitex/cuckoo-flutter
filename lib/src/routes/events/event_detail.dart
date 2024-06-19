@@ -19,12 +19,10 @@ class EventDetailView extends StatelessWidget {
 
   Widget _buildEventHeader(BuildContext context) {
     Color headerTint =
-        event.color == null ? context.cuckooTheme.secondaryText : event.color!;
+        event.color == null ? context.theme.secondaryText : event.color!;
     Color? badgeForegroundColor = Color.lerp(
-        context.cuckooTheme.popUpBackground,
-        event.color == null
-            ? context.cuckooTheme.popUpBackground
-            : event.color!,
+        context.theme.popUpBackground,
+        event.color == null ? context.theme.popUpBackground : event.color!,
         0.15);
     bool canShowCustomBadge = event.eventtype == MoodleEventTypes.custom &&
         trueSettingsValue(SettingsKey.differentiateCustom);
@@ -56,9 +54,10 @@ class EventDetailView extends StatelessWidget {
                       size: 15, color: badgeForegroundColor),
                   const SizedBox(width: 4.0),
                   Text('Custom Event',
-                      style: TextStylePresets.body(
-                              size: 12, weight: FontWeight.w500)
-                          .copyWith(color: badgeForegroundColor))
+                      style: CuckooTextStyles.body(
+                          size: 12,
+                          weight: FontWeight.w500,
+                          color: badgeForegroundColor))
                 ],
               ),
             ),
@@ -69,16 +68,16 @@ class EventDetailView extends StatelessWidget {
                       ? 'Moodle User Event'
                       : 'Custom Event')
                   : event.course!.displayname,
-              style: TextStylePresets.body(weight: FontWeight.w600)
-                  .copyWith(color: headerTint),
+              style: CuckooTextStyles.body(
+                  weight: FontWeight.w600, color: headerTint),
             ),
           if (shouldShowTextHeader) const SizedBox(height: 3.0),
           Text(
             event.name,
             maxLines: 4,
             overflow: TextOverflow.ellipsis,
-            style: TextStylePresets.body(size: 24, weight: FontWeight.bold)
-                .copyWith(height: 1.35),
+            style: CuckooTextStyles.body(
+                size: 24, weight: FontWeight.bold, height: 1.35),
           )
         ],
       ),
@@ -97,18 +96,20 @@ class EventDetailView extends StatelessWidget {
       children: [
         Text(
           Constants.kEventDetailDueItem,
-          style: TextStylePresets.body(size: 10, weight: FontWeight.bold)
-              .copyWith(color: context.cuckooTheme.secondaryText),
+          style: CuckooTextStyles.body(
+              size: 10,
+              weight: FontWeight.bold,
+              color: context.theme.secondaryText),
         ),
         const SizedBox(height: 1.5),
         Text(
           '$remainingDays ${remainingDays == 1 ? "day" : "days"} $remainingHours ${remainingHours == 1 ? "hour" : "hours"}',
-          style: TextStylePresets.body(weight: FontWeight.bold)
-              .copyWith(color: ColorPresets.primary),
+          style: CuckooTextStyles.body(
+              weight: FontWeight.bold, color: CuckooColors.primary),
         ),
         Text(
           '${DateFormat.Hm().format(event.time)}, ${DateFormat.yMMMd().format(event.time)}',
-          style: TextStylePresets.body(),
+          style: CuckooTextStyles.body(),
         ),
       ],
     ));
@@ -120,8 +121,10 @@ class EventDetailView extends StatelessWidget {
         ..add(Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
             Constants.kEventDetailDetailItem,
-            style: TextStylePresets.body(size: 10, weight: FontWeight.bold)
-                .copyWith(color: context.cuckooTheme.secondaryText),
+            style: CuckooTextStyles.body(
+                size: 10,
+                weight: FontWeight.bold,
+                color: context.theme.secondaryText),
           ),
           const SizedBox(height: 2.5),
           Html(
@@ -152,29 +155,28 @@ class EventDetailView extends StatelessWidget {
         children: [
           Text(
             Constants.kEventDetailReminderItem,
-            style: TextStylePresets.body(size: 10, weight: FontWeight.bold)
-                .copyWith(color: context.cuckooTheme.secondaryText),
+            style: CuckooTextStyles.body(
+                size: 10,
+                weight: FontWeight.bold,
+                color: context.theme.secondaryText),
           ),
           const SizedBox(height: 1.5),
           if (falseSettingsValue(SettingsKey.reminderIgnoreCustom) &&
               event.eventtype == MoodleEventTypes.custom)
             Text(
               Constants.kEventDetailMutedRemindersCustom,
-              style: TextStylePresets.body()
-                  .copyWith(color: context.cuckooTheme.tertiaryText),
+              style: CuckooTextStyles.body(color: context.theme.tertiaryText),
             )
           else if (trueSettingsValue(SettingsKey.reminderIgnoreCompleted) &&
               event.isCompleted)
             Text(
               Constants.kEventDetailMutedRemindersCompleted,
-              style: TextStylePresets.body()
-                  .copyWith(color: context.cuckooTheme.tertiaryText),
+              style: CuckooTextStyles.body(color: context.theme.tertiaryText),
             )
           else if (appliedReminders.isEmpty)
             Text(
               Constants.kEventDetailNoReminders,
-              style: TextStylePresets.body()
-                  .copyWith(color: context.cuckooTheme.tertiaryText),
+              style: CuckooTextStyles.body(color: context.theme.tertiaryText),
             )
           else
             Column(
@@ -185,8 +187,8 @@ class EventDetailView extends StatelessWidget {
                 return Builder(builder: (context) {
                   final reminderExpired = reminder.scheduleTimePassed(event);
                   final tint = reminderExpired
-                      ? context.cuckooTheme.tertiaryText
-                      : context.cuckooTheme.primaryText;
+                      ? context.theme.tertiaryText
+                      : context.theme.primaryText;
                   return GestureDetector(
                     onTap: () {
                       Navigator.of(context, rootNavigator: true)
@@ -202,7 +204,7 @@ class EventDetailView extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 3.0),
                       child: RichText(
                           text: TextSpan(
-                        style: TextStylePresets.body().copyWith(color: tint),
+                        style: CuckooTextStyles.body(color: tint),
                         children: [
                           TextSpan(text: reminder.title ?? ''),
                           WidgetSpan(
@@ -313,7 +315,7 @@ class EventDetailView extends StatelessWidget {
           cachedCompletion
               ? Icons.unpublished_rounded
               : Icons.check_circle_rounded,
-          color: ColorPresets.positivePrimary,
+          color: CuckooColors.positivePrimary,
         )).show(delayInMillisec: 250, haptic: true);
   }
 

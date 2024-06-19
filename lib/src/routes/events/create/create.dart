@@ -54,8 +54,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
           // Title
           CuckooFormSection(children: [
             CuckooFormTextField(
-              icon: Icon(Icons.title_rounded,
-                  color: context.cuckooTheme.secondaryText),
+              icon:
+                  Icon(Icons.title_rounded, color: context.theme.secondaryText),
               placeholder: 'Title',
               initialValue: _event.name,
               autofocus: _event.name.isEmpty,
@@ -138,7 +138,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     CuckooToast(Constants.kCustomEventDeletedPrompt,
                         icon: const Icon(
                           Icons.delete,
-                          color: ColorPresets.negativePrimary,
+                          color: CuckooColors.negativePrimary,
                         )).show(delayInMillisec: 250, haptic: true);
                   }
                 });
@@ -170,8 +170,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
               icon: Icon(
                 Icons.check_circle_rounded,
                 color: _formValid
-                    ? ColorPresets.primary
-                    : context.cuckooTheme.tertiaryText,
+                    ? CuckooColors.primary
+                    : context.theme.tertiaryText,
               ),
               onPressed: () {
                 if (_formValid) {
@@ -193,7 +193,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   CuckooToast(Constants.kCustomEventSavedPrompt,
                       icon: const Icon(
                         Icons.check_circle_rounded,
-                        color: ColorPresets.positivePrimary,
+                        color: CuckooColors.positivePrimary,
                       )).show(delayInMillisec: 250, haptic: true);
                 }
               })

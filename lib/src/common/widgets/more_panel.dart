@@ -50,7 +50,7 @@ class MorePanelElement extends StatelessWidget {
         const SizedBox(width: 14.0),
         Text(
           title,
-          style: TextStylePresets.popUpDisplayBody(weight: FontWeight.w600),
+          style: CuckooTextStyles.popUpDisplayBody(weight: FontWeight.w600),
         )
       ],
     );
@@ -80,7 +80,7 @@ class MorePanelElement extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 18.0),
         decoration: BoxDecoration(
-          color: context.cuckooTheme.secondaryTransBg,
+          color: context.theme.secondaryTransBg,
           borderRadius: BorderRadius.circular(15),
         ),
         child: content,

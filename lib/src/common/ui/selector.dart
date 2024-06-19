@@ -40,7 +40,7 @@ class CuckooSelector extends StatelessWidget {
       children
         ..add(Icon(
           icon,
-          color: color ?? ColorPresets.primary,
+          color: color ?? CuckooColors.primary,
           size: 16.0,
         ))
         ..add(const SizedBox(width: 4.0));
@@ -51,14 +51,16 @@ class CuckooSelector extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 0.5),
         child: Text(
           description,
-          style: TextStylePresets.body(size: fontSize, weight: FontWeight.w500)
-              .copyWith(color: color ?? ColorPresets.primary),
+          style: CuckooTextStyles.body(
+              size: fontSize,
+              weight: FontWeight.w500,
+              color: color ?? CuckooColors.primary),
         ),
       ),
       const SizedBox(width: 2.0),
       Icon(
         Icons.expand_more_rounded,
-        color: color ?? ColorPresets.primary,
+        color: color ?? CuckooColors.primary,
         size: 15.0,
       )
     ]);
@@ -73,7 +75,7 @@ class CuckooSelector extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(11.0, 3.5, 8.0, 3.5),
         decoration: BoxDecoration(
-          color: backgroundColor ?? context.cuckooTheme.primaryBackground,
+          color: backgroundColor ?? context.theme.primaryBackground,
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Row(

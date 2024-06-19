@@ -41,7 +41,7 @@ class CuckooFullPageView extends StatelessWidget {
         ..add(const SizedBox(height: 7.0))
         ..add(Text(
           message!,
-          style: TextStylePresets.body(),
+          style: CuckooTextStyles.body(),
           textAlign: TextAlign.center,
         ));
     }

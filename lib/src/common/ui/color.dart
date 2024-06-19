@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// A series of text style presets to be used conveniently.
-class ColorPresets {
+class CuckooColors {
   // ******* Universal *******
 
   static const Color primary = Color.fromARGB(255, 88, 108, 245);

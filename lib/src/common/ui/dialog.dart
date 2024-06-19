@@ -40,7 +40,7 @@ class CuckooDialog {
       return Dialog(
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-        backgroundColor: context.cuckooTheme.popUpBackground,
+        backgroundColor: context.theme.popUpBackground,
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 350),
           child: Container(
@@ -57,14 +57,14 @@ class CuckooDialog {
                         Text(
                           title,
                           textAlign: TextAlign.center,
-                          style: TextStylePresets.popUpDisplayBody(
+                          style: CuckooTextStyles.popUpDisplayBody(
                               weight: FontWeight.w500),
                         ),
                         if (description != null) const SizedBox(height: 10.0),
                         if (description != null)
                           Text(
                             description!,
-                            style: TextStylePresets.body(),
+                            style: CuckooTextStyles.body(),
                           ),
                       ]),
                     ),

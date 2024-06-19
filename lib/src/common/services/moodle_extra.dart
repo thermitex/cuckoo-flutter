@@ -180,7 +180,7 @@ extension MoodleCourseExtension on MoodleCourse {
   Color get color =>
       HexColor.fromHex(colorHex) ??
       ColorRegistry().colorForCourse(this) ??
-      ColorPresets.primary;
+      CuckooColors.primary;
 
   /// Set the course as favorite.
   set favoriteMark(bool fav) {

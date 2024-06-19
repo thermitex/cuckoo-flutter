@@ -29,7 +29,7 @@ class SelectionPanel extends StatelessWidget {
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(30.0))),
-      backgroundColor: context.cuckooTheme.popUpBackground,
+      backgroundColor: context.theme.popUpBackground,
       builder: (context) => this,
     );
   }
@@ -41,7 +41,7 @@ class SelectionPanel extends StatelessWidget {
       final selected = index == selectedIndex;
       final rowComps = <Widget>[];
       final rowColor =
-          selected ? ColorPresets.primary : context.cuckooTheme.primaryText;
+          selected ? CuckooColors.primary : context.theme.primaryText;
 
       if (item.icon != null) {
         rowComps
@@ -52,8 +52,8 @@ class SelectionPanel extends StatelessWidget {
       late Widget content;
       final title = Text(
         item.title,
-        style: TextStylePresets.popUpDisplayBody(weight: FontWeight.w600)
-            .copyWith(color: rowColor),
+        style: CuckooTextStyles.popUpDisplayBody(
+            weight: FontWeight.w600, color: rowColor),
       );
       if (item.description == null) {
         content = title;
@@ -66,8 +66,8 @@ class SelectionPanel extends StatelessWidget {
             const SizedBox(height: 2.0),
             Text(
               item.description!,
-              style: TextStylePresets.body(size: 11.5)
-                  .copyWith(color: context.cuckooTheme.secondaryText),
+              style: CuckooTextStyles.body(
+                  size: 11.5, color: context.theme.secondaryText),
             )
           ],
         );
@@ -77,7 +77,7 @@ class SelectionPanel extends StatelessWidget {
       rowComps.addAll([
         const SizedBox(width: 20.0),
         selected
-            ? const Icon(Icons.done_rounded, color: ColorPresets.primary)
+            ? const Icon(Icons.done_rounded, color: CuckooColors.primary)
             : const SizedBox(width: 24, height: 24)
       ]);
 

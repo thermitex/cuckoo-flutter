@@ -49,7 +49,7 @@ class _CoursesPageState extends State<CoursesPage> {
       useSafeArea: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(30.0))),
-      backgroundColor: context.cuckooTheme.popUpBackground,
+      backgroundColor: context.theme.popUpBackground,
       builder: (context) {
         return MorePanel(children: <MorePanelElement>[
           MorePanelElement(
@@ -62,15 +62,15 @@ class _CoursesPageState extends State<CoursesPage> {
                 width: double.infinity,
                 child: ToggleSwitch(
                   minWidth: double.infinity,
-                  customTextStyles: [TextStylePresets.body()],
+                  customTextStyles: [CuckooTextStyles.body()],
                   initialLabelIndex: context
                           .settingsValue<int>(SettingsKey.courseSortingType) ??
                       0,
                   dividerColor: Colors.transparent,
-                  activeBgColor: const [ColorPresets.primary],
+                  activeBgColor: const [CuckooColors.primary],
                   activeFgColor: Colors.white,
-                  inactiveBgColor: context.cuckooTheme.secondaryTransBg,
-                  inactiveFgColor: context.cuckooTheme.primaryText,
+                  inactiveBgColor: context.theme.secondaryTransBg,
+                  inactiveFgColor: context.theme.primaryText,
                   totalSwitches: 2,
                   radiusStyle: true,
                   cornerRadius: 10.0,
@@ -95,15 +95,15 @@ class _CoursesPageState extends State<CoursesPage> {
                   width: double.infinity,
                   child: ToggleSwitch(
                     minWidth: double.infinity,
-                    customTextStyles: [TextStylePresets.body()],
+                    customTextStyles: [CuckooTextStyles.body()],
                     initialLabelIndex: context.settingsValue<int>(
                             SettingsKey.courseFilteringType) ??
                         0,
                     dividerColor: Colors.transparent,
-                    activeBgColor: const [ColorPresets.primary],
+                    activeBgColor: const [CuckooColors.primary],
                     activeFgColor: Colors.white,
-                    inactiveBgColor: context.cuckooTheme.secondaryTransBg,
-                    inactiveFgColor: context.cuckooTheme.primaryText,
+                    inactiveBgColor: context.theme.secondaryTransBg,
+                    inactiveFgColor: context.theme.primaryText,
                     totalSwitches: 2,
                     radiusStyle: true,
                     cornerRadius: 10.0,
@@ -138,13 +138,13 @@ class _CoursesPageState extends State<CoursesPage> {
       CuckooAppBarActionItem(
           icon: const Icon(
             Icons.more_horiz_rounded,
-            color: ColorPresets.primary,
+            color: CuckooColors.primary,
           ),
           onPressed: () => _openMorePanel()),
       CuckooAppBarActionItem(
           icon: Icon(
             _showFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
-            color: ColorPresets.primary,
+            color: CuckooColors.primary,
             size: 28,
           ),
           onPressed: () => _toggleFavorite()),
@@ -159,7 +159,7 @@ class _CoursesPageState extends State<CoursesPage> {
               width: 20,
               child: Center(
                   child: CircularProgressIndicator(
-                color: context.cuckooTheme.tertiaryBackground,
+                color: context.theme.tertiaryBackground,
                 strokeWidth: 3.0,
               )),
             ),
@@ -179,7 +179,7 @@ class _CoursesPageState extends State<CoursesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.cuckooTheme.primaryBackground,
+      backgroundColor: context.theme.primaryBackground,
       appBar: CuckooLargeAppBar(
         title: Constants.kCoursesTitle,
         actionItems: _appBarActionItems(),

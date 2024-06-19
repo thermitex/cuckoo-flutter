@@ -65,8 +65,8 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
         icon: Icon(
           target ? Icons.star_rounded : Icons.star_border_rounded,
           color: target
-              ? ColorPresets.positivePrimary
-              : ColorPresets.negativePrimary,
+              ? CuckooColors.positivePrimary
+              : CuckooColors.negativePrimary,
         )).show(delayInMillisec: 200, haptic: true);
   }
 
@@ -83,7 +83,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
               width: 20,
               child: Center(
                   child: CircularProgressIndicator(
-                color: context.cuckooTheme.tertiaryBackground,
+                color: context.theme.tertiaryBackground,
                 strokeWidth: 3.0,
               )),
             ),
@@ -118,13 +118,12 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
           // Course code
           Text(
             _course.courseCode,
-            style:
-                TextStylePresets.title(size: 30).copyWith(color: _course.color),
+            style: CuckooTextStyles.title(size: 30, color: _course.color),
           ),
           // Course name
           Text(
             _course.nameWithoutCode,
-            style: TextStylePresets.body(size: 18, weight: FontWeight.w600),
+            style: CuckooTextStyles.body(size: 18, weight: FontWeight.w600),
           ),
           const SizedBox(height: 10.0),
           // Content selector

@@ -12,13 +12,13 @@ class CuckooFullScreenIndicator {
   Future<void> startLoading({String? message}) async {
     var children = <Widget>[
       const CircularProgressIndicator(
-        color: ColorPresets.primary,
+        color: CuckooColors.primary,
       ),
     ];
     if (message != null) {
       children
         ..add(const SizedBox(height: 23.0))
-        ..add(Text(message, style: TextStylePresets.body(size: 13)));
+        ..add(Text(message, style: CuckooTextStyles.body(size: 13)));
     }
 
     return await showDialog<void>(
@@ -28,7 +28,7 @@ class CuckooFullScreenIndicator {
         return SimpleDialog(
           elevation: 0.0,
           contentPadding: const EdgeInsets.fromLTRB(0, 45, 0, 40),
-          backgroundColor: context.cuckooTheme.popUpBackground,
+          backgroundColor: context.theme.popUpBackground,
           children: <Widget>[
             Center(
               child: Column(

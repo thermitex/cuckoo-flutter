@@ -109,9 +109,9 @@ class _ReminderRelativeTimingInputViewState
             }
             if (widget.onChanged != null) widget.onChanged!(_data);
           },
-          cursorColor: ColorPresets.primary,
+          cursorColor: CuckooColors.primary,
           onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
-          style: TextStylePresets.textFieldBody(),
+          style: CuckooTextStyles.textFieldBody(),
           controller: widget.controller,
           keyboardType: TextInputType.number,
           textAlignVertical: TextAlignVertical.center,
@@ -124,7 +124,7 @@ class _ReminderRelativeTimingInputViewState
               errorBorder: InputBorder.none,
               disabledBorder: InputBorder.none,
               hintText: 'Amount',
-              hintStyle: TextStylePresets.textFieldBody(),
+              hintStyle: CuckooTextStyles.textFieldBody(),
               isDense: true,
               contentPadding: const EdgeInsets.fromLTRB(0, -2, 0, 2)),
         )),
@@ -147,7 +147,7 @@ class _ReminderRelativeTimingInputViewState
         const SizedBox(width: 10.0),
         Text(
           'Before Due',
-          style: TextStylePresets.textFieldBody(),
+          style: CuckooTextStyles.textFieldBody(),
         )
       ],
     );
@@ -220,7 +220,7 @@ class _ReminderExactTimingInputViewState
         child: Center(
           child: Icon(
             Icons.schedule_rounded,
-            color: context.cuckooTheme.secondaryText,
+            color: context.theme.secondaryText,
           ),
         ),
       ),
@@ -244,10 +244,10 @@ class _ReminderExactTimingInputViewState
             _time == null
                 ? 'At Due Time'
                 : 'At ${_time!.hour}:${_time!.minute.toString().padLeft(2, "0")}',
-            style: TextStylePresets.textFieldBody().copyWith(
+            style: CuckooTextStyles.textFieldBody(
                 color: _time == null
-                    ? context.cuckooTheme.secondaryText
-                    : context.cuckooTheme.primaryText),
+                    ? context.theme.secondaryText
+                    : context.theme.primaryText),
           ),
         ),
       ),
@@ -264,7 +264,7 @@ class _ReminderExactTimingInputViewState
               : Center(
                   child: Icon(
                   Icons.cancel_rounded,
-                  color: context.cuckooTheme.quaternaryText,
+                  color: context.theme.quaternaryText,
                   size: 20,
                 )),
         ),

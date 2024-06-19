@@ -63,18 +63,18 @@ class CourseSelectionPanel extends StatelessWidget {
                   children: [
                     Text(
                       course.courseCode,
-                      style: TextStylePresets.body(
-                              size: 15, weight: FontWeight.w600)
-                          .copyWith(
-                              color: course == selectedCourse
-                                  ? ColorPresets.primary
-                                  : null),
+                      style: CuckooTextStyles.body(
+                          size: 15,
+                          weight: FontWeight.w600,
+                          color: course == selectedCourse
+                              ? CuckooColors.primary
+                              : null),
                     ),
                     Text(
                       course.nameWithoutCode,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStylePresets.body(size: 12),
+                      style: CuckooTextStyles.body(size: 12),
                     )
                   ],
                 ),
@@ -85,7 +85,7 @@ class CourseSelectionPanel extends StatelessWidget {
                 height: 40.0,
                 child: course == selectedCourse
                     ? const Icon(Icons.done_rounded,
-                        color: ColorPresets.primary)
+                        color: CuckooColors.primary)
                     : null)
           ],
         )),
@@ -98,7 +98,7 @@ class CourseSelectionPanel extends StatelessWidget {
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(15.0)),
       child: Scaffold(
-        backgroundColor: context.cuckooTheme.popUpBackground,
+        backgroundColor: context.theme.popUpBackground,
         appBar: const CuckooAppBar(
           title: 'Choose Course',
           exitButtonStyle: ExitButtonStyle.close,
