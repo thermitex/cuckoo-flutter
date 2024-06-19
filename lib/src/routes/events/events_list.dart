@@ -196,12 +196,12 @@ class MoodleEventListTile extends StatelessWidget {
                   DeadlineDisplayStyle.daysRemainingAndTime.index]),
           textAlign: TextAlign.center,
           style: CuckooTextStyles.body(
-                  size: 11,
-                  weight: FontWeight.w600,
-                  color: event.isCompleted && _canShowCompleted(context)
-                      ? context.theme.tertiaryText
-                      : context.theme.primaryText)
-              .copyWith(height: 1.3),
+              size: 11,
+              weight: FontWeight.w600,
+              color: event.isCompleted && _canShowCompleted(context)
+                  ? context.theme.tertiaryText
+                  : context.theme.primaryText,
+              height: 1.3),
         )),
       ),
     );

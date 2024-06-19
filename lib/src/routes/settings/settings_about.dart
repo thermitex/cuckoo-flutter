@@ -138,8 +138,9 @@ class SettingsAboutPage extends StatelessWidget {
                     content: RichText(
                       text: TextSpan(
                           style: CuckooTextStyles.body(
-                                  size: 12.5, color: context.theme.primaryText)
-                              .copyWith(height: 1.4),
+                              size: 12.5,
+                              color: context.theme.primaryText,
+                              height: 1.4),
                           children: [
                             const TextSpan(
                                 text: Constants.kAboutOpenSourceDesc),
