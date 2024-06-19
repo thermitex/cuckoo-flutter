@@ -31,8 +31,7 @@ class CuckooTextStyles {
       Color? color,
       double? height}) {
     return TextStyle(
-        fontFamily:
-            Platform.isAndroid ? _bodyFontFamily : 'CupertinoSystemText',
+        fontFamily: Platform.isAndroid ? _bodyFontFamily : null,
         fontSize: size,
         fontWeight: weight,
         letterSpacing: Platform.isIOS ? 0 : null,
