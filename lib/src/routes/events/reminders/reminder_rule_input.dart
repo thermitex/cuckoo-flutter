@@ -76,16 +76,16 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
                 ? const BorderRadius.vertical(bottom: Radius.circular(15))
                 : BorderRadius.circular(15),
             border: Border.all(
-                color: ColorPresets.primary,
+                color: CuckooColors.primary,
                 strokeAlign: BorderSide.strokeAlignInside,
                 style: BorderStyle.solid)),
         child: Center(
             child: Row(mainAxisSize: MainAxisSize.min, children: [
-          const Icon(Icons.add_circle_rounded, color: ColorPresets.primary),
+          const Icon(Icons.add_circle_rounded, color: CuckooColors.primary),
           const SizedBox(width: 5.0),
           Text(Constants.kAddNewRules,
-              style: TextStylePresets.body(weight: FontWeight.w500)
-                  .copyWith(color: ColorPresets.primary))
+              style: CuckooTextStyles.body(
+                  weight: FontWeight.w500, color: CuckooColors.primary))
         ])),
       ),
     );
@@ -98,7 +98,7 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
     return Container(
       padding: EdgeInsets.fromLTRB(
           16.0, isFirst ? 10.0 : 7.0, 16.0, isLast ? 10.0 : 7.0),
-      color: ColorPresets.primary.withAlpha(context.isDarkMode ? 70 : 28),
+      color: CuckooColors.primary.withAlpha(context.isDarkMode ? 70 : 28),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Row(children: [
           Expanded(
@@ -178,16 +178,16 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
               },
               child: Icon(
                 Icons.cancel_rounded,
-                color: context.cuckooTheme.quaternaryText,
+                color: context.theme.quaternaryText,
                 size: 20,
               ))
         ]),
         const SizedBox(height: 5.0),
         TextField(
           onChanged: _onContentChangeHandler(rule),
-          cursorColor: ColorPresets.primary,
+          cursorColor: CuckooColors.primary,
           onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
-          style: TextStylePresets.textFieldBody(),
+          style: CuckooTextStyles.textFieldBody(),
           controller: controller,
           decoration: InputDecoration(
               border: InputBorder.none,
@@ -196,7 +196,7 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
               errorBorder: InputBorder.none,
               disabledBorder: InputBorder.none,
               hintText: 'Content',
-              hintStyle: TextStylePresets.textFieldBody(),
+              hintStyle: CuckooTextStyles.textFieldBody(),
               isDense: true,
               contentPadding: const EdgeInsets.fromLTRB(3, 2, 10, 4)),
         )
@@ -207,7 +207,7 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
   /// Separtor between rule blocks to show relation.
   Widget _relationSeparator(EventReminderRule rule) {
     return Container(
-      color: ColorPresets.primary.withAlpha(context.isDarkMode ? 70 : 28),
+      color: CuckooColors.primary.withAlpha(context.isDarkMode ? 70 : 28),
       width: double.infinity,
       height: 18.0,
       child: Stack(
@@ -217,7 +217,7 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
               child: Container(
                 width: double.infinity,
                 height: 1.0,
-                color: ColorPresets.primary,
+                color: CuckooColors.primary,
               ),
             ),
           ),
@@ -237,15 +237,15 @@ class _ReminderRuleInputViewState extends State<ReminderRuleInputView> {
               width: 40.0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
-                color: ColorPresets.primary,
+                color: CuckooColors.primary,
               ),
               child: Center(
                   child: Text(
                 Constants.kReminderRelationChoices[
                     (rule.relationWithNext ?? ReminderRuleRelation.and)
                         .toInt()],
-                style: TextStylePresets.body(size: 10, weight: FontWeight.w600)
-                    .copyWith(color: Colors.white),
+                style: CuckooTextStyles.body(
+                    size: 10, weight: FontWeight.w600, color: Colors.white),
               )),
             ),
           )

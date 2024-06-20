@@ -109,13 +109,13 @@ class _CuckooButtonState extends State<CuckooButton> {
   Color _buttonBackgroundColor() {
     var bgColor = widget.backgroundColor;
     bgColor ??= {
-      CuckooButtonStyle.primary: ColorPresets.primary,
-      CuckooButtonStyle.secondary: context.cuckooTheme.secondaryTransBg,
-      CuckooButtonStyle.danger: ColorPresets.negativePrimary,
+      CuckooButtonStyle.primary: CuckooColors.primary,
+      CuckooButtonStyle.secondary: context.theme.secondaryTransBg,
+      CuckooButtonStyle.danger: CuckooColors.negativePrimary,
       CuckooButtonStyle.secondaryDanger:
-          ColorPresets.negativePrimary.withAlpha(context.isDarkMode ? 50 : 25),
+          CuckooColors.negativePrimary.withAlpha(context.isDarkMode ? 50 : 25),
     }[widget.style];
-    return bgColor ?? ColorPresets.primary;
+    return bgColor ?? CuckooColors.primary;
   }
 
   /// Build button text color.
@@ -123,9 +123,9 @@ class _CuckooButtonState extends State<CuckooButton> {
     var textColor = widget.textColor;
     textColor ??= {
       CuckooButtonStyle.primary: Colors.white,
-      CuckooButtonStyle.secondary: context.cuckooTheme.primaryText,
+      CuckooButtonStyle.secondary: context.theme.primaryText,
       CuckooButtonStyle.danger: Colors.white,
-      CuckooButtonStyle.secondaryDanger: ColorPresets.negativePrimary,
+      CuckooButtonStyle.secondaryDanger: CuckooColors.negativePrimary,
     }[widget.style];
     return textColor ?? Colors.white;
   }
@@ -150,8 +150,9 @@ class _CuckooButtonState extends State<CuckooButton> {
     if (widget.text != null) {
       var textWidget = Text(
         widget.text!,
-        style: TextStylePresets.body(size: _buttonTextSize).copyWith(
-          fontWeight: _isSecondary ? FontWeight.normal : FontWeight.w600,
+        style: CuckooTextStyles.body(
+          size: _buttonTextSize,
+          weight: _isSecondary ? FontWeight.normal : FontWeight.w600,
           color: _buttonTextColor(),
         ),
       );

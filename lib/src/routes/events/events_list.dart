@@ -62,16 +62,17 @@ class _MoodleEventListViewState extends State<MoodleEventListView> {
     return Container(
       height: kEventHeaderHeight,
       width: double.infinity,
-      color: context.cuckooTheme.primaryBackground,
+      color: context.theme.primaryBackground,
       child: Padding(
         padding:
             const EdgeInsetsDirectional.only(start: kSidePaddings + 2, top: 10),
         child: Text(
           events.keys.elementAt(index),
-          style: TextStylePresets.body(size: 10.5).copyWith(
-            fontWeight: FontWeight.w600,
-            color: Color.lerp(context.cuckooTheme.secondaryText,
-                ColorPresets.primary, stuckAmount),
+          style: CuckooTextStyles.body(
+            size: 10.5,
+            weight: FontWeight.w600,
+            color: Color.lerp(
+                context.theme.secondaryText, CuckooColors.primary, stuckAmount),
           ),
         ),
       ),
@@ -120,9 +121,9 @@ class MoodleEventListTile extends StatelessWidget {
 
   Color _eventTintColor(BuildContext context) {
     if (event.isCompleted && _canShowCompleted(context)) {
-      return context.cuckooTheme.tertiaryText;
+      return context.theme.tertiaryText;
     }
-    return event.color ?? context.cuckooTheme.tertiaryText;
+    return event.color ?? context.theme.tertiaryText;
   }
 
   Widget _eventContent(BuildContext context) {
@@ -130,22 +131,24 @@ class MoodleEventListTile extends StatelessWidget {
     if (event.course != null) {
       children
         ..add(Text(event.course!.courseCode,
-            style: TextStylePresets.body(size: 10.5).copyWith(
-                fontWeight: FontWeight.bold, color: _eventTintColor(context))))
+            style: CuckooTextStyles.body(
+                size: 10.5,
+                weight: FontWeight.bold,
+                color: _eventTintColor(context))))
         ..add(const SizedBox(height: 1.0));
     }
     children.add(Text(event.name,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: TextStylePresets.body(size: 15, weight: FontWeight.normal)
+        style: CuckooTextStyles.body(size: 15, weight: FontWeight.normal)
             .copyWith(
                 color: event.isCompleted && _canShowCompleted(context)
-                    ? context.cuckooTheme.tertiaryText
-                    : context.cuckooTheme.primaryText,
+                    ? context.theme.tertiaryText
+                    : context.theme.primaryText,
                 decoration: event.isCompleted && _canShowCompleted(context)
                     ? TextDecoration.lineThrough
                     : null,
-                decorationColor: context.cuckooTheme.tertiaryText)));
+                decorationColor: context.theme.tertiaryText)));
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -185,18 +188,19 @@ class MoodleEventListTile extends StatelessWidget {
           defaultChoice: DeadlineDisplayStyle.daysRemainingAndTime.index),
       child: Container(
         width: 70.0,
-        color: context.cuckooTheme.tertiaryBackground,
+        color: context.theme.tertiaryBackground,
         child: Center(
             child: Text(
           deadlineDisplay(DeadlineDisplayStyle.values[
               context.settingsValue<int>(SettingsKey.deadlineDisplay) ??
                   DeadlineDisplayStyle.daysRemainingAndTime.index]),
           textAlign: TextAlign.center,
-          style: TextStylePresets.body(size: 11).copyWith(
-              fontWeight: FontWeight.w600,
+          style: CuckooTextStyles.body(
+              size: 11,
+              weight: FontWeight.w600,
               color: event.isCompleted && _canShowCompleted(context)
-                  ? context.cuckooTheme.tertiaryText
-                  : context.cuckooTheme.primaryText,
+                  ? context.theme.tertiaryText
+                  : context.theme.primaryText,
               height: 1.3),
         )),
       ),
@@ -216,7 +220,7 @@ class MoodleEventListTile extends StatelessWidget {
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(30.0))),
-      backgroundColor: context.cuckooTheme.popUpBackground,
+      backgroundColor: context.theme.popUpBackground,
       builder: (context) {
         return EventDetailView(event);
       },
@@ -276,7 +280,7 @@ class MoodleEventListTile extends StatelessWidget {
           child: GestureDetector(
             onTap: () => _openEventDetails(context),
             child: Container(
-              color: context.cuckooTheme.secondaryBackground,
+              color: context.theme.secondaryBackground,
               child: Row(
                 children: [
                   const SizedBox(width: 8.0),

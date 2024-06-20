@@ -47,7 +47,7 @@ class CuckooLargeAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget _titleWidget() {
     return Text(
       title,
-      style: TextStylePresets.title(size: 31.5),
+      style: CuckooTextStyles.title(size: 31.5),
     );
   }
 
@@ -130,10 +130,11 @@ class CuckooAppBar extends StatelessWidget implements PreferredSizeWidget {
         title,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: TextStylePresets.body(weight: FontWeight.w600, size: 16)
-            .copyWith(
-                color: context.cuckooTheme.primaryText
-                    .withAlpha((255 * titleTransparency).round())),
+        style: CuckooTextStyles.body(
+            weight: FontWeight.w600,
+            size: 16,
+            color: context.theme.primaryText
+                .withAlpha((255 * titleTransparency).round())),
       ),
     );
   }
@@ -166,7 +167,7 @@ class CuckooAppBar extends StatelessWidget implements PreferredSizeWidget {
             Platform.isAndroid ? Icons.close_rounded : Icons.arrow_back_rounded;
       }
       final exit = CuckooAppBarActionItem(
-          icon: Icon(icon, color: context.cuckooTheme.primaryText),
+          icon: Icon(icon, color: context.theme.primaryText),
           onPressed: () => Navigator.of(context).pop());
       left.insert(0, CuckooAppBarActionWidget(item: exit));
     }

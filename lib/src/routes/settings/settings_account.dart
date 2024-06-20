@@ -39,25 +39,23 @@ class SettingsAccountPage extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 22.0),
                       child: Text(
                         Constants.kSettingsAccountTitle,
-                        style: TextStylePresets.body(
-                                size: 20, weight: FontWeight.bold)
-                            .copyWith(height: 1.3),
+                        style: CuckooTextStyles.body(
+                            size: 20, weight: FontWeight.bold, height: 1.3),
                         textAlign: TextAlign.center,
                       ),
                     ),
                     const SizedBox(height: 28.0),
                     RichText(
                       text: TextSpan(
-                          style: TextStylePresets.body().copyWith(
-                              color: context.cuckooTheme.secondaryText,
-                              height: 1.3),
+                          style: CuckooTextStyles.body(
+                              color: context.theme.secondaryText, height: 1.3),
                           children: [
                             const TextSpan(
                                 text: Constants.kSettingsAccountDesc),
                             TextSpan(
                                 text: Constants.kLearnMore,
-                                style: TextStylePresets.body().copyWith(
-                                    color: ColorPresets.primary, height: 1.3),
+                                style: CuckooTextStyles.body(
+                                    color: CuckooColors.primary, height: 1.3),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () => launchUrlString(
                                       Constants.kAccountLearnMoreUrl))

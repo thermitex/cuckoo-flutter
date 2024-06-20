@@ -58,7 +58,7 @@ class _CuckooFormInputWrapper extends StatelessWidget {
       padding: input.padding ??
           const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
       decoration: BoxDecoration(
-          color: context.cuckooTheme.secondaryBackground,
+          color: context.theme.secondaryBackground,
           borderRadius: BorderRadius.vertical(
             top: firstInSection ? const Radius.circular(15.0) : Radius.zero,
             bottom: lastInSection ? const Radius.circular(15.0) : Radius.zero,
@@ -80,10 +80,10 @@ class CuckooFormSection extends StatelessWidget {
       return Container(
         height: 0.5,
         width: double.infinity,
-        color: context.cuckooTheme.secondaryBackground,
+        color: context.theme.secondaryBackground,
         child: SizedBox.expand(
           child: Container(
-            color: context.cuckooTheme.separator,
+            color: context.theme.separator,
             margin: EdgeInsets.only(left: withIcon ? 50.0 : 16.0),
           ),
         ),

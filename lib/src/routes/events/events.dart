@@ -32,16 +32,16 @@ class _EventsPageState extends State<EventsPage> {
       CuckooAppBarActionItem(
           icon: const Icon(
             Icons.more_horiz_rounded,
-            color: ColorPresets.primary,
+            color: CuckooColors.primary,
           ),
           onPressed: () => _openMorePanel()),
       CuckooAppBarActionItem(
           icon: const Icon(
             Icons.notifications_rounded,
-            color: ColorPresets.primary,
+            color: CuckooColors.primary,
             size: 20,
           ),
-          backgroundColor: context.cuckooTheme.secondaryBackground,
+          backgroundColor: context.theme.secondaryBackground,
           backgroundPadding: const EdgeInsets.all(5.0),
           onPressed: () => _openReminderPage()),
     ];
@@ -55,7 +55,7 @@ class _EventsPageState extends State<EventsPage> {
               width: 20,
               child: Center(
                   child: CircularProgressIndicator(
-                color: context.cuckooTheme.tertiaryBackground,
+                color: context.theme.tertiaryBackground,
                 strokeWidth: 3.0,
               )),
             ),
@@ -67,7 +67,7 @@ class _EventsPageState extends State<EventsPage> {
           CuckooAppBarActionItem(
               icon: const Icon(
                 Icons.warning_rounded,
-                color: ColorPresets.negativePrimary,
+                color: CuckooColors.negativePrimary,
               ),
               onPressed: () => showMoodleConnectionErrorDetails(context)));
     }
@@ -90,7 +90,7 @@ class _EventsPageState extends State<EventsPage> {
       useSafeArea: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(30.0))),
-      backgroundColor: context.cuckooTheme.popUpBackground,
+      backgroundColor: context.theme.popUpBackground,
       builder: (context) {
         return MorePanel(children: <MorePanelElement>[
           MorePanelElement(
@@ -103,15 +103,15 @@ class _EventsPageState extends State<EventsPage> {
                 width: double.infinity,
                 child: ToggleSwitch(
                   minWidth: double.infinity,
-                  customTextStyles: [TextStylePresets.body()],
+                  customTextStyles: [CuckooTextStyles.body()],
                   initialLabelIndex: context
                           .settingsValue<int>(SettingsKey.eventGroupingType) ??
                       0,
                   dividerColor: Colors.transparent,
-                  activeBgColor: const [ColorPresets.primary],
+                  activeBgColor: const [CuckooColors.primary],
                   activeFgColor: Colors.white,
-                  inactiveBgColor: context.cuckooTheme.secondaryTransBg,
-                  inactiveFgColor: context.cuckooTheme.primaryText,
+                  inactiveBgColor: context.theme.secondaryTransBg,
+                  inactiveFgColor: context.theme.primaryText,
                   totalSwitches: 3,
                   radiusStyle: true,
                   cornerRadius: 10.0,
@@ -222,7 +222,7 @@ class _EventsPageState extends State<EventsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.cuckooTheme.primaryBackground,
+      backgroundColor: context.theme.primaryBackground,
       appBar: CuckooLargeAppBar(
         title: Constants.kEventsTitle,
         actionItems: _appBarActionItems(),

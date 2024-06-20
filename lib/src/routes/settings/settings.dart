@@ -26,7 +26,7 @@ class SettingsPage extends StatelessWidget {
         if (context.eventManager.status == MoodleManagerStatus.idle) {
           return const Icon(
             Icons.check_circle_rounded,
-            color: ColorPresets.positivePrimary,
+            color: CuckooColors.positivePrimary,
           );
         } else if (context.eventManager.status ==
             MoodleManagerStatus.updating) {
@@ -37,7 +37,7 @@ class SettingsPage extends StatelessWidget {
               width: 20,
               child: Center(
                   child: CircularProgressIndicator(
-                color: context.cuckooTheme.quaternaryText,
+                color: context.theme.quaternaryText,
                 strokeWidth: 3.0,
               )),
             ),
@@ -45,13 +45,13 @@ class SettingsPage extends StatelessWidget {
         } else if (context.eventManager.status == MoodleManagerStatus.error) {
           return const Icon(
             Icons.warning_rounded,
-            color: ColorPresets.negativePrimary,
+            color: CuckooColors.negativePrimary,
           );
         }
       }
       return Icon(
         Icons.login_rounded,
-        color: context.cuckooTheme.secondaryText,
+        color: context.theme.secondaryText,
       );
     }
 
@@ -73,7 +73,7 @@ class SettingsPage extends StatelessWidget {
       child: Container(
         height: 65.0,
         decoration: BoxDecoration(
-          color: context.cuckooTheme.secondaryBackground,
+          color: context.theme.secondaryBackground,
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Padding(
@@ -86,7 +86,7 @@ class SettingsPage extends StatelessWidget {
                     ? 'Moodle Account'
                     : Constants.kLoginMoodleButton,
                 style:
-                    TextStylePresets.body(size: 15.0, weight: FontWeight.w600),
+                    CuckooTextStyles.body(size: 15.0, weight: FontWeight.w600),
               )),
               accessory()
             ],
@@ -99,7 +99,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.cuckooTheme.primaryBackground,
+      backgroundColor: context.theme.primaryBackground,
       appBar: const SettingsTopBar(),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(18, 5, 18, 0),
@@ -157,7 +157,7 @@ class SettingsPage extends StatelessWidget {
                           CuckooToast(Constants.kSettingsClearCachePrompt,
                               icon: const Icon(
                                 Icons.check_circle_rounded,
-                                color: ColorPresets.positivePrimary,
+                                color: CuckooColors.positivePrimary,
                               )).show(delayInMillisec: 250, haptic: true);
                         },
                       ),
@@ -274,7 +274,7 @@ class SettingsPage extends StatelessWidget {
                 SettingsFirstLevelMenuItem(
                   icon: Symbols.logout_rounded,
                   text: 'Sign Out',
-                  color: ColorPresets.negativePrimary,
+                  color: CuckooColors.negativePrimary,
                   action: () {
                     const CuckooDialog(
                         title: Constants.kLogOutConfirmation,
@@ -335,13 +335,13 @@ class SettingsFirstLevelMenuItem extends StatelessWidget {
         child: Row(
           children: [
             const SizedBox(width: 12.0),
-            Icon(icon,
-                color: color ?? context.cuckooTheme.primaryText, weight: 600),
+            Icon(icon, color: color ?? context.theme.primaryText, weight: 600),
             const SizedBox(width: 26.0),
             Text(text,
-                style: TextStylePresets.body(
-                        size: 15.0, weight: FontWeight.w600)
-                    .copyWith(color: color ?? context.cuckooTheme.primaryText))
+                style: CuckooTextStyles.body(
+                    size: 15.0,
+                    weight: FontWeight.w600,
+                    color: color ?? context.theme.primaryText))
           ],
         ),
       ),

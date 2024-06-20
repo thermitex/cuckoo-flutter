@@ -9,7 +9,7 @@ import 'package:material_symbols_icons/symbols.dart';
 void showMoodleConnectionErrorDetails(BuildContext context) async {
   final connectivityResult = await Connectivity().checkConnectivity();
   const errorIcon = Icon(Icons.warning_rounded,
-      color: ColorPresets.negativePrimary, size: 50.0);
+      color: CuckooColors.negativePrimary, size: 50.0);
   if (connectivityResult.contains(ConnectivityResult.none)) {
     // No internet connection
     IconDetailPanel(

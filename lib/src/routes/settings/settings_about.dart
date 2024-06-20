@@ -25,32 +25,34 @@ class SettingsAboutPage extends StatelessWidget {
           const SizedBox(height: 6.0),
           Text(
             'Cuckoo',
-            style: TextStylePresets.title(size: 38)
-                .copyWith(color: ColorPresets.primary, height: 1.1),
+            style: CuckooTextStyles.title(size: 38, color: CuckooColors.primary)
+                .copyWith(height: 1.1),
           ),
           Text(
             version,
-            style: TextStylePresets.title(size: 30, weight: FontWeight.w500)
+            style: CuckooTextStyles.title(size: 30, weight: FontWeight.w500)
                 .copyWith(height: 1.1),
           ),
           Padding(
               padding: const EdgeInsets.only(top: 3.0),
               child: RichText(
                 text: TextSpan(
-                  style:
-                      TextStylePresets.body(size: 12, weight: FontWeight.w500)
-                          .copyWith(
-                              color: context.cuckooTheme.secondaryText,
-                              height: 1.3),
+                  style: CuckooTextStyles.body(
+                      size: 12,
+                      weight: FontWeight.w500,
+                      color: context.theme.secondaryText,
+                      height: 1.3),
                   children: [
                     const TextSpan(
                       text: 'Developed by Jerry Li\nAnd ',
                     ),
                     TextSpan(
                         text: 'Contributors',
-                        style: TextStylePresets.body(
-                                size: 12, weight: FontWeight.w500)
-                            .copyWith(color: ColorPresets.primary, height: 1.3),
+                        style: CuckooTextStyles.body(
+                            size: 12,
+                            weight: FontWeight.w500,
+                            color: CuckooColors.primary,
+                            height: 1.3),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             launchUrlString(Constants.kProjectContributorsUrl);
@@ -80,7 +82,7 @@ class SettingsAboutPage extends StatelessWidget {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: backgroundColor ?? context.cuckooTheme.secondaryBackground,
+          color: backgroundColor ?? context.theme.secondaryBackground,
           borderRadius: BorderRadius.circular(15.0),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 20.0),
@@ -97,8 +99,8 @@ class SettingsAboutPage extends StatelessWidget {
             const SizedBox(height: 12.0),
             Text(
               title,
-              style: TextStylePresets.body(size: 16, weight: FontWeight.bold)
-                  .copyWith(color: color, height: 1.3),
+              style: CuckooTextStyles.body(
+                  size: 16, weight: FontWeight.bold, color: color, height: 1.3),
             ),
             if (content != null) const SizedBox(height: 15.0),
             if (content != null) content,
@@ -130,21 +132,22 @@ class SettingsAboutPage extends StatelessWidget {
                 _aboutBlock(context,
                     icon: FontAwesomeIcons.github,
                     title: Constants.kAboutOpenSourceTitle,
-                    color: ColorPresets.primary,
-                    backgroundColor: ColorPresets.primary
+                    color: CuckooColors.primary,
+                    backgroundColor: CuckooColors.primary
                         .withAlpha(context.isDarkMode ? 50 : 25),
                     content: RichText(
                       text: TextSpan(
-                          style: TextStylePresets.body(size: 12.5)
-                              .copyWith(height: 1.4)
-                              .copyWith(color: context.cuckooTheme.primaryText),
+                          style: CuckooTextStyles.body(
+                              size: 12.5,
+                              color: context.theme.primaryText,
+                              height: 1.4),
                           children: [
                             const TextSpan(
                                 text: Constants.kAboutOpenSourceDesc),
                             TextSpan(
                                 text: Constants.kCheckGithub,
-                                style: TextStylePresets.body(size: 12.5)
-                                    .copyWith(color: ColorPresets.primary),
+                                style: CuckooTextStyles.body(
+                                    size: 12.5, color: CuckooColors.primary),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     launchUrlString(
@@ -161,8 +164,7 @@ class SettingsAboutPage extends StatelessWidget {
                   backgroundColor: const Color.fromARGB(255, 88, 101, 242)
                       .withAlpha(context.isDarkMode ? 50 : 25),
                   content: Text(Constants.kAboutDiscordContent,
-                      style: TextStylePresets.body(size: 12.5)
-                          .copyWith(height: 1.4)),
+                      style: CuckooTextStyles.body(size: 12.5, height: 1.4)),
                   action: () => launchUrlString(Constants.kAboutDiscordUrl),
                 ),
                 const SizedBox(height: 18),

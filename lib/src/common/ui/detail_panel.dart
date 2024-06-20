@@ -33,7 +33,7 @@ class IconDetailPanel extends StatelessWidget {
           maxHeight: max(MediaQuery.of(context).size.height * 0.3, 800),
           maxWidth: 650),
       context: context,
-      backgroundColor: context.cuckooTheme.popUpBackground,
+      backgroundColor: context.theme.popUpBackground,
       useRootNavigator: true,
       useSafeArea: true,
       shape: const RoundedRectangleBorder(
@@ -48,14 +48,13 @@ class IconDetailPanel extends StatelessWidget {
       const SizedBox(height: 10.0),
       Text(
         title,
-        style: TextStylePresets.body(size: 24, weight: FontWeight.bold)
-            .copyWith(height: 1.3),
+        style: CuckooTextStyles.body(
+            size: 24, weight: FontWeight.bold, height: 1.3),
       ),
       const SizedBox(height: 12.0),
       Text(
         description,
-        style: TextStylePresets.body()
-            .copyWith(color: context.cuckooTheme.secondaryText),
+        style: CuckooTextStyles.body(color: context.theme.secondaryText),
       ),
       const Spacer()
     ];

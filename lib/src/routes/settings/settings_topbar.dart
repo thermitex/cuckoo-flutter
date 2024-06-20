@@ -18,7 +18,7 @@ class SettingsTopBar extends StatelessWidget implements PreferredSizeWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: ColorPresets.primary,
+          color: CuckooColors.primary,
           width: 5.0,
           strokeAlign: BorderSide.strokeAlignOutside,
         ),
@@ -40,20 +40,20 @@ class SettingsTopBar extends StatelessWidget implements PreferredSizeWidget {
       minFontSize: 22,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: TextStylePresets.title(size: 29).copyWith(height: 1.1),
+      style: CuckooTextStyles.title(size: 29).copyWith(height: 1.1),
     );
 
     final username = Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(10)),
-        color: ColorPresets.primary.withAlpha(context.isDarkMode ? 70 : 30),
+        color: CuckooColors.primary.withAlpha(context.isDarkMode ? 70 : 30),
       ),
       padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
       child: Center(
           child: Text(
         loggedIn ? Moodle.username : '',
-        style: TextStylePresets.body(size: 12, weight: FontWeight.w600)
-            .copyWith(color: ColorPresets.primary),
+        style: CuckooTextStyles.body(
+            size: 12, weight: FontWeight.w600, color: CuckooColors.primary),
       )),
     );
 

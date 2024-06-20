@@ -31,8 +31,8 @@ class CuckooToast {
     }
     children.add(Text(
       description,
-      style: TextStylePresets.body(weight: FontWeight.w500)
-          .copyWith(color: Colors.white),
+      style:
+          CuckooTextStyles.body(weight: FontWeight.w500, color: Colors.white),
     ));
 
     return Material(
@@ -42,7 +42,7 @@ class CuckooToast {
         padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 14.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.0),
-          color: ColorPresets.darkTertiaryBackground,
+          color: CuckooColors.darkTertiaryBackground,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

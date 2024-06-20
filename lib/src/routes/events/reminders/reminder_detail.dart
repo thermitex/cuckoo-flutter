@@ -57,8 +57,8 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
           // Title
           CuckooFormSection(children: [
             CuckooFormTextField(
-              icon: Icon(Icons.title_rounded,
-                  color: context.cuckooTheme.secondaryText),
+              icon:
+                  Icon(Icons.title_rounded, color: context.theme.secondaryText),
               placeholder: 'Title',
               initialValue: _reminder.title,
               autofocus: _reminder.title == null,
@@ -131,7 +131,7 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
                     CuckooToast(Constants.kReminderDeletedPrompt,
                         icon: const Icon(
                           Icons.delete,
-                          color: ColorPresets.negativePrimary,
+                          color: CuckooColors.negativePrimary,
                         )).show(delayInMillisec: 250, haptic: true);
                   }
                 });
@@ -163,8 +163,8 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
               icon: Icon(
                 Icons.check_circle_rounded,
                 color: _formValid
-                    ? ColorPresets.primary
-                    : context.cuckooTheme.tertiaryText,
+                    ? CuckooColors.primary
+                    : context.theme.tertiaryText,
               ),
               onPressed: () {
                 if (_formValid) {
@@ -181,7 +181,7 @@ class _ReminderDetailPageState extends State<ReminderDetailPage> {
                   CuckooToast(Constants.kReminderSavedPrompt,
                       icon: const Icon(
                         Icons.check_circle_rounded,
-                        color: ColorPresets.positivePrimary,
+                        color: CuckooColors.positivePrimary,
                       )).show(delayInMillisec: 250, haptic: true);
                 }
               })

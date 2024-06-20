@@ -27,8 +27,8 @@ class CourseDetailSection extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10.0),
       child: Text(
         section.name.htmlParsed,
-        style: TextStylePresets.body(size: 16, weight: FontWeight.w600)
-            .copyWith(color: course.color),
+        style: CuckooTextStyles.body(
+            size: 16, weight: FontWeight.w600, color: course.color),
       ),
     );
   }
@@ -146,7 +146,7 @@ class CourseDetailSection extends StatelessWidget {
           indentLevel: indent,
           icon: FaIcon(
             _moduleIcon(module),
-            color: context.cuckooTheme.primaryText,
+            color: context.theme.primaryText,
             size: 20,
           ),
         ),
@@ -158,10 +158,10 @@ class CourseDetailSection extends StatelessWidget {
         children.add(Container(
           width: double.infinity,
           height: 0.5,
-          color: context.cuckooTheme.secondaryBackground,
+          color: context.theme.secondaryBackground,
           padding: EdgeInsets.only(left: 50.0 + 20 * commonIndent),
           child: Container(
-            color: context.cuckooTheme.separator,
+            color: context.theme.separator,
           ),
         ));
       }
@@ -174,7 +174,7 @@ class CourseDetailSection extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(15.0),
       child: Container(
-        color: context.cuckooTheme.secondaryBackground,
+        color: context.theme.secondaryBackground,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,7 +213,7 @@ class CourseDetailItem extends StatelessWidget {
       margin: Margins.zero,
       padding: HtmlPaddings.zero,
       fontSize: FontSize(titleFontSize),
-      fontFamily: TextStylePresets.body().fontFamily,
+      fontFamily: CuckooTextStyles.body().fontFamily,
     );
     final htmlStyles = <String, Style>{};
     const htmlTags = ['html', 'body', 'p', 'div'];
@@ -242,7 +242,7 @@ class CourseDetailItem extends StatelessWidget {
                 ? _htmlText(title)
                 : Text(
                     title,
-                    style: TextStylePresets.body(size: titleFontSize),
+                    style: CuckooTextStyles.body(size: titleFontSize),
                   ),
           ),
         ],

@@ -99,7 +99,7 @@ class RootState extends State<Root> with WidgetsBindingObserver {
             IconDetailPanel(
               icon: const Icon(
                 Icons.favorite_rounded,
-                color: ColorPresets.primary,
+                color: CuckooColors.primary,
                 size: 50,
               ),
               title: Constants.kTipThankYouTitle,
@@ -142,25 +142,25 @@ class RootState extends State<Root> with WidgetsBindingObserver {
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.calendar_view_day_rounded),
         title: ("Events"),
-        activeColorPrimary: ColorPresets.primary,
+        activeColorPrimary: CuckooColors.primary,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.school_rounded),
         title: ("Courses"),
-        activeColorPrimary: ColorPresets.primary,
+        activeColorPrimary: CuckooColors.primary,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.calendar_month_rounded),
         title: ("Calendar"),
-        activeColorPrimary: ColorPresets.primary,
+        activeColorPrimary: CuckooColors.primary,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.settings_rounded),
         title: ("Settings"),
-        activeColorPrimary: ColorPresets.primary,
+        activeColorPrimary: CuckooColors.primary,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
     ];
@@ -222,7 +222,7 @@ class RootState extends State<Root> with WidgetsBindingObserver {
       items: _navBarItems(),
       confineInSafeArea: true,
       navBarHeight: 58,
-      backgroundColor: context.cuckooTheme.primaryBackground,
+      backgroundColor: context.theme.primaryBackground,
       handleAndroidBackButtonPress: true,
       resizeToAvoidBottomInset: true,
       stateManagement: true,
@@ -230,10 +230,10 @@ class RootState extends State<Root> with WidgetsBindingObserver {
       decoration: NavBarDecoration(
         border: Border(
             top: BorderSide(
-          color: context.cuckooTheme.secondaryBackground,
+          color: context.theme.secondaryBackground,
           width: 1.5,
         )),
-        colorBehindNavBar: context.cuckooTheme.primaryBackground,
+        colorBehindNavBar: context.theme.primaryBackground,
       ),
       popAllScreensOnTapOfSelectedTab: true,
       popActionScreens: PopActionScreensType.all,

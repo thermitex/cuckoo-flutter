@@ -37,7 +37,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
               child: Text(
                 widget.title,
                 style:
-                    TextStylePresets.title(size: 30, weight: FontWeight.w600),
+                    CuckooTextStyles.title(size: 30, weight: FontWeight.w600),
               ),
             );
           }
@@ -133,13 +133,12 @@ class _SettingsItemState extends State<SettingsItem> {
                 children: [
                   Expanded(
                       child: Text(widget.label,
-                          style: TextStylePresets.body(size: 15.0))),
+                          style: CuckooTextStyles.body(size: 15.0))),
                   if (widget.type == SettingsItemType.boolean)
                     Switch.adaptive(
                       value: _value,
-                      activeColor: ColorPresets.primary,
-                      inactiveTrackColor:
-                          context.cuckooTheme.tertiaryBackground,
+                      activeColor: CuckooColors.primary,
+                      inactiveTrackColor: context.theme.tertiaryBackground,
                       onChanged: (value) {
                         Settings().set<bool>(widget.settingsKey, value);
                         setState(() => _value = value);
@@ -149,7 +148,7 @@ class _SettingsItemState extends State<SettingsItem> {
                   else if (widget.type == SettingsItemType.choice)
                     CuckooSelector(
                       widget.choiceNames![_value],
-                      backgroundColor: ColorPresets.primary
+                      backgroundColor: CuckooColors.primary
                           .withAlpha(context.isDarkMode ? 70 : 30),
                       fontSize: 13.0,
                       borderRadius: 20.0,
@@ -180,8 +179,8 @@ class _SettingsItemState extends State<SettingsItem> {
             padding: const EdgeInsets.only(right: 110.0),
             child: Text(
               widget.description!,
-              style: TextStylePresets.body(size: 12.0).copyWith(
-                  color: context.cuckooTheme.secondaryText, height: 1.3),
+              style: CuckooTextStyles.body(
+                  size: 12.0, color: context.theme.secondaryText, height: 1.3),
             ),
           )
       ],

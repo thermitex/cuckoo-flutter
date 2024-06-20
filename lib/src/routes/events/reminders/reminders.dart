@@ -30,7 +30,7 @@ class _ReminderPageState extends State<ReminderPage> {
     padding: const EdgeInsets.only(bottom: 8.0),
     child: Text(
       Constants.kReminderTitle,
-      style: TextStylePresets.title(size: 30, weight: FontWeight.w600),
+      style: CuckooTextStyles.title(size: 30, weight: FontWeight.w600),
     ),
   );
 
@@ -83,12 +83,14 @@ class _ReminderPageState extends State<ReminderPage> {
           onTap: () => _createNewReminder(),
           child: Center(
               child: Row(mainAxisSize: MainAxisSize.min, children: [
-            const Icon(Icons.add_circle_rounded, color: ColorPresets.primary),
+            const Icon(Icons.add_circle_rounded, color: CuckooColors.primary),
             const SizedBox(width: 6.0),
             Text(
               Constants.kAddReminder,
-              style: TextStylePresets.body(size: 13.0, weight: FontWeight.w500)
-                  .copyWith(color: ColorPresets.primary),
+              style: CuckooTextStyles.body(
+                  size: 13.0,
+                  weight: FontWeight.w500,
+                  color: CuckooColors.primary),
             )
           ])),
         ),
@@ -101,13 +103,15 @@ class _ReminderPageState extends State<ReminderPage> {
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
       margin: const EdgeInsets.symmetric(vertical: 7.0),
       decoration: BoxDecoration(
-          color: ColorPresets.warningTertiary,
+          color: CuckooColors.warningTertiary,
           borderRadius: BorderRadius.circular(17.0),
-          border: Border.all(color: ColorPresets.warningPrimary)),
+          border: Border.all(color: CuckooColors.warningPrimary)),
       child: Text(
         Constants.kNotiPermissionWarning,
-        style: TextStylePresets.body(weight: FontWeight.w500, size: 12)
-            .copyWith(color: ColorPresets.warningPrimary),
+        style: CuckooTextStyles.body(
+            weight: FontWeight.w500,
+            size: 12,
+            color: CuckooColors.warningPrimary),
       ),
     );
   }
@@ -121,7 +125,7 @@ class _ReminderPageState extends State<ReminderPage> {
         padding: const EdgeInsets.all(7.0),
         margin: const EdgeInsets.only(top: 7.0),
         decoration: BoxDecoration(
-          color: context.cuckooTheme.secondaryBackground,
+          color: context.theme.secondaryBackground,
           borderRadius: BorderRadius.circular(17.0),
         ),
         child: Row(children: [
@@ -129,9 +133,8 @@ class _ReminderPageState extends State<ReminderPage> {
             height: double.infinity,
             width: 20,
             decoration: BoxDecoration(
-              color: disabled
-                  ? context.cuckooTheme.tertiaryText
-                  : ColorPresets.primary,
+              color:
+                  disabled ? context.theme.tertiaryText : CuckooColors.primary,
               borderRadius: BorderRadius.circular(10.0),
             ),
             child: Center(
@@ -152,18 +155,18 @@ class _ReminderPageState extends State<ReminderPage> {
             children: [
               Text(
                 reminder.title!,
-                style: TextStylePresets.body(size: 15, weight: FontWeight.w600),
+                style: CuckooTextStyles.body(size: 15, weight: FontWeight.w600),
               ),
               Text(
                 reminder.timingDescription,
-                style: TextStylePresets.body(size: 12)
-                    .copyWith(color: ColorPresets.primary),
+                style: CuckooTextStyles.body(
+                    size: 12, color: CuckooColors.primary),
               )
             ],
           )),
           Icon(
             Icons.chevron_right_rounded,
-            color: context.cuckooTheme.tertiaryText,
+            color: context.theme.tertiaryText,
           )
         ]),
       ),
@@ -249,7 +252,7 @@ class _ReminderPageState extends State<ReminderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.cuckooTheme.primaryBackground,
+      backgroundColor: context.theme.primaryBackground,
       appBar: CuckooAppBar(
         title: Constants.kReminderTitle,
         exitButtonStyle: ExitButtonStyle.close,
