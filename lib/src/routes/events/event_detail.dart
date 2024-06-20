@@ -316,7 +316,7 @@ class EventDetailView extends StatelessWidget {
               ? Icons.unpublished_rounded
               : Icons.check_circle_rounded,
           color: CuckooColors.positivePrimary,
-        )).show(delayInMillisec: 250, haptic: true);
+        )).show();
   }
 
   @override

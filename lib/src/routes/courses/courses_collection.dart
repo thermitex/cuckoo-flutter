@@ -1,12 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cuckoo/src/app.dart';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
+import 'package:cuckoo/src/common/widgets/more_panel.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:cuckoo/src/routes/courses/course_detail.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -125,10 +129,18 @@ class _MoodleCourseCollectionViewState
   }
 }
 
-class MoodleCourseTile extends StatelessWidget {
+class MoodleCourseTile extends StatefulWidget {
   const MoodleCourseTile(this.course, {super.key});
 
   final MoodleCourse course;
+
+  @override
+  State<MoodleCourseTile> createState() => _MoodleCourseTileState();
+}
+
+class _MoodleCourseTileState extends State<MoodleCourseTile> {
+  // An intermediate variable to store color before applying.
+  Color? _pickerColor;
 
   /// Icon of the course to show at the background.
   IconData _courseIcon() {
@@ -154,7 +166,74 @@ class MoodleCourseTile extends StatelessWidget {
       FontAwesomeIcons.globe,
       FontAwesomeIcons.seedling,
     ];
-    return iconsToUse[course.id.toInt() % iconsToUse.length];
+    return iconsToUse[widget.course.id.toInt() % iconsToUse.length];
+  }
+
+  /// Color panel displayed on long tap.
+  void _showColorEditingPanel(BuildContext context) {
+    showModalBottomSheet<void>(
+        context: context,
+        useRootNavigator: true,
+        useSafeArea: true,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30.0))),
+        backgroundColor: context.theme.popUpBackground,
+        builder: (context) {
+          return MorePanel(
+            children: [
+              MorePanelElement(
+                title: Constants.kColorPanelChooseColor,
+                icon: const Icon(Icons.color_lens_rounded),
+                action: () {
+                  context.navigator.pop();
+                  Future.delayed(250.ms).then((_) => showDialog(
+                        context: navigatorKey.currentContext!,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            titlePadding: const EdgeInsets.all(0),
+                            contentPadding: const EdgeInsets.all(0),
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30))),
+                            content: SingleChildScrollView(
+                              child: ColorPicker(
+                                pickerColor: widget.course.color,
+                                onColorChanged: (selectedColor) =>
+                                    _pickerColor = selectedColor,
+                                enableAlpha: false,
+                                labelTypes: const [],
+                                pickerAreaBorderRadius:
+                                    const BorderRadius.vertical(
+                                        top: Radius.circular(30)),
+                                hexInputBar: false,
+                                displayThumbColor: true,
+                              ),
+                            ),
+                            actions: [
+                              CuckooButton(
+                                text: Constants.kOK,
+                                action: () {
+                                  context.navigator.pop();
+                                  widget.course.customColor = _pickerColor;
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      ));
+                },
+              ),
+              MorePanelElement(
+                title: Constants.kColorPanelResetColor,
+                icon: const Icon(Icons.replay_rounded),
+                action: () {
+                  context.navigator.pop();
+                  widget.course.customColor = null;
+                },
+              )
+            ],
+          );
+        });
   }
 
   @override
@@ -163,13 +242,17 @@ class MoodleCourseTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(20.0),
       child: GestureDetector(
         onTap: () => context.platformDependentPush(
-            builder: (context) => CourseDetailPage(course)),
+            builder: (context) => CourseDetailPage(widget.course)),
+        onLongPress: () => _showColorEditingPanel(context),
         child: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [course.color, course.color.withAlpha(220)])),
+                  colors: [
+                widget.course.color,
+                widget.course.color.withAlpha(220)
+              ])),
           child: Stack(
             children: [
               Positioned(
@@ -196,7 +279,7 @@ class MoodleCourseTile extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 7.0, horizontal: 12.0),
                     child: AutoSizeText(
-                      course.courseCode,
+                      widget.course.courseCode,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: CuckooTextStyles.title(
@@ -213,7 +296,7 @@ class MoodleCourseTile extends StatelessWidget {
                     color: context.theme.primaryInverseText
                         .withAlpha(context.isDarkMode ? 140 : 180),
                     child: Text(
-                      course.nameWithoutCode,
+                      widget.course.nameWithoutCode,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: CuckooTextStyles.body(

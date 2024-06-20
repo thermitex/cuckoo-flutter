@@ -7,6 +7,7 @@ import 'package:cuckoo/src/models/index.dart';
 import 'package:cuckoo/src/routes/courses/course_detail_grade.dart';
 import 'package:cuckoo/src/routes/courses/course_detail_section.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 /// View type of the course.
 enum CourseViewType { contents, grades }
@@ -67,7 +68,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
           color: target
               ? CuckooColors.positivePrimary
               : CuckooColors.negativePrimary,
-        )).show(delayInMillisec: 200, haptic: true);
+        )).show(delay: 200.ms);
   }
 
   CuckooAppBar _pageAppBar() {

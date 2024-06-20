@@ -2,6 +2,7 @@ import 'package:cuckoo/src/app.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 /// Show a standard Cuckoo toast at the bottom of the screen.
@@ -53,13 +54,13 @@ class CuckooToast {
   }
 
   /// Show the toast.
-  void show({int delayInMillisec = 0, bool haptic = false}) {
-    Future.delayed(Duration(milliseconds: delayInMillisec)).then((_) {
+  void show({Duration? delay, bool haptic = true}) {
+    Future.delayed(delay ?? 250.ms).then((_) {
       if (haptic) HapticFeedback.mediumImpact();
       _toast.showToast(
           child: _toastView(),
-          toastDuration: const Duration(seconds: 2),
-          fadeDuration: const Duration(milliseconds: 200),
+          toastDuration: 2.seconds,
+          fadeDuration: 200.ms,
           positionedToastBuilder: (context, child) {
             return Positioned(
               bottom: 110,

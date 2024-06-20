@@ -5,6 +5,7 @@ import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 /// A row for displaying a course grade.
 class CourseDetailGradeItem extends StatelessWidget {
@@ -41,13 +42,22 @@ class CourseDetailGradeItem extends StatelessWidget {
       borderRadius: BorderRadius.circular(15.0),
       child: Stack(children: [
         Container(
-            color: context.theme.tertiaryBackground,
-            height: outerSize,
-            width: outerSize,
-            child: CustomPaint(
-              painter: GradeIndicatorPainter(
-                  color: course.color, value: indicatorValue ?? 0),
-            )),
+          color: context.theme.tertiaryBackground,
+          height: outerSize,
+          width: outerSize,
+          child: Animate().custom(
+            duration: 800.ms,
+            curve: Curves.easeInOutCirc,
+            begin: 0,
+            end: indicatorValue ?? 0,
+            builder: (_, value, __) {
+              return CustomPaint(
+                painter:
+                    GradeIndicatorPainter(color: course.color, value: value),
+              );
+            },
+          ),
+        ),
         SizedBox(
           height: outerSize,
           width: outerSize,

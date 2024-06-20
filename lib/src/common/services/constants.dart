@@ -192,4 +192,6 @@ class Constants {
       'We strive to constantly improve Cuckoo for a better user experience. Don\'t forget to join the Discord community to let us know how we can further improve.';
   static const kNotiPermissionWarning =
       'Cuckoo currently does not have the permission to display notifications, and therfore the reminders here may not work as expected. Please go to Settings and allow notifications from Cuckoo.';
+  static const kColorPanelChooseColor = 'Choose Custom Color';
+  static const kColorPanelResetColor = 'Reset Custom Color';
 }
