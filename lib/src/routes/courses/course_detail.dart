@@ -34,6 +34,10 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
   /// Grades are lazily loaded and not cached.
   List<MoodleCourseGrade>? _grades;
 
+  /// Keep track of a list to see whether the current grade row has been
+  /// animated. Make sure each animation is played once only.
+  late List<bool> _gradesAnimated;
+
   /// If the current course is marked as favorite.
   bool _isFavoriteCourse = false;
 
@@ -229,6 +233,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
     Moodle.getCourseGrades(_course).then((grades) {
       if (grades != null) {
         _grades = grades;
+        _gradesAnimated = List.generate(grades.length, (_) => false);
         setState(() => _contentReady = true);
       } else {
         setState(() => _contentError = true);
@@ -275,7 +280,12 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                 if (index == _grades!.length + 1) {
                   return const SizedBox(height: 16.0);
                 }
-                return CourseDetailGradeItem(_course, _grades![index - 1]);
+                return CourseDetailGradeItem(
+                  _course,
+                  _grades![index - 1],
+                  shouldAnimate: !_gradesAnimated[index - 1],
+                  animationPlayed: () => _gradesAnimated[index - 1] = true,
+                );
               },
               separatorBuilder: (context, index) {
                 return const SizedBox(height: 15.0);

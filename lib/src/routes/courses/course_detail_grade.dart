@@ -9,11 +9,16 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 /// A row for displaying a course grade.
 class CourseDetailGradeItem extends StatelessWidget {
-  const CourseDetailGradeItem(this.course, this.grade, {super.key});
+  const CourseDetailGradeItem(this.course, this.grade,
+      {super.key, this.shouldAnimate = true, this.animationPlayed});
 
   final MoodleCourse course;
 
   final MoodleCourseGrade grade;
+
+  final bool shouldAnimate;
+
+  final void Function()? animationPlayed;
 
   Widget _gradeIndicator(BuildContext context) {
     double? indicatorValue;
@@ -45,18 +50,25 @@ class CourseDetailGradeItem extends StatelessWidget {
           color: context.theme.tertiaryBackground,
           height: outerSize,
           width: outerSize,
-          child: Animate().custom(
-            duration: 800.ms,
-            curve: Curves.easeInOutCirc,
-            begin: 0,
-            end: indicatorValue ?? 0,
-            builder: (_, value, __) {
-              return CustomPaint(
-                painter:
-                    GradeIndicatorPainter(color: course.color, value: value),
-              );
-            },
-          ),
+          child: shouldAnimate
+              ? Animate(
+                  onInit: (_) => animationPlayed?.call(),
+                ).custom(
+                  duration: 800.ms,
+                  curve: Curves.easeInOutCirc,
+                  begin: 0,
+                  end: indicatorValue ?? 0,
+                  builder: (_, value, __) {
+                    return CustomPaint(
+                      painter: GradeIndicatorPainter(
+                          color: course.color, value: value),
+                    );
+                  },
+                )
+              : CustomPaint(
+                  painter: GradeIndicatorPainter(
+                      color: course.color, value: indicatorValue ?? 0),
+                ),
         ),
         SizedBox(
           height: outerSize,
