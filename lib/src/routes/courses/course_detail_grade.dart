@@ -5,14 +5,20 @@ import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 /// A row for displaying a course grade.
 class CourseDetailGradeItem extends StatelessWidget {
-  const CourseDetailGradeItem(this.course, this.grade, {super.key});
+  const CourseDetailGradeItem(this.course, this.grade,
+      {super.key, this.shouldAnimate = true, this.animationPlayed});
 
   final MoodleCourse course;
 
   final MoodleCourseGrade grade;
+
+  final bool shouldAnimate;
+
+  final void Function()? animationPlayed;
 
   Widget _gradeIndicator(BuildContext context) {
     double? indicatorValue;
@@ -41,13 +47,29 @@ class CourseDetailGradeItem extends StatelessWidget {
       borderRadius: BorderRadius.circular(15.0),
       child: Stack(children: [
         Container(
-            color: context.theme.tertiaryBackground,
-            height: outerSize,
-            width: outerSize,
-            child: CustomPaint(
-              painter: GradeIndicatorPainter(
-                  color: course.color, value: indicatorValue ?? 0),
-            )),
+          color: context.theme.tertiaryBackground,
+          height: outerSize,
+          width: outerSize,
+          child: shouldAnimate
+              ? Animate(
+                  onInit: (_) => animationPlayed?.call(),
+                ).custom(
+                  duration: 800.ms,
+                  curve: Curves.easeInOutCirc,
+                  begin: 0,
+                  end: indicatorValue ?? 0,
+                  builder: (_, value, __) {
+                    return CustomPaint(
+                      painter: GradeIndicatorPainter(
+                          color: course.color, value: value),
+                    );
+                  },
+                )
+              : CustomPaint(
+                  painter: GradeIndicatorPainter(
+                      color: course.color, value: indicatorValue ?? 0),
+                ),
+        ),
         SizedBox(
           height: outerSize,
           width: outerSize,

@@ -126,7 +126,7 @@ class MoodleFunctionResponse {
 /// Shortcuts for Moodle event.
 extension MoodleEventExtension on MoodleEvent {
   /// Course for Moodle event.
-  MoodleCourse? get course => Moodle.courseForEvent(this);
+  MoodleCourse? get course => Moodle().courseManager._courseForEvent(this);
 
   /// Remaining seconds for Moodle event.
   num get remainingTime => timestart - DateTime.now().secondEpoch;
@@ -150,6 +150,14 @@ extension MoodleEventExtension on MoodleEvent {
 
   /// Event associated color.
   Color? get color => course?.color;
+
+  /// Event associated color that is subscribed to change notifiers.
+  ///
+  /// Note that this will add extra building times for the widget, therefore
+  /// use color getter as much as possible.
+  Color? contextWatchedColor(BuildContext context) =>
+      context.select<MoodleCourseManager, Color?>(
+          (manager) => manager._courseForEvent(this)?.color);
 
   /// If the event has expired.
   bool get expired => remainingTime < 0;
@@ -185,6 +193,13 @@ extension MoodleCourseExtension on MoodleCourse {
   /// Set the course as favorite.
   set favoriteMark(bool fav) {
     customFavorite = fav;
+    Moodle().courseManager._notifyManually();
+    Moodle()._saveCourses();
+  }
+
+  /// Set the custom color of the course.
+  set customColor(Color? color) {
+    colorHex = color?.toHex();
     Moodle().courseManager._notifyManually();
     Moodle()._saveCourses();
   }

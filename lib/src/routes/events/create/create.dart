@@ -139,7 +139,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         icon: const Icon(
                           Icons.delete,
                           color: CuckooColors.negativePrimary,
-                        )).show(delayInMillisec: 250, haptic: true);
+                        )).show();
                   }
                 });
               },
@@ -194,7 +194,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       icon: const Icon(
                         Icons.check_circle_rounded,
                         color: CuckooColors.positivePrimary,
-                      )).show(delayInMillisec: 250, haptic: true);
+                      )).show();
                 }
               })
         ],

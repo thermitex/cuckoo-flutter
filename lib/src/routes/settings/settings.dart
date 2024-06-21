@@ -158,7 +158,7 @@ class SettingsPage extends StatelessWidget {
                               icon: const Icon(
                                 Icons.check_circle_rounded,
                                 color: CuckooColors.positivePrimary,
-                              )).show(delayInMillisec: 250, haptic: true);
+                              )).show();
                         },
                       ),
                     ],

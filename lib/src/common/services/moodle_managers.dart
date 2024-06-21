@@ -211,6 +211,14 @@ class MoodleCourseManager with ChangeNotifier {
     return _courses.map((course) => course.id.toString()).toList();
   }
 
+  /// Get the course info associated with the event.
+  ///
+  /// Recommend to use the shortcut `event.course` instead.
+  MoodleCourse? _courseForEvent(MoodleEvent event) {
+    final courseId = event.courseid;
+    return courseId != null ? _courseMap[courseId] : null;
+  }
+
   /// Manually notify.
   void _notifyManually({bool flushCache = false}) {
     if (flushCache) _sortedCoursesCache = {};

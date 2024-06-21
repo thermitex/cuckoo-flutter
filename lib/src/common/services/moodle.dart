@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:html/parser.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -512,18 +513,6 @@ class Moodle {
       }
     }
     return Future.wait(requests).then((_) => moodle._saveEvents());
-  }
-
-  /// Get the course info associated with the event.
-  ///
-  /// Recommend to use the shortcut `event.course` instead.
-  static MoodleCourse? courseForEvent(MoodleEvent event) {
-    final moodle = Moodle();
-    final courseId = event.courseid;
-    if (courseId != null) {
-      return moodle.courseManager._courseMap[courseId];
-    }
-    return null;
   }
 
   /// Add or update a custom event to the current event list.

@@ -7,6 +7,7 @@ import 'package:cuckoo/src/models/index.dart';
 import 'package:cuckoo/src/routes/courses/course_detail_grade.dart';
 import 'package:cuckoo/src/routes/courses/course_detail_section.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 /// View type of the course.
 enum CourseViewType { contents, grades }
@@ -32,6 +33,10 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
   /// Grades of the course.
   /// Grades are lazily loaded and not cached.
   List<MoodleCourseGrade>? _grades;
+
+  /// Keep track of a list to see whether the current grade row has been
+  /// animated. Make sure each animation is played once only.
+  late List<bool> _gradesAnimated;
 
   /// If the current course is marked as favorite.
   bool _isFavoriteCourse = false;
@@ -67,7 +72,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
           color: target
               ? CuckooColors.positivePrimary
               : CuckooColors.negativePrimary,
-        )).show(delayInMillisec: 200, haptic: true);
+        )).show(delay: 200.ms);
   }
 
   CuckooAppBar _pageAppBar() {
@@ -228,6 +233,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
     Moodle.getCourseGrades(_course).then((grades) {
       if (grades != null) {
         _grades = grades;
+        _gradesAnimated = List.generate(grades.length, (_) => false);
         setState(() => _contentReady = true);
       } else {
         setState(() => _contentError = true);
@@ -274,7 +280,12 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                 if (index == _grades!.length + 1) {
                   return const SizedBox(height: 16.0);
                 }
-                return CourseDetailGradeItem(_course, _grades![index - 1]);
+                return CourseDetailGradeItem(
+                  _course,
+                  _grades![index - 1],
+                  shouldAnimate: !_gradesAnimated[index - 1],
+                  animationPlayed: () => _gradesAnimated[index - 1] = true,
+                );
               },
               separatorBuilder: (context, index) {
                 return const SizedBox(height: 15.0);

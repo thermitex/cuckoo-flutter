@@ -123,7 +123,7 @@ class MoodleEventListTile extends StatelessWidget {
     if (event.isCompleted && _canShowCompleted(context)) {
       return context.theme.tertiaryText;
     }
-    return event.color ?? context.theme.tertiaryText;
+    return event.contextWatchedColor(context) ?? context.theme.tertiaryText;
   }
 
   Widget _eventContent(BuildContext context) {
