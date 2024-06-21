@@ -4,6 +4,12 @@
 
 ![Flutter Build](https://github.com/thermitex/cuckoo-flutter/actions/workflows/flutter-build.yml/badge.svg)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![Version](https://img.shields.io/github/v/release/thermitex/cuckoo-flutter?include_prereleases&label=Release)](https://github.com/thermitex/cuckoo-flutter/releases/latest)
+[![Download iOS](https://img.shields.io/badge/Download-iOS-lightgrey.svg)](https://apps.apple.com/us/app/cuckoo-hku-moodle-client/id1550121476)
+[![Download Android](https://img.shields.io/badge/Download-Android-green.svg)](https://github.com/thermitex/cuckoo-flutter/releases/latest)
+[![Invite](https://dcbadge.limes.pink/api/server/Z7KWUuEyyG?style=flat)](https://discord.gg/Z7KWUuEyyG)
+[!["Buy Me A Coffee"](https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee)](https://www.buymeacoffee.com/jerryli)
+[![Github Stars](https://img.shields.io/github/stars/thermitex/cuckoo-flutter?style=social)](https://github.com/thermitex/cuckoo-flutter/stargazers)
 
 Cuckoo is a mobile [Moodle](https://moodle.org) client majorly designed for [HKU Moodle](https://moodle.hku.hk). Written in Flutter, Cuckoo has a better performance compared with the official Moodle app and integrates useful features such as customizable reminder rules and workload estimation. Cuckoo can be easily modified to support **other** Moodle platforms as well.
 

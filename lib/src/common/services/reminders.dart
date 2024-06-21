@@ -229,7 +229,7 @@ class Reminders with ChangeNotifier {
   static final Reminders _instance = Reminders._internal();
 }
 
-extension EventReminderExtenson on EventReminder {
+extension EventReminderExtension on EventReminder {
   /// Timing description to be shown in reminder list.
   String get timingDescription {
     final unitDesc = ['second', 'minute', 'hour', 'day', 'week'];
