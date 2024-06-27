@@ -122,75 +122,82 @@ class SettingsAboutPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 42.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 14),
-                _aboutTitle(context),
-                const SizedBox(height: 28),
-                _aboutBlock(context,
-                    icon: FontAwesomeIcons.github,
-                    title: Constants.kAboutOpenSourceTitle,
-                    color: CuckooColors.primary,
-                    backgroundColor: CuckooColors.primary
-                        .withAlpha(context.isDarkMode ? 50 : 25),
-                    content: RichText(
-                      text: TextSpan(
-                          style: CuckooTextStyles.body(
-                              size: 12.5,
-                              color: context.theme.primaryText,
-                              height: 1.4),
-                          children: [
-                            const TextSpan(
-                                text: Constants.kAboutOpenSourceDesc),
-                            TextSpan(
-                                text: Constants.kCheckGithub,
-                                style: CuckooTextStyles.body(
-                                    size: 12.5, color: CuckooColors.primary),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    launchUrlString(
-                                        Constants.kProjectGithubUrl);
-                                  })
-                          ]),
-                    )),
-                const SizedBox(height: 18),
-                _aboutBlock(
-                  context,
-                  icon: FontAwesomeIcons.discord,
-                  title: Constants.kAboutDiscordTitle,
-                  color: const Color.fromARGB(255, 88, 101, 242),
-                  backgroundColor: const Color.fromARGB(255, 88, 101, 242)
-                      .withAlpha(context.isDarkMode ? 50 : 25),
-                  content: Text(Constants.kAboutDiscordContent,
-                      style: CuckooTextStyles.body(size: 12.5, height: 1.4)),
-                  action: () => launchUrlString(Constants.kAboutDiscordUrl),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 900.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 14),
+                    _aboutTitle(context),
+                    const SizedBox(height: 28),
+                    _aboutBlock(context,
+                        icon: FontAwesomeIcons.github,
+                        title: Constants.kAboutOpenSourceTitle,
+                        color: CuckooColors.primary,
+                        backgroundColor: CuckooColors.primary
+                            .withAlpha(context.isDarkMode ? 50 : 25),
+                        content: RichText(
+                          text: TextSpan(
+                              style: CuckooTextStyles.body(
+                                  size: 12.5,
+                                  color: context.theme.primaryText,
+                                  height: 1.4),
+                              children: [
+                                const TextSpan(
+                                    text: Constants.kAboutOpenSourceDesc),
+                                TextSpan(
+                                    text: Constants.kCheckGithub,
+                                    style: CuckooTextStyles.body(
+                                        size: 12.5,
+                                        color: CuckooColors.primary),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        launchUrlString(
+                                            Constants.kProjectGithubUrl);
+                                      })
+                              ]),
+                        )),
+                    const SizedBox(height: 18),
+                    _aboutBlock(
+                      context,
+                      icon: FontAwesomeIcons.discord,
+                      title: Constants.kAboutDiscordTitle,
+                      color: const Color.fromARGB(255, 88, 101, 242),
+                      backgroundColor: const Color.fromARGB(255, 88, 101, 242)
+                          .withAlpha(context.isDarkMode ? 50 : 25),
+                      content: Text(Constants.kAboutDiscordContent,
+                          style:
+                              CuckooTextStyles.body(size: 12.5, height: 1.4)),
+                      action: () => launchUrlString(Constants.kAboutDiscordUrl),
+                    ),
+                    const SizedBox(height: 18),
+                    _aboutBlock(
+                      context,
+                      icon: Symbols.language_rounded,
+                      title: Constants.kAboutWebsiteTitle,
+                      action: () => launchUrlString(Constants.kAboutWebsiteUrl),
+                    ),
+                    const SizedBox(height: 18),
+                    _aboutBlock(
+                      context,
+                      icon: Symbols.policy_rounded,
+                      title: Constants.kAboutPrivacyTitle,
+                      action: () => launchUrlString(Constants.kAboutPrivacyUrl),
+                    ),
+                    const SizedBox(height: 18),
+                    _aboutBlock(
+                      context,
+                      icon: Symbols.license_rounded,
+                      title: Constants.kAboutSoftwareLicense,
+                      action: () =>
+                          launchUrlString(Constants.kAboutSoftwareLicenseUrl),
+                    ),
+                    const SizedBox(height: 40),
+                  ],
                 ),
-                const SizedBox(height: 18),
-                _aboutBlock(
-                  context,
-                  icon: Symbols.language_rounded,
-                  title: Constants.kAboutWebsiteTitle,
-                  action: () => launchUrlString(Constants.kAboutWebsiteUrl),
-                ),
-                const SizedBox(height: 18),
-                _aboutBlock(
-                  context,
-                  icon: Symbols.policy_rounded,
-                  title: Constants.kAboutPrivacyTitle,
-                  action: () => launchUrlString(Constants.kAboutPrivacyUrl),
-                ),
-                const SizedBox(height: 18),
-                _aboutBlock(
-                  context,
-                  icon: Symbols.license_rounded,
-                  title: Constants.kAboutSoftwareLicense,
-                  action: () =>
-                      launchUrlString(Constants.kAboutSoftwareLicenseUrl),
-                ),
-                const SizedBox(height: 40),
-              ],
+              ),
             ),
           ),
         ),
