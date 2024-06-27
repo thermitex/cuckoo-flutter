@@ -224,7 +224,6 @@ class _ReminderPageState extends State<ReminderPage> {
               IOSFlutterLocalNotificationsPlugin>()
           ?.requestPermissions(
             alert: true,
-            badge: true,
             sound: true,
           );
       setState(() => _shouldShowPermissionWarning = !(result ?? false));
