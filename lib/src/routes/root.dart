@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:background_fetch/background_fetch.dart';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
@@ -126,27 +125,6 @@ class RootState extends State<Root> with WidgetsBindingObserver {
     });
   }
 
-  /// Setup background fetch for events.
-  ///
-  /// Only supports iOS for now.
-  Future<void> _configureBackgroundFetch() async {
-    if (!Platform.isIOS) return;
-    await BackgroundFetch.configure(
-        BackgroundFetchConfig(
-          // Interval on iOS is indeterminate, and therefore 30 is only for
-          // a minimum bound
-          minimumFetchInterval: 30,
-        ), (String taskId) async {
-      // Fetch Moodle events upon task fired
-      await Moodle.fetchEvents();
-      BackgroundFetch.finish(taskId);
-    }, (String taskId) async {
-      // Upon timeout, finish directly
-      BackgroundFetch.finish(taskId);
-    });
-    if (!mounted) return;
-  }
-
   /// A list of screens/routes included in the bottom tab bar.
   List<Widget> _buildScreens() {
     return [
@@ -197,8 +175,6 @@ class RootState extends State<Root> with WidgetsBindingObserver {
     _handleIncomingLinks();
     // Init store updates listener
     _handleStoreUpdates();
-    // Init background fetch
-    _configureBackgroundFetch();
     // Init resume from background observer
     WidgetsBinding.instance.addObserver(this);
     // Init notifications
@@ -250,7 +226,7 @@ class RootState extends State<Root> with WidgetsBindingObserver {
       handleAndroidBackButtonPress: true,
       resizeToAvoidBottomInset: true,
       stateManagement: true,
-      hideNavigationBarWhenKeyboardShows: true,
+      hideNavigationBarWhenKeyboardShows: false,
       decoration: NavBarDecoration(
         border: Border(
             top: BorderSide(

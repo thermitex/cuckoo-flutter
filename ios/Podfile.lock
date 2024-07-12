@@ -1,6 +1,4 @@
 PODS:
-  - background_fetch (1.3.5):
-    - Flutter
   - connectivity_plus (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -39,7 +37,6 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - background_fetch (from `.symlinks/plugins/background_fetch/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/darwin`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
@@ -61,8 +58,6 @@ SPEC REPOS:
     - Toast
 
 EXTERNAL SOURCES:
-  background_fetch:
-    :path: ".symlinks/plugins/background_fetch/ios"
   connectivity_plus:
     :path: ".symlinks/plugins/connectivity_plus/darwin"
   device_info_plus:
@@ -95,7 +90,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
-  background_fetch: f73d045fee3d313ea8c0afa205317bff8a6bf8d2
   connectivity_plus: ddd7f30999e1faaef5967c23d5b6d503d10434db
   device_info_plus: 97af1d7e84681a90d0693e63169a5d50e0839a0d
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
