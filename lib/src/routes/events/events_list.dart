@@ -126,6 +126,16 @@ class MoodleEventListTile extends StatelessWidget {
     return event.contextWatchedColor(context) ?? context.theme.tertiaryText;
   }
 
+  Color _eventOpaqueTintColor(BuildContext context) {
+    final fallbackColor = context.isDarkMode
+        ? const Color.fromARGB(255, 91, 91, 95)
+        : const Color.fromARGB(255, 187, 187, 191);
+    if (event.isCompleted && _canShowCompleted(context)) {
+      return fallbackColor;
+    }
+    return event.contextWatchedColor(context) ?? fallbackColor;
+  }
+
   Widget _eventContent(BuildContext context) {
     List<Widget> children = [];
     if (event.course != null) {
@@ -271,6 +281,18 @@ class MoodleEventListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     bool canAddStripes =
         context.settingsValue<bool>(SettingsKey.differentiateCustom) ?? true;
+
+    double? progress;
+    if (event.timemodified != null &&
+        (context.settingsValue<bool>(SettingsKey.showProgressIndicator) ??
+            true)) {
+      final total = event.timestart - event.timemodified!;
+      final passed = DateTime.now().secondEpoch - event.timemodified!;
+      if (total > 0) {
+        progress = (passed / total).clamp(0.0, 1.0);
+      }
+    }
+
     return SizedBox(
       height: kEventTileHeight,
       child: Padding(
@@ -283,24 +305,57 @@ class MoodleEventListTile extends StatelessWidget {
               color: context.theme.secondaryBackground,
               child: Row(
                 children: [
-                  const SizedBox(width: 8.0),
-                  Container(
-                    height: kEventTileHeight - 2 * 8.0,
-                    width: 10.0,
+                  Expanded(
+                      child: Container(
                     decoration: BoxDecoration(
-                        color: (event.eventtype == MoodleEventTypes.custom &&
-                                canAddStripes)
-                            ? null
-                            : _eventTintColor(context),
-                        borderRadius: BorderRadius.circular(10.0),
-                        gradient: (event.eventtype == MoodleEventTypes.custom &&
-                                canAddStripes)
-                            ? _customEventGradient(context)
+                        gradient: progress != null
+                            ? LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                colors: [
+                                    _eventOpaqueTintColor(context)
+                                        .withAlpha(10),
+                                    _eventOpaqueTintColor(context)
+                                        .withAlpha(10),
+                                    _eventOpaqueTintColor(context).withAlpha(
+                                        (15 + 25 * progress).toInt() +
+                                            (context.isDarkMode ? 10 : 0)),
+                                    Colors.transparent,
+                                    Colors.transparent,
+                                  ],
+                                stops: [
+                                    0.0,
+                                    progress - 0.25 - 0.4 * progress,
+                                    progress,
+                                    progress,
+                                    1.0
+                                  ])
                             : null),
-                  ),
-                  const SizedBox(width: 9.0),
-                  _eventContent(context),
-                  const SizedBox(width: 9.0),
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 8.0),
+                        Container(
+                          height: kEventTileHeight - 2 * 8.0,
+                          width: 10.0,
+                          decoration: BoxDecoration(
+                              color:
+                                  (event.eventtype == MoodleEventTypes.custom &&
+                                          canAddStripes)
+                                      ? null
+                                      : _eventTintColor(context),
+                              borderRadius: BorderRadius.circular(10.0),
+                              gradient:
+                                  (event.eventtype == MoodleEventTypes.custom &&
+                                          canAddStripes)
+                                      ? _customEventGradient(context)
+                                      : null),
+                        ),
+                        const SizedBox(width: 9.0),
+                        _eventContent(context),
+                        const SizedBox(width: 9.0),
+                      ],
+                    ),
+                  )),
                   if (displayDeadline) _eventDeadline(context)
                 ],
               ),

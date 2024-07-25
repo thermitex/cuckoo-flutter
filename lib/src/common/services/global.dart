@@ -1,4 +1,5 @@
 import 'package:cuckoo/src/common/services/color_registry.dart';
+import 'package:cuckoo/src/common/services/widget_control.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/services/reminders.dart';
 import 'package:cuckoo/src/common/services/settings.dart';
@@ -29,6 +30,7 @@ class Global {
     ColorRegistry.init();
     Moodle.init();
     Reminders.init();
+    WidgetControl.init();
   }
 
   /// Notifier providers for the app.

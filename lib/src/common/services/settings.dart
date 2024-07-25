@@ -29,6 +29,7 @@ class SettingsKey {
   static const String reminderIgnoreCompleted =
       'settings_reminder_ignore_completed';
   static const String reminderIgnoreCustom = 'settings_reminder_ignore_custom';
+  static const String showProgressIndicator = 'settings_progress_indicator';
 }
 
 /// Settings service for Cuckoo.

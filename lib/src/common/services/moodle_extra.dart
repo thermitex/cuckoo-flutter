@@ -146,6 +146,8 @@ extension MoodleEventExtension on MoodleEvent {
     Moodle()._saveEvents();
     bool shouldSync = trueSettingsValue(SettingsKey.syncCompletionStatus);
     if (shouldSync) Moodle.syncEventCompletion();
+    WidgetControl().updateIfNeeded();
+    Reminders().rescheduleAll();
   }
 
   /// Event associated color.
@@ -162,6 +164,16 @@ extension MoodleEventExtension on MoodleEvent {
   /// If the event has expired.
   bool get expired => remainingTime < 0;
 
+  /// Content map for sharing info to widgets.
+  Map<String, dynamic> get contentForWidgets => {
+        'eventId': id,
+        'courseCode': course?.courseCode ?? '',
+        'courseColorHex': color?.toHex(includeAlpha: false) ?? '#ffffff',
+        'eventTitle': name,
+        'eventDueDate': timestart,
+        'currentDate': DateTime.now().secondEpoch,
+      };
+
   /// A blank template for custom event.
   static MoodleEvent custom() {
     final event = MoodleEvent();
@@ -170,6 +182,7 @@ extension MoodleEventExtension on MoodleEvent {
       ..name = ''
       ..description = ''
       ..timestart = DateTime.now().secondEpoch + 3600
+      ..timemodified = DateTime.now().secondEpoch
       ..eventtype = MoodleEventTypes.custom
       ..hascompletion = false;
     return event;

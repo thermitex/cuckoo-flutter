@@ -187,6 +187,10 @@ class SettingsPage extends StatelessWidget {
                         description:
                             Constants.kSettingsEventsSyncCompletionDesc,
                         defaultValue: true),
+                    SettingsItem(SettingsKey.showProgressIndicator,
+                        label: Constants.kSettingsEventsShowProgress,
+                        description: Constants.kSettingsEventsShowProgressDesc,
+                        defaultValue: true),
                     SettingsItem(SettingsKey.greyOutCompleted,
                         label: Constants.kSettingsEventsGreyOutComleted,
                         description:
