@@ -66,7 +66,7 @@ class WidgetControl {
   }
 
   /// Update external widgets to reflect potential event changes.
-  /// 
+  ///
   /// This method will be called when events have been modified.
   Future<void> updateIfNeeded() async {
     if (_liveActivitiesEnabled) {
@@ -107,7 +107,7 @@ class WidgetControl {
       if (event != null) {
         HomeWidget.saveWidgetData<bool>('hasEvent', true);
         event.contentForWidgets.forEach((key, value) {
-           HomeWidget.saveWidgetData(key, value);
+          HomeWidget.saveWidgetData(key, value);
         });
       } else {
         HomeWidget.saveWidgetData<bool>('hasEvent', false);
