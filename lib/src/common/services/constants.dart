@@ -133,6 +133,12 @@ class Constants {
   static const kSettingsEventsDiffCustom = 'Differentiate Custom Events';
   static const kSettingsEventsDiffCustomDesc =
       'Add stripes to the custom events on the event list to differentiate them from Moodle events.';
+  static const kSettingsEventsShowProgress = 'Show Progress Indicator';
+  static const kSettingsEventsShowProgressDesc =
+      'Add a progress indicator to show how much the event has progressed since its creation or last modification.';
+  static const kSettingsEventsAutoPin = 'Pin Events Automatically';
+  static const kSettingsEventsAutoPinDesc =
+      'Events that are due within 24 hours and not marked as completed will be automatically added to lock screen.';
   static const kSettingsCoursesOnlyResources = 'Only Display Resources';
   static const kSettingsCoursesOnlyResourcesDesc =
       'When this option is turned on, course detail page will only display course resources and hide other texts to avoid unexpected layout caused by rendering formatted content.';
@@ -194,4 +200,6 @@ class Constants {
       'Cuckoo currently does not have the permission to display notifications, and therfore the reminders here may not work as expected. Please go to Settings and allow notifications from Cuckoo.';
   static const kColorPanelChooseColor = 'Choose Custom Color';
   static const kColorPanelResetColor = 'Reset Custom Color';
+  static const kCuckooAppGroupId = 'group.jerry.li.Cuckoo';
+  static const kEventPinnedToast = 'Event Added to Lock Screen';
 }

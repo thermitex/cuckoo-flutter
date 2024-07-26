@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:background_fetch/background_fetch.dart';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/services/settings.dart';
+import 'package:cuckoo/src/common/services/widget_control.dart';
 import 'package:cuckoo/src/routes/events/events.dart';
 import 'package:cuckoo/src/routes/courses/courses.dart';
 import 'package:cuckoo/src/routes/calendar/calendar.dart';
@@ -24,6 +24,10 @@ import 'package:url_launcher/url_launcher.dart';
 /// Following the iOS convention, the root widget should be a
 /// TabBarViewController. Here Root primarily maintains PersistentTabView,
 /// similar to TabBarViewController in iOS.
+///
+/// Some initializations are also done at the `initState` stage of Root. This is
+/// because Root is the first widget loaded (early enough) and will not be
+/// disposed through the entire app lifecycle (guaranteed to init only once).
 class Root extends StatefulWidget {
   const Root({super.key});
 
@@ -51,6 +55,11 @@ class RootState extends State<Root> with WidgetsBindingObserver {
       if (!mounted) return;
       if (link != null) {
         var tokenString = link.split('//').last;
+        // Check if is an action
+        if (tokenString.startsWith('action')) {
+          _handleExternalActions(Uri.parse(link));
+          return;
+        }
         // Close in-app browser for logging in
         try {
           closeInAppWebView();
@@ -79,6 +88,22 @@ class RootState extends State<Root> with WidgetsBindingObserver {
         });
       }
     });
+  }
+
+  /// Handle actions called externally.
+  void _handleExternalActions(Uri actionLink) {
+    final params = actionLink.queryParameters;
+    switch (params['name']) {
+      case 'complete':
+        final eventId = params['id'];
+        if (eventId != null) {
+          Moodle().eventManager.eventForId(num.parse(eventId))?.completionMark =
+              true;
+        }
+        break;
+      default:
+        return;
+    }
   }
 
   /// Handle updates from the store.
@@ -124,27 +149,6 @@ class RootState extends State<Root> with WidgetsBindingObserver {
     }, onError: (error) {
       CuckooFullScreenIndicator().stopLoading();
     });
-  }
-
-  /// Setup background fetch for events.
-  ///
-  /// Only supports iOS for now.
-  Future<void> _configureBackgroundFetch() async {
-    if (!Platform.isIOS) return;
-    await BackgroundFetch.configure(
-        BackgroundFetchConfig(
-          // Interval on iOS is indeterminate, and therefore 30 is only for
-          // a minimum bound
-          minimumFetchInterval: 30,
-        ), (String taskId) async {
-      // Fetch Moodle events upon task fired
-      await Moodle.fetchEvents();
-      BackgroundFetch.finish(taskId);
-    }, (String taskId) async {
-      // Upon timeout, finish directly
-      BackgroundFetch.finish(taskId);
-    });
-    if (!mounted) return;
   }
 
   /// A list of screens/routes included in the bottom tab bar.
@@ -197,8 +201,6 @@ class RootState extends State<Root> with WidgetsBindingObserver {
     _handleIncomingLinks();
     // Init store updates listener
     _handleStoreUpdates();
-    // Init background fetch
-    _configureBackgroundFetch();
     // Init resume from background observer
     WidgetsBinding.instance.addObserver(this);
     // Init notifications
@@ -232,6 +234,8 @@ class RootState extends State<Root> with WidgetsBindingObserver {
       // wait for the event fetch (which will take some time) before removing
       // them or re-calculating deadlines.
       Moodle().eventManager.rebuildNow();
+      // Update widgets upon resuming to foreground
+      WidgetControl().updateIfNeeded();
     }
     _lastState = state;
     super.didChangeAppLifecycleState(state);
@@ -250,7 +254,7 @@ class RootState extends State<Root> with WidgetsBindingObserver {
       handleAndroidBackButtonPress: true,
       resizeToAvoidBottomInset: true,
       stateManagement: true,
-      hideNavigationBarWhenKeyboardShows: true,
+      hideNavigationBarWhenKeyboardShows: false,
       decoration: NavBarDecoration(
         border: Border(
             top: BorderSide(

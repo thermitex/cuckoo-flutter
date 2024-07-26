@@ -146,6 +146,8 @@ extension MoodleEventExtension on MoodleEvent {
     Moodle()._saveEvents();
     bool shouldSync = trueSettingsValue(SettingsKey.syncCompletionStatus);
     if (shouldSync) Moodle.syncEventCompletion();
+    WidgetControl().updateIfNeeded();
+    Reminders().rescheduleAll();
   }
 
   /// Event associated color.
@@ -170,6 +172,7 @@ extension MoodleEventExtension on MoodleEvent {
       ..name = ''
       ..description = ''
       ..timestart = DateTime.now().secondEpoch + 3600
+      ..timemodified = DateTime.now().secondEpoch
       ..eventtype = MoodleEventTypes.custom
       ..hascompletion = false;
     return event;

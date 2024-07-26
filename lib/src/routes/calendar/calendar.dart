@@ -227,7 +227,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 headerStyle: _headerStyle(),
                 calendarBuilders: _builders(),
                 pageJumpingEnabled: true,
-                eventLoader: (day) => context.eventManager.eventsforDate(day),
+                eventLoader: (day) => context.eventManager.eventsForDate(day),
                 onFormatChanged: (format) {
                   if (_calendarFormat != format) {
                     Settings().set<int>(
@@ -245,7 +245,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 child: Builder(
                   builder: (context) {
                     final events =
-                        context.eventManager.eventsforDate(_selectedDay);
+                        context.eventManager.eventsForDate(_selectedDay);
                     if (events.isEmpty) {
                       // In case there are no events
                       return Padding(

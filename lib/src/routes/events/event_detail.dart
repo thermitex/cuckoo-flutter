@@ -1,5 +1,6 @@
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
+import 'package:cuckoo/src/common/services/widget_control.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/services/reminders.dart';
 import 'package:cuckoo/src/common/services/settings.dart';
@@ -260,6 +261,28 @@ class EventDetailView extends StatelessWidget {
   }
 
   Widget _buildEventActions(BuildContext context) {
+    final canShowLiveActivities =
+        WidgetControl.liveActivitesEnabled && !event.isCompleted;
+    final secondActionButton = event.eventtype != MoodleEventTypes.custom
+        ? CuckooButton(
+            style: CuckooButtonStyle.secondary,
+            text: Constants.kViewActivity,
+            icon: Symbols.open_in_new_rounded,
+            action: () => Moodle.openMoodleUrl(event.url),
+          )
+        : CuckooButton(
+            style: CuckooButtonStyle.secondary,
+            text: Constants.kEditCustomEvent,
+            icon: Symbols.edit_document_rounded,
+            action: () {
+              Navigator.of(context, rootNavigator: true)
+                ..pop()
+                ..push(MaterialPageRoute(
+                  fullscreenDialog: true,
+                  builder: (context) => CreateEventPage(event),
+                ));
+            },
+          );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -273,27 +296,31 @@ class EventDetailView extends StatelessWidget {
           action: () => _toggleEventCompletion(context),
         ),
         const SizedBox(height: 10.0),
-        if (event.eventtype != MoodleEventTypes.custom)
-          CuckooButton(
-            style: CuckooButtonStyle.secondary,
-            text: Constants.kViewActivity,
-            icon: Symbols.open_in_new_rounded,
-            action: () => Moodle.openMoodleUrl(event.url),
+        if (canShowLiveActivities)
+          Row(
+            children: [
+              Expanded(child: secondActionButton),
+              const SizedBox(width: 6.0),
+              SizedBox(
+                width: 50.0,
+                child: CuckooButton(
+                  style: CuckooButtonStyle.secondary,
+                  icon: Symbols.add_to_home_screen_rounded,
+                  action: () async {
+                    await WidgetControl().pinEventToLockScreen(event);
+                    // Show toast
+                    CuckooToast(Constants.kEventPinnedToast,
+                        icon: const Icon(
+                          Icons.check_circle_rounded,
+                          color: CuckooColors.positivePrimary,
+                        )).show();
+                  },
+                ),
+              )
+            ],
           )
         else
-          CuckooButton(
-            style: CuckooButtonStyle.secondary,
-            text: Constants.kEditCustomEvent,
-            icon: Symbols.edit_document_rounded,
-            action: () {
-              Navigator.of(context, rootNavigator: true)
-                ..pop()
-                ..push(MaterialPageRoute(
-                  fullscreenDialog: true,
-                  builder: (context) => CreateEventPage(event),
-                ));
-            },
-          )
+          secondActionButton
       ],
     );
   }
@@ -304,8 +331,6 @@ class EventDetailView extends StatelessWidget {
     // Set completion
     bool cachedCompletion = event.isCompleted;
     event.completionMark = !cachedCompletion;
-    // Reschedule reminders
-    Reminders().rescheduleAll();
     // Show toast
     CuckooToast(
         cachedCompletion

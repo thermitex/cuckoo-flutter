@@ -349,8 +349,38 @@ class MoodleEventManager with ChangeNotifier {
   /// Obtain events due on a specific date.
   ///
   /// Used for displaying events on calendar page.
-  List<MoodleEvent> eventsforDate(DateTime date) =>
+  List<MoodleEvent> eventsForDate(DateTime date) =>
       events.where((event) => isSameDay(event.time, date)).toList();
+
+  /// Get event based on event id.
+  ///
+  /// Return null if the event does not exist.
+  MoodleEvent? eventForId(num eventId) => _eventMap[eventId];
+
+  /// Get the upcoming outstanding event.
+  MoodleEvent? nextEvent({bool ignoreCompleted = true}) {
+    late GroupedMoodleEvents groupedEvents;
+    // Based on existing cache as much as possible
+    if (_groupedEventsCache[MoodleEventGroupingType.byTime] != null) {
+      groupedEvents = _groupedEventsCache[MoodleEventGroupingType.byTime]!;
+    } else if (_groupedEventsCache[MoodleEventGroupingType.none] != null) {
+      groupedEvents = _groupedEventsCache[MoodleEventGroupingType.none]!;
+    } else {
+      groupedEvents = this.groupedEvents();
+    }
+    if (groupedEvents.isNotEmpty) {
+      final events = <MoodleEvent>[];
+      for (final group in groupedEvents.values) {
+        events.addAll(group);
+      }
+      for (final event in events) {
+        if (!ignoreCompleted || (ignoreCompleted && !event.isCompleted)) {
+          return event;
+        }
+      }
+    }
+    return null;
+  }
 
   /// Obtain a number to evaluate the workload on a specific date.
   ///
@@ -459,6 +489,7 @@ class MoodleEventManager with ChangeNotifier {
     _groupedEventsCache.clear();
     _workloadCache.clear();
     Reminders().rescheduleAll();
+    WidgetControl().updateIfNeeded();
     if (notify) notifyListeners();
   }
 
