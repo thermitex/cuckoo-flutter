@@ -65,7 +65,9 @@ class WidgetControl {
     _pinnedEventId = event.id;
   }
 
-  /// Update pinned event on the lock screen.
+  /// Update external widgets to reflect potential event changes.
+  /// 
+  /// This method will be called when events have been modified.
   Future<void> updateIfNeeded() async {
     if (_liveActivitiesEnabled) {
       final activeLiveActivityId =
@@ -98,6 +100,19 @@ class WidgetControl {
           pinEventToLockScreen(event);
         }
       }
+    }
+
+    if (_homeWidgetEnabled) {
+      final event = Moodle().eventManager.nextEvent();
+      if (event != null) {
+        HomeWidget.saveWidgetData<bool>('hasEvent', true);
+        event.contentForWidgets.forEach((key, value) {
+           HomeWidget.saveWidgetData(key, value);
+        });
+      } else {
+        HomeWidget.saveWidgetData<bool>('hasEvent', false);
+      }
+      HomeWidget.updateWidget(iOSName: 'CuckooUpcomingEventWidget');
     }
   }
 
