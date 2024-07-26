@@ -357,6 +357,31 @@ class MoodleEventManager with ChangeNotifier {
   /// Return null if the event does not exist.
   MoodleEvent? eventForId(num eventId) => _eventMap[eventId];
 
+  /// Get the upcoming outstanding event.
+  MoodleEvent? nextEvent({bool ignoreCompleted = true}) {
+    late GroupedMoodleEvents groupedEvents;
+    // Based on existing cache as much as possible
+    if (_groupedEventsCache[MoodleEventGroupingType.byTime] != null) {
+      groupedEvents = _groupedEventsCache[MoodleEventGroupingType.byTime]!;
+    } else if (_groupedEventsCache[MoodleEventGroupingType.none] != null) {
+      groupedEvents = _groupedEventsCache[MoodleEventGroupingType.none]!;
+    } else {
+      groupedEvents = this.groupedEvents();
+    }
+    if (groupedEvents.isNotEmpty) {
+      final events = <MoodleEvent>[];
+      for (final group in groupedEvents.values) {
+        events.addAll(group);
+      }
+      for (final event in events) {
+        if (!ignoreCompleted || (ignoreCompleted && !event.isCompleted)) {
+          return event;
+        }
+      }
+    }
+    return null;
+  }
+
   /// Obtain a number to evaluate the workload on a specific date.
   ///
   /// Used for displaying heatmap on calendar page.

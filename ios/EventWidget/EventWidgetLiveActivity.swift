@@ -44,41 +44,37 @@ struct CuckooEventLiveActivity: Widget {
           .init(color: .clear, location: 0.55),
           .init(color: courseColor.opacity(courseCode.count > 0 ? 0.24 : 0.0), location: 1.0)
         ], startPoint: .topLeading, endPoint: .bottomTrailing)
-        VStack(alignment: .leading, spacing: 5.0) {
-          Image("AppBanner")
-            .padding(.leading, 1.0)
-          VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 5.0) {
-              if (courseCode.count > 0) {
-                Text(courseCode)
-                  .font(.system(size: 15.0, weight: .bold))
-                  .foregroundStyle(courseColor)
-              }
-              Text(eventTitle)
-                .font(.system(size: 15.0))
-                .lineLimit(1)
+        VStack(alignment: .leading, spacing: 0) {
+          HStack(spacing: 5.0) {
+            if (courseCode.count > 0) {
+              Text(courseCode)
+                .font(.system(size: 13.0, weight: .bold))
+                .foregroundStyle(courseColor)
+            }
+            Text(eventTitle)
+              .font(.system(size: 13.0))
+              .lineLimit(1)
+          }
+          .padding(.bottom, 2.0)
+          HStack() {
+            VStack(alignment: .leading) {
+              Text(timerInterval: timeRemaining, countsDown: true, showsHours: true)
+                .font(.custom("Montserrat-Bold", size: 37.0))
+              Text("Til due at \(Text(dueFormatter.string(from: eventDueDate)).foregroundStyle(primaryColor))")
+                .font(.system(size: 13.0, weight: .medium))
             }
             Spacer()
-            HStack() {
-              VStack(alignment: .leading) {
-                Text(timerInterval: timeRemaining, countsDown: true, showsHours: true)
-                  .font(.custom("Montserrat-Bold", size: 37.0))
-                Text("Til due at \(Text(dueFormatter.string(from: eventDueDate)).foregroundStyle(primaryColor))")
-                  .font(.system(size: 14.0, weight: .medium))
-              }
-              Spacer()
-              Link(destination: URL(string: "cuckoo://action?name=complete&id=\(eventId)")!) {
-                Image(systemName: "checkmark.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 44.0, height: 44.0)
-                    .foregroundStyle(primaryColor)
-              }
+            Link(destination: URL(string: "cuckoo://action?name=complete&id=\(eventId)")!) {
+              Image(systemName: "checkmark.circle.fill")
+                  .resizable()
+                  .scaledToFit()
+                  .frame(width: 42.0, height: 42.0)
+                  .foregroundStyle(primaryColor)
+                  .padding(.top, 4.0)
             }
           }
         }
-        .padding(.top, 16.0)
-        .padding(.bottom, 17.0)
+        .padding(.vertical, 18.0)
         .padding(.horizontal, 25.0)
       }
       
@@ -115,28 +111,29 @@ struct CuckooEventLiveActivity: Widget {
             HStack(spacing: 5.0) {
               if (courseCode.count > 0) {
                 Text(courseCode)
-                  .font(.system(size: 15.0, weight: .bold))
+                  .font(.system(size: 13.0, weight: .bold))
                   .foregroundStyle(courseColor)
               }
               Text(eventTitle)
-                .font(.system(size: 15.0))
+                .font(.system(size: 13.0))
                 .lineLimit(1)
             }
-            Spacer()
+            .padding(.bottom, 3.0)
             HStack() {
               VStack(alignment: .leading) {
                 Text(timerInterval: timeRemaining, countsDown: true, showsHours: true)
                   .font(.custom("Montserrat-Bold", size: 37.0))
                 Text("Til due at \(Text(dueFormatter.string(from: eventDueDate)).foregroundStyle(primaryColor))")
-                  .font(.system(size: 14.0, weight: .medium))
+                  .font(.system(size: 13.0, weight: .medium))
               }
               Spacer()
               Link(destination: URL(string: "cuckoo://action?name=complete&id=\(eventId)")!) {
                 Image(systemName: "checkmark.circle.fill")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 44.0, height: 44.0)
+                    .frame(width: 42.0, height: 42.0)
                     .foregroundStyle(primaryColor)
+                    .padding(.top, 4.0)
               }
             }
           }

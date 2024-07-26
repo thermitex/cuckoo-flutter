@@ -307,7 +307,7 @@ class EventDetailView extends StatelessWidget {
                   style: CuckooButtonStyle.secondary,
                   icon: Symbols.add_to_home_screen_rounded,
                   action: () async {
-                    await WidgetControl().pinEvent(event);
+                    await WidgetControl().pinEventToLockScreen(event);
                     // Show toast
                     CuckooToast(Constants.kEventPinnedToast,
                         icon: const Icon(

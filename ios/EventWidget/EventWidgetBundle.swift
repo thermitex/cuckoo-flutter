@@ -12,7 +12,7 @@ import SwiftUI
 struct EventWidgetBundle: WidgetBundle {
   var body: some Widget {
     if #available(iOS 16.1, *) {
-      EventWidget()
+      CuckooUpcomingEventWidget()
       CuckooEventLiveActivity()
     }
   }

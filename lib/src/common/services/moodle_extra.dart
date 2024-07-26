@@ -164,16 +164,6 @@ extension MoodleEventExtension on MoodleEvent {
   /// If the event has expired.
   bool get expired => remainingTime < 0;
 
-  /// Content map for sharing info to widgets.
-  Map<String, dynamic> get contentForWidgets => {
-        'eventId': id,
-        'courseCode': course?.courseCode ?? '',
-        'courseColorHex': color?.toHex(includeAlpha: false) ?? '#ffffff',
-        'eventTitle': name,
-        'eventDueDate': timestart,
-        'currentDate': DateTime.now().secondEpoch,
-      };
-
   /// A blank template for custom event.
   static MoodleEvent custom() {
     final event = MoodleEvent();

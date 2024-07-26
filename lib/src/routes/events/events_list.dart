@@ -120,13 +120,6 @@ class MoodleEventListTile extends StatelessWidget {
       context.settingsValue<bool>(SettingsKey.greyOutCompleted) ?? true;
 
   Color _eventTintColor(BuildContext context) {
-    if (event.isCompleted && _canShowCompleted(context)) {
-      return context.theme.tertiaryText;
-    }
-    return event.contextWatchedColor(context) ?? context.theme.tertiaryText;
-  }
-
-  Color _eventOpaqueTintColor(BuildContext context) {
     final fallbackColor = context.isDarkMode
         ? const Color.fromARGB(255, 91, 91, 95)
         : const Color.fromARGB(255, 187, 187, 191);
@@ -313,11 +306,9 @@ class MoodleEventListTile extends StatelessWidget {
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
                                 colors: [
-                                    _eventOpaqueTintColor(context)
-                                        .withAlpha(10),
-                                    _eventOpaqueTintColor(context)
-                                        .withAlpha(10),
-                                    _eventOpaqueTintColor(context).withAlpha(
+                                    _eventTintColor(context).withAlpha(10),
+                                    _eventTintColor(context).withAlpha(10),
+                                    _eventTintColor(context).withAlpha(
                                         (15 + 25 * progress).toInt() +
                                             (context.isDarkMode ? 10 : 0)),
                                     Colors.transparent,

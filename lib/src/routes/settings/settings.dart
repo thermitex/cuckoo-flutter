@@ -5,6 +5,7 @@ import 'package:cuckoo/src/common/services/constants.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/services/reminders.dart';
 import 'package:cuckoo/src/common/services/settings.dart';
+import 'package:cuckoo/src/common/services/widget_control.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/routes/settings/settings_about.dart';
 import 'package:cuckoo/src/routes/settings/settings_account.dart';
@@ -163,13 +164,13 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ],
                   )),
-              const SettingsFirstLevelMenuItem(
+              SettingsFirstLevelMenuItem(
                 icon: Symbols.calendar_view_day_rounded,
                 text: Constants.kEventsTitle,
                 page: SettingsDetailPage(
                   Constants.kEventsTitle,
                   items: [
-                    SettingsItem(
+                    const SettingsItem(
                       SettingsKey.deadlineDisplay,
                       type: SettingsItemType.choice,
                       choiceNames: [
@@ -182,21 +183,26 @@ class SettingsPage extends StatelessWidget {
                       label: Constants.kSettingsEventsDeadlineDisplay,
                       description: Constants.kSettingsEventsDeadlineDisplayDesc,
                     ),
-                    SettingsItem(SettingsKey.syncCompletionStatus,
+                    const SettingsItem(SettingsKey.syncCompletionStatus,
                         label: Constants.kSettingsEventsSyncCompletion,
                         description:
                             Constants.kSettingsEventsSyncCompletionDesc,
                         defaultValue: true),
-                    SettingsItem(SettingsKey.showProgressIndicator,
+                    const SettingsItem(SettingsKey.showProgressIndicator,
                         label: Constants.kSettingsEventsShowProgress,
                         description: Constants.kSettingsEventsShowProgressDesc,
                         defaultValue: true),
-                    SettingsItem(SettingsKey.greyOutCompleted,
+                    if (WidgetControl.liveActivitesEnabled)
+                      const SettingsItem(SettingsKey.autoPinEvent,
+                          label: Constants.kSettingsEventsAutoPin,
+                          description: Constants.kSettingsEventsAutoPinDesc,
+                          defaultValue: true),
+                    const SettingsItem(SettingsKey.greyOutCompleted,
                         label: Constants.kSettingsEventsGreyOutComleted,
                         description:
                             Constants.kSettingsEventsGreyOutComletedDesc,
                         defaultValue: true),
-                    SettingsItem(SettingsKey.differentiateCustom,
+                    const SettingsItem(SettingsKey.differentiateCustom,
                         label: Constants.kSettingsEventsDiffCustom,
                         description: Constants.kSettingsEventsDiffCustomDesc,
                         defaultValue: true),

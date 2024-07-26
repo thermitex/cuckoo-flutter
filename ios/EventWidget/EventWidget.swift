@@ -53,7 +53,7 @@ struct EventWidgetEntryView : View {
     }
 }
 
-struct EventWidget: Widget {
+struct CuckooUpcomingEventWidget: Widget {
     let kind: String = "EventWidget"
 
     var body: some WidgetConfiguration {
@@ -67,14 +67,7 @@ struct EventWidget: Widget {
                     .background()
             }
         }
-        .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
+        .configurationDisplayName("Upcoming Event")
+        .description("Display time remaining until next upcoming event.")
     }
-}
-
-#Preview(as: .systemSmall) {
-    EventWidget()
-} timeline: {
-    SimpleEntry(date: .now, emoji: "😀")
-    SimpleEntry(date: .now, emoji: "🤩")
 }

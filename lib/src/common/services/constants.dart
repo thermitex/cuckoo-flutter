@@ -136,6 +136,9 @@ class Constants {
   static const kSettingsEventsShowProgress = 'Show Progress Indicator';
   static const kSettingsEventsShowProgressDesc =
       'Add a progress indicator to show how much the event has progressed since its creation or last modification.';
+  static const kSettingsEventsAutoPin = 'Pin Events Automatically';
+  static const kSettingsEventsAutoPinDesc =
+      'Events that are due within 24 hours and not marked as completed will be automatically added to lock screen.';
   static const kSettingsCoursesOnlyResources = 'Only Display Resources';
   static const kSettingsCoursesOnlyResourcesDesc =
       'When this option is turned on, course detail page will only display course resources and hide other texts to avoid unexpected layout caused by rendering formatted content.';
