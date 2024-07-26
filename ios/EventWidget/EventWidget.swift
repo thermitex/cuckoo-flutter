@@ -42,6 +42,7 @@ struct DateEntry: TimelineEntry {
 struct EventWidgetEntryView : View {
   var entry: Provider.Entry
   let data = UserDefaults.init(suiteName: widgetGroupId)
+  @Environment(\.widgetFamily) var family
   
   var hasEvent = false
   var remainingDay: Int?
@@ -78,27 +79,89 @@ struct EventWidgetEntryView : View {
 
   var body: some View {
     if (hasEvent) {
-      HStack {
-        VStack (alignment: .leading) {
-          Text("\(Text(String(remainingDay!)).font(.custom("Montserrat-Bold", size: 31.0)))d \(Text(String(remainingHour!)).font(.custom("Montserrat-Bold", size: 31.0)))hr")
-            .font(.custom("Montserrat-Medium", size: 15.0))
-          Spacer()
-          (Text(courseCode!)
-            .bold()
-            .foregroundColor(color!)
-            .font(.caption) +
-          Text("\n") +
-          Text(eventTitle!))
+      if (family == .systemSmall) {
+        HStack {
+          VStack (alignment: .leading) {
+            Text("\(Text(String(remainingDay!)).font(.custom("Montserrat-Bold", size: 31.0)))d \(Text(String(remainingHour!)).font(.custom("Montserrat-Bold", size: 31.0)))hr")
+              .font(.custom("Montserrat-Medium", size: 15.0))
+            Spacer()
+            (Text(courseCode!)
+              .bold()
+              .foregroundColor(color!)
+              .font(.caption) +
+             Text("\n") +
+             Text(eventTitle!))
             .font(.subheadline)
             .lineLimit(3)
+            Spacer()
+              .frame(height: 5)
+            Text(dueDateStr!)
+              .bold()
+              .font(.caption2)
+              .foregroundColor(color!)
+          }
           Spacer()
-            .frame(height: 5)
-          Text(dueDateStr!)
-            .bold()
-            .font(.caption2)
-            .foregroundColor(color!)
         }
-        Spacer()
+      } else if (family == .systemMedium) {
+        HStack {
+          VStack(alignment: .leading) {
+            Image("AppBanner")
+            Spacer()
+            (Text(courseCode!)
+              .bold()
+              .foregroundColor(color!)
+              .font(.caption) +
+             Text("\n") +
+             Text(eventTitle!))
+            .font(.subheadline)
+            .lineLimit(4)
+            Spacer()
+              .frame(height: 5)
+            Text(dueDateStr!)
+              .bold()
+              .font(.caption2)
+              .foregroundColor(color!)
+          }
+          Spacer(minLength: 30.0)
+          VStack(alignment: .trailing) {
+            Spacer()
+            Text("\(Text(String(remainingDay!)).font(.custom("Montserrat-Bold", size: 42.0)))d")
+              .font(.custom("Montserrat-Medium", size: 20.0))
+              .frame(height: -3.0)
+            Text("\(Text(String(remainingHour!)).font(.custom("Montserrat-Bold", size: 42.0)))h")
+              .font(.custom("Montserrat-Medium", size: 20.0))
+            Text("Time\nRemaining")
+              .foregroundColor(Color(.secondaryLabel))
+              .font(.caption2)
+              .multilineTextAlignment(.trailing)
+          }
+        }
+      } else if (family == .accessoryInline) {
+        Text("\(remainingDay! > 0 ? "\(remainingDay!)d " : "")\(remainingHour!)h Left")
+          .padding(.leading, 2.0)
+      } else if (family == .accessoryRectangular) {
+        HStack(spacing: 8.0) {
+          RoundedRectangle(cornerRadius: 3.0)
+            .fill()
+            .frame(width: 6.0, height: .infinity)
+            .padding(.vertical, 2.0)
+          VStack(alignment: .leading) {
+            (Text(courseCode!)
+              .bold()
+              .font(.caption) +
+             Text(courseCode!.count > 0 ? "\n" : "") +
+             Text(eventTitle!)
+              .fontWeight(.medium))
+            .font(.subheadline)
+            .lineLimit(2)
+            Spacer()
+              .frame(height: 5)
+            Text(dueDateStr!)
+              .bold()
+              .font(.caption2)
+          }
+          Spacer()
+        }
       }
     } else {
       Text("No Events")
@@ -121,8 +184,8 @@ struct CuckooUpcomingEventWidget: Widget {
           .background()
       }
     }
-    .supportedFamilies([.systemSmall])
+    .supportedFamilies([.systemSmall, .systemMedium, .accessoryInline, .accessoryRectangular])
     .configurationDisplayName("Upcoming Event")
-    .description("Display time remaining until next upcoming event.")
+    .description("Display the next upcoming event in the events list.")
   }
 }
