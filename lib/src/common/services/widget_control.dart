@@ -91,7 +91,7 @@ class WidgetControl {
       }
       // Auto create pin
       else if (activeLiveActivityId == null &&
-          trueSettingsValue(SettingsKey.autoPinEvent)) {
+          falseSettingsValue(SettingsKey.autoPinEvent)) {
         // Check latest event
         final event = Moodle().eventManager.nextEvent();
         if (event != null &&
