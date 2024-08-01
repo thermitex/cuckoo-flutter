@@ -22,7 +22,7 @@ class EventsPage extends StatefulWidget {
 }
 
 class _EventsPageState extends State<EventsPage> {
-  /// Rebuild events at midnight to show potential date changes.
+  /// Rebuild events every minute.
   Timer? rebuildTimer;
 
   /// Build app bar action items.
@@ -209,11 +209,10 @@ class _EventsPageState extends State<EventsPage> {
   void initState() {
     // Set up rebuild timer
     final now = DateTime.now();
-    final secsTillMidnight =
-        (60 - now.second) + (59 - now.minute) * 60 + (23 - now.hour) * 3600;
-    Future.delayed(Duration(seconds: secsTillMidnight), () {
+    final secsTillNextMin = 60 - now.second;
+    Future.delayed(Duration(seconds: secsTillNextMin), () {
       Moodle().eventManager.rebuildNow();
-      rebuildTimer = Timer.periodic(const Duration(days: 1),
+      rebuildTimer = Timer.periodic(const Duration(minutes: 1),
           (timer) => Moodle().eventManager.rebuildNow());
     });
     super.initState();
