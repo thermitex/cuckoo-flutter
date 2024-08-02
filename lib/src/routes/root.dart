@@ -12,6 +12,7 @@ import 'package:cuckoo/src/routes/calendar/calendar.dart';
 import 'package:cuckoo/src/routes/settings/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -243,6 +244,13 @@ class RootState extends State<Root> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    // Change the icon color according to the current theme.
+    final iconBrightness =
+        context.isDarkMode ? Brightness.light : Brightness.dark;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarIconBrightness: iconBrightness,
+        systemNavigationBarIconBrightness: iconBrightness));
+
     return PersistentTabView(
       context,
       controller: _controller,
