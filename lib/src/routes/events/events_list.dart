@@ -117,13 +117,14 @@ class MoodleEventListTile extends StatelessWidget {
   final bool displayDeadline;
 
   bool _canShowCompleted(BuildContext context) =>
-      context.settingsValue<bool>(SettingsKey.greyOutCompleted) ?? true;
+      event.isCompleted &&
+      (context.settingsValue<bool>(SettingsKey.greyOutCompleted) ?? true);
 
   Color _eventTintColor(BuildContext context) {
     final fallbackColor = context.isDarkMode
         ? const Color.fromARGB(255, 91, 91, 95)
         : const Color.fromARGB(255, 187, 187, 191);
-    if (event.isCompleted && _canShowCompleted(context)) {
+    if (_canShowCompleted(context)) {
       return fallbackColor;
     }
     return event.contextWatchedColor(context) ?? fallbackColor;
@@ -138,17 +139,17 @@ class MoodleEventListTile extends StatelessWidget {
                 size: 10.5,
                 weight: FontWeight.bold,
                 color: _eventTintColor(context))))
-        ..add(const SizedBox(height: 1.0));
+        ..add(const SizedBox(height: 0.5));
     }
     children.add(Text(event.name,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: CuckooTextStyles.body(size: 15, weight: FontWeight.normal)
             .copyWith(
-                color: event.isCompleted && _canShowCompleted(context)
+                color: _canShowCompleted(context)
                     ? context.theme.tertiaryText
                     : context.theme.primaryText,
-                decoration: event.isCompleted && _canShowCompleted(context)
+                decoration: _canShowCompleted(context)
                     ? TextDecoration.lineThrough
                     : null,
                 decorationColor: context.theme.tertiaryText)));
@@ -161,7 +162,10 @@ class MoodleEventListTile extends StatelessWidget {
     );
   }
 
-  Widget _eventDeadline(BuildContext context) {
+  Widget _eventDeadline(BuildContext context, double? colorLerp) {
+    bool canShowRemaining =
+        !_canShowCompleted(context) && event.remainingTime < 24 * 3600;
+
     String deadlineDisplay(DeadlineDisplayStyle style) {
       DateTime eventTime = event.time;
       final date = DateFormat.MMMd().format(eventTime);
@@ -185,27 +189,73 @@ class MoodleEventListTile extends StatelessWidget {
       }
     }
 
+    String remainingDisplay() {
+      final remainingSecs = event.remainingTime;
+      final remainingHours = remainingSecs ~/ 3600;
+      final remainingMins =
+          max((remainingSecs - remainingHours * 3600) ~/ 60, 0);
+
+      return "${remainingHours > 0 ? '${remainingHours}h ' : ''}${remainingMins}m";
+    }
+
+    Color lerpedColor() {
+      final defaultColor = context.theme.primaryInverseBackground.withAlpha(18);
+      if (event.color == null ||
+          colorLerp == null ||
+          _canShowCompleted(context)) return defaultColor;
+
+      const interimThreshold = 0.8;
+      final interimColor = event.color!.withAlpha(35);
+      final destColor = event.color!.withAlpha(context.isDarkMode ? 50 : 40);
+      if (colorLerp < interimThreshold) {
+        return Color.lerp(
+            defaultColor, interimColor, colorLerp / interimThreshold)!;
+      } else {
+        return Color.lerp(interimColor, destColor,
+            (colorLerp - interimThreshold) / (1 - interimThreshold))!;
+      }
+    }
+
     return GestureDetector(
       onTap: () => Settings().switchChoice(
           SettingsKey.deadlineDisplay, DeadlineDisplayStyle.values.length,
           defaultChoice: DeadlineDisplayStyle.daysRemainingAndTime.index),
       child: Container(
         width: 70.0,
-        color: context.theme.tertiaryBackground,
-        child: Center(
-            child: Text(
-          deadlineDisplay(DeadlineDisplayStyle.values[
-              context.settingsValue<int>(SettingsKey.deadlineDisplay) ??
-                  DeadlineDisplayStyle.daysRemainingAndTime.index]),
-          textAlign: TextAlign.center,
-          style: CuckooTextStyles.body(
-              size: 11,
-              weight: FontWeight.w600,
-              color: event.isCompleted && _canShowCompleted(context)
-                  ? context.theme.tertiaryText
-                  : context.theme.primaryText,
-              height: 1.3),
-        )),
+        color: lerpedColor(),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text(
+            deadlineDisplay(DeadlineDisplayStyle.values[
+                context.settingsValue<int>(SettingsKey.deadlineDisplay) ??
+                    DeadlineDisplayStyle.daysRemainingAndTime.index]),
+            textAlign: TextAlign.center,
+            style: CuckooTextStyles.body(
+                size: 11,
+                weight: FontWeight.w600,
+                color: _canShowCompleted(context)
+                    ? context.theme.tertiaryText
+                    : context.theme.primaryText,
+                height: 1.3),
+          ),
+          if (canShowRemaining) const SizedBox(height: 2.0),
+          if (canShowRemaining)
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.orange[context.isDarkMode ? 800 : 500],
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 4.5, vertical: 2.5),
+              child: Text(
+                remainingDisplay(),
+                style: CuckooTextStyles.body(
+                    size: 9,
+                    weight: FontWeight.bold,
+                    color: context.theme.secondaryBackground,
+                    height: 1.0),
+              ),
+            )
+        ]),
       ),
     );
   }
@@ -237,8 +287,7 @@ class MoodleEventListTile extends StatelessWidget {
     Color baseColor = _eventTintColor(context);
 
     late Color stripeColor;
-    if (event.color == null ||
-        (event.isCompleted && _canShowCompleted(context))) {
+    if (event.color == null || _canShowCompleted(context)) {
       stripeColor = context.isDarkMode
           ? const Color.fromARGB(100, 91, 91, 95)
           : const Color.fromARGB(80, 187, 187, 191);
@@ -282,7 +331,7 @@ class MoodleEventListTile extends StatelessWidget {
       final total = event.timestart - event.timemodified!;
       final passed = DateTime.now().secondEpoch - event.timemodified!;
       if (total > 0) {
-        progress = (passed / total).clamp(0.0, 1.0);
+        progress = (passed / total).clamp(0.0, 0.99);
       }
     }
 
@@ -347,7 +396,13 @@ class MoodleEventListTile extends StatelessWidget {
                       ],
                     ),
                   )),
-                  if (displayDeadline) _eventDeadline(context)
+                  if (displayDeadline)
+                    _eventDeadline(
+                      context,
+                      progress == null
+                          ? null
+                          : ((progress - 0.6) / 0.4).clamp(0.0, 1.0),
+                    )
                 ],
               ),
             ),

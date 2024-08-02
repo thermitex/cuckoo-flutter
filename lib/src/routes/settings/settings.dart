@@ -196,7 +196,7 @@ class SettingsPage extends StatelessWidget {
                       const SettingsItem(SettingsKey.autoPinEvent,
                           label: Constants.kSettingsEventsAutoPin,
                           description: Constants.kSettingsEventsAutoPinDesc,
-                          defaultValue: true),
+                          defaultValue: false),
                     const SettingsItem(SettingsKey.greyOutCompleted,
                         label: Constants.kSettingsEventsGreyOutComleted,
                         description:
