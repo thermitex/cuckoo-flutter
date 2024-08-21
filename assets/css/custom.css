@@ -1,0 +1,62 @@
+html,
+body {
+    font-family: 'Inter';
+}
+
+a {
+    text-decoration: none;
+    color: #586CF5;
+    transition: 0.3s;
+}
+
+a:hover {
+    color: #8c99f0;
+}
+
+.content {
+    margin: 55pt 20pt;
+}
+
+.page-title {
+    font-family: 'Montserrat';
+    color: #586CF5;
+    margin-bottom: 1em;
+    font-weight: 600;
+    line-height: 1.1;
+}
+
+.page-logo-container {
+    margin-bottom: 1.2em;
+}
+
+.page-illus {
+    max-width: 320pt;
+    margin-bottom: 2.3rem;
+    background-color: aliceblue;
+    border-radius: 30px;
+    padding: 5px;
+}
+
+.special-text {
+    color: #586CF5;
+    font-family: 'Montserrat';
+    font-weight: 600;
+}
+
+#page-logo {
+    height: 50pt;
+}
+
+@media screen and (max-width: 600px) {
+    #page-logo {
+        height: 38pt;
+    }
+
+    .content {
+        margin: 35pt 15pt;
+    }
+
+    .page-illus {
+        max-width: 200pt;
+    }
+}
