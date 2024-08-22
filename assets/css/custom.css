@@ -14,7 +14,7 @@ a:hover {
 }
 
 .content {
-    margin: 55pt 20pt;
+    margin: 55px 20px;
 }
 
 .page-title {
@@ -30,8 +30,9 @@ a:hover {
 }
 
 .page-illus {
-    max-width: 320pt;
-    margin-bottom: 2.3rem;
+    max-height: 400px;
+    max-width: 400px;
+    margin-bottom: 2.2rem;
     background-color: aliceblue;
     border-radius: 30px;
     padding: 5px;
@@ -44,19 +45,24 @@ a:hover {
 }
 
 #page-logo {
-    height: 50pt;
+    height: 60px;
 }
 
-@media screen and (max-width: 600px) {
+@media (max-width: 600px) {
     #page-logo {
-        height: 38pt;
+        height: 40px;
+    }
+
+    .page-logo-container {
+        margin-bottom: 1em;
     }
 
     .content {
-        margin: 35pt 15pt;
+        margin: 35px 15px;
     }
 
     .page-illus {
-        max-width: 200pt;
+        max-height: 250px;
+        max-width: 250px;
     }
 }
