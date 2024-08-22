@@ -30,12 +30,16 @@ a:hover {
 }
 
 .page-illus {
-    max-height: 400px;
-    max-width: 400px;
-    margin-bottom: 2.2rem;
+    height: auto;
+    width: 400px;
+    padding: 5px;
+}
+
+.illus-container {
     background-color: aliceblue;
     border-radius: 30px;
-    padding: 5px;
+    width: 100%;
+    margin-bottom: 2.2rem;
 }
 
 .special-text {
@@ -62,7 +66,7 @@ a:hover {
     }
 
     .page-illus {
-        max-height: 250px;
+        height: auto;
         max-width: 250px;
     }
 }
