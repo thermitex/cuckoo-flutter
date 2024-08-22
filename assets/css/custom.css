@@ -14,7 +14,7 @@ a:hover {
 }
 
 .content {
-    margin: 55px 20px;
+    margin: 55px 20px 100px 20px;
 }
 
 .page-title {
@@ -62,7 +62,7 @@ a:hover {
     }
 
     .content {
-        margin: 35px 15px;
+        margin: 35px 15px 50px 15px;
     }
 
     .page-illus {
