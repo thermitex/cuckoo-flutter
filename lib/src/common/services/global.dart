@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cuckoo/src/common/services/color_registry.dart';
 import 'package:cuckoo/src/common/services/widget_control.dart';
 import 'package:cuckoo/src/common/services/moodle.dart';
@@ -27,10 +29,12 @@ class Global {
     prefs = await SharedPreferences.getInstance();
 
     // Remove the background of the status bar and the gestures indicator.
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        systemNavigationBarColor: Colors.black.withOpacity(0.002)));
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    if (Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          systemNavigationBarColor: Colors.black.withOpacity(0.002)));
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    }
 
     // Init service modules.
     Settings.init();

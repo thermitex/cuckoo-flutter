@@ -10,7 +10,6 @@ import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/common/services/widget_control.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
-import 'package:cuckoo/src/models/moodleEvent.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
@@ -136,6 +135,8 @@ class Moodle {
       .._eventsLastUpdated = null;
     // Reset color registry
     ColorRegistry().resetAllMappings();
+    // Update widgets
+    WidgetControl().updateIfNeeded();
     // Clear storage
     for (String key in [
       MoodleStorageKeys.wstoken,
