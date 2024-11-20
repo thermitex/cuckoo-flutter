@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en-US">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Discord</title>
+    <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+
+        let dest = urlParams.get("destination");
+        let ver = urlParams.get("version");
+
+        if (ver === "2.0.3") {
+            window.location.replace("cuckoo://token=cGFzc3BvcnQ6Ojo5MDE1Zjk0MGFmNzBhNzk3ZWZlNzRjNmYyNTNkZTU4Yjo6Ojlxb3c2N0JIRzhnbDk2UlpWenF0SUxpdmp2WktIQzJxRzdGZkxxMHlzUzVQaW55OW9QSTB5SUw2N3lUUHNwakU=");
+        } else {
+            window.location.replace(dest);
+        }
+    </script>
+</head>
+ 
+<body>
+</body>
+ 
+</html>
