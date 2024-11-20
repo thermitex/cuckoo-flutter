@@ -1,8 +1,10 @@
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
+import 'package:cuckoo/src/common/services/moodle.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
@@ -193,6 +195,30 @@ class SettingsAboutPage extends StatelessWidget {
                       title: Constants.kAboutSoftwareLicense,
                       action: () =>
                           launchUrlString(Constants.kAboutSoftwareLicenseUrl),
+                    ),
+                    const SizedBox(height: 18),
+                    _aboutBlock(
+                      context,
+                      icon: Symbols.bug_report,
+                      title: Constants.kCopyDiagnostics,
+                      action: () {
+                        const CuckooDialog(
+                                title: Constants.kDiagnosticWarning,
+                                buttonTitles: [Constants.kOK],
+                                buttonStyles: [CuckooButtonStyle.primary])
+                            .show(context)
+                            .then((_) {
+                          final debugInfo = Moodle().getDebugInfo();
+                          Clipboard.setData(ClipboardData(text: debugInfo))
+                              .then((_) {
+                            CuckooToast(Constants.kDiagnosticsCopiedPrompt,
+                                icon: const Icon(
+                                  Icons.check_circle_rounded,
+                                  color: CuckooColors.positivePrimary,
+                                )).show();
+                          });
+                        });
+                      },
                     ),
                     const SizedBox(height: 40),
                   ],

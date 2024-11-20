@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cuckoo/src/app.dart';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/color_registry.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
@@ -23,6 +24,7 @@ import 'package:dio/dio.dart';
 
 part 'moodle_extra.dart';
 part 'moodle_managers.dart';
+part 'moodle_debug.dart';
 
 /// Domain name of HKU Moodle.
 const String kHKUMoodleDomain = 'moodle.hku.hk';
@@ -135,6 +137,8 @@ class Moodle {
       .._eventsLastUpdated = null;
     // Reset color registry
     ColorRegistry().resetAllMappings();
+    // Reschedule reminders
+    Reminders().rescheduleAll();
     // Update widgets
     WidgetControl().updateIfNeeded();
     // Clear storage
@@ -183,6 +187,13 @@ class Moodle {
   static Future<bool> startAuth(
       {bool force = false, bool internal = true}) async {
     if (!force && isUserLoggedIn) return false;
+
+    // If is in debug mode, allow logging in using tokens
+    if (kDebugMode) {
+      final useTokens = await Moodle().promptForLoginWithTokens();
+      if (useTokens ?? false) return true;
+    }
+
     final authUrl = Moodle()._buildLaunchUrl();
     return await launchUrl(authUrl,
         mode: internal
