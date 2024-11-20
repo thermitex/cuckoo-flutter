@@ -1,0 +1,45 @@
+{
+    "startup_popups": [
+        {
+            "id": 0,
+            "priority": 0,
+            "enabled": false,
+            "logo": "",
+            "title": "Cuckoo needs your support.",
+            "description": "Cuckoo is completely developed and maintained by students. Donate to help keep Cuckoo free.",
+            "buttons": [
+                {
+                    "type": 0,
+                    "logo": null,
+                    "title": "Donate",
+                    "action": {
+                        "ios": {
+                            "route": true,
+                            "value": "/donate"
+                        },
+                        "android": {
+                            "route": false,
+                            "value": "https://buymeacoffee.com/jerryli"
+                        }
+                    }
+                },
+                {
+                    "type": 1,
+                    "logo": null,
+                    "title": "Not Now"
+                }
+            ],
+            "prerequisite": {
+                "since_first_launch": {
+                    "days": 7,
+                    "sessions": 10
+                },
+                "since_last": {
+                    "days": 5,
+                    "sessions": 0
+                }
+            }
+        }
+    ],
+    "donators": []
+}
