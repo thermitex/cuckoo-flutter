@@ -181,7 +181,7 @@ class Constants {
   static const kCopyDiagnostics = 'Copy Diagnositics';
   static const kDiagnosticsCopiedPrompt = 'Diagnositic Info Copied';
   static const kDiagnosticWarning =
-      'Diagnostic information contains your private information and should only be shared with someone you trusted.';
+      'Diagnostic information contains your private information and should only be shared with someone you trust.';
   static const kProjectGithubUrl =
       'https://github.com/thermitex/cuckoo-flutter';
   static const kProjectContributorsUrl =
