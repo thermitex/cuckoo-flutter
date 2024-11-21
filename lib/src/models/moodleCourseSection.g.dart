@@ -10,11 +10,11 @@ MoodleCourseSection _$MoodleCourseSectionFromJson(Map<String, dynamic> json) =>
     MoodleCourseSection()
       ..id = json['id'] as num
       ..name = json['name'] as String
-      ..visible = json['visible'] as num
+      ..visible = json['visible'] as num?
       ..summary = json['summary'] as String
-      ..summaryformat = json['summaryformat'] as num
-      ..section = json['section'] as num
-      ..hiddenbynumsections = json['hiddenbynumsections'] as num
+      ..summaryformat = json['summaryformat'] as num?
+      ..section = json['section'] as num?
+      ..hiddenbynumsections = json['hiddenbynumsections'] as num?
       ..uservisible = json['uservisible'] as bool?
       ..modules = (json['modules'] as List<dynamic>)
           .map((e) => MoodleCourseModule.fromJson(e as Map<String, dynamic>))

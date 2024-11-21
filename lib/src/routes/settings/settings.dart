@@ -150,7 +150,9 @@ class SettingsPage extends StatelessWidget {
                           // Clean downloads
                           Directory dir = await getTemporaryDirectory();
                           Directory cacheDir = Directory('${dir.path}/cuckoo');
-                          cacheDir.deleteSync(recursive: true);
+                          try {
+                            cacheDir.deleteSync(recursive: true);
+                          } catch (_) {}
                           cacheDir.create();
                           // Clean course cached contents
                           Moodle.clearCourseCachedContents();

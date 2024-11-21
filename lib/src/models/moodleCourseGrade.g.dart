@@ -8,14 +8,14 @@ part of 'moodleCourseGrade.dart';
 
 MoodleCourseGrade _$MoodleCourseGradeFromJson(Map<String, dynamic> json) =>
     MoodleCourseGrade()
-      ..itemname = json['itemname']['content'] as String
-      ..weight = (json['weight'] ?? const {})['content'] as String?
-      ..grade = json['grade']['content'] as String
-      ..range = json['range']['content'] as String
-      ..feedback = (json['feedback'] ?? const {})['content'] as String?
-      ..percentage = (json['percentage'] ?? const {})['content'] as String?
+      ..itemname = json['itemname'] as String
+      ..weight = json['weight'] as String?
+      ..grade = json['grade'] as String
+      ..range = json['range'] as String
+      ..feedback = json['feedback'] as String?
+      ..percentage = json['percentage'] as String?
       ..contributiontocoursetotal =
-          (json['contributiontocoursetotal'] ?? const {})['content'] as String?;
+          json['contributiontocoursetotal'] as String?;
 
 Map<String, dynamic> _$MoodleCourseGradeToJson(MoodleCourseGrade instance) =>
     <String, dynamic>{

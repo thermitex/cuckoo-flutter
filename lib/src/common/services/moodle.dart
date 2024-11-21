@@ -15,6 +15,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:html/parser.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -194,7 +195,7 @@ class Moodle {
       if (useTokens ?? false) return true;
     }
 
-    final authUrl = Moodle()._buildLaunchUrl();
+    final authUrl = await Moodle()._buildLaunchUrl();
     return await launchUrl(authUrl,
         mode: internal
             ? LaunchMode.inAppBrowserView
@@ -678,14 +679,25 @@ class Moodle {
 
   /// Build Moodle mobile launch URL.
   /// Used for authentication.
-  Uri _buildLaunchUrl() {
+  Future<Uri> _buildLaunchUrl() async {
     // Passport here does not affect the authentication, fixed to be 100
     const String passport = '100';
-    return _buildMoodleUrl(entryPoint: 'admin/tool/mobile/launch.php', params: {
+    final moodleLaunchUrl = _buildMoodleUrl(entryPoint: 'admin/tool/mobile/launch.php', params: {
       'service': 'moodle_mobile_app',
       'passport': passport,
       'urlscheme': 'cuckoo'
     });
+    final packageinfo = await PackageInfo.fromPlatform();
+    // Wrap Moodle launch url with apputil page for app review control
+    return Uri(
+      scheme: 'https',
+      host: 'cuckoo-hku.xyz',
+      path: 'apputil/login',
+      queryParameters: {
+        'version': packageinfo.version,
+        'destination': moodleLaunchUrl.toString()
+      }
+    );
   }
 
   /// Build URL for calling Moodle functions.
