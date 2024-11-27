@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cuckoo/src/app.dart';
 import 'package:cuckoo/src/common/extensions/extensions.dart';
 import 'package:cuckoo/src/common/services/color_registry.dart';
 import 'package:cuckoo/src/common/services/constants.dart';
@@ -10,11 +11,11 @@ import 'package:cuckoo/src/common/services/settings.dart';
 import 'package:cuckoo/src/common/services/widget_control.dart';
 import 'package:cuckoo/src/common/ui/ui.dart';
 import 'package:cuckoo/src/models/index.dart';
-import 'package:cuckoo/src/models/moodleEvent.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:html/parser.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,6 +25,7 @@ import 'package:dio/dio.dart';
 
 part 'moodle_extra.dart';
 part 'moodle_managers.dart';
+part 'moodle_debug.dart';
 
 /// Domain name of HKU Moodle.
 const String kHKUMoodleDomain = 'moodle.hku.hk';
@@ -136,6 +138,10 @@ class Moodle {
       .._eventsLastUpdated = null;
     // Reset color registry
     ColorRegistry().resetAllMappings();
+    // Reschedule reminders
+    Reminders().rescheduleAll();
+    // Update widgets
+    WidgetControl().updateIfNeeded();
     // Clear storage
     for (String key in [
       MoodleStorageKeys.wstoken,
@@ -182,7 +188,14 @@ class Moodle {
   static Future<bool> startAuth(
       {bool force = false, bool internal = true}) async {
     if (!force && isUserLoggedIn) return false;
-    final authUrl = Moodle()._buildLaunchUrl();
+
+    // If is in debug mode, allow logging in using tokens
+    if (kDebugMode) {
+      final useTokens = await Moodle().promptForLoginWithTokens();
+      if (useTokens ?? false) return true;
+    }
+
+    final authUrl = await Moodle()._buildLaunchUrl();
     return await launchUrl(authUrl,
         mode: internal
             ? LaunchMode.inAppBrowserView
@@ -666,14 +679,25 @@ class Moodle {
 
   /// Build Moodle mobile launch URL.
   /// Used for authentication.
-  Uri _buildLaunchUrl() {
+  Future<Uri> _buildLaunchUrl() async {
     // Passport here does not affect the authentication, fixed to be 100
     const String passport = '100';
-    return _buildMoodleUrl(entryPoint: 'admin/tool/mobile/launch.php', params: {
+    final moodleLaunchUrl = _buildMoodleUrl(entryPoint: 'admin/tool/mobile/launch.php', params: {
       'service': 'moodle_mobile_app',
       'passport': passport,
       'urlscheme': 'cuckoo'
     });
+    final packageinfo = await PackageInfo.fromPlatform();
+    // Wrap Moodle launch url with apputil page for app review control
+    return Uri(
+      scheme: 'https',
+      host: 'cuckoo-hku.xyz',
+      path: 'apputil/login',
+      queryParameters: {
+        'version': packageinfo.version,
+        'destination': moodleLaunchUrl.toString()
+      }
+    );
   }
 
   /// Build URL for calling Moodle functions.

@@ -137,7 +137,7 @@ class CourseDetailSection extends StatelessWidget {
     ];
     // Modules
     section.modules.forEachIndexed((index, module) {
-      final indent = module.indent?.toInt() ?? 0;
+      final indent = max(module.indent?.toInt() ?? 0, 0);
       children.add(GestureDetector(
         onTap: () => _moduleAction(module),
         behavior: HitTestBehavior.translucent,
@@ -153,7 +153,7 @@ class CourseDetailSection extends StatelessWidget {
       ));
       if (index < section.modules.length - 1) {
         // Add separator
-        final nextIndent = section.modules[index + 1].indent?.toInt() ?? 0;
+        final nextIndent = max(section.modules[index + 1].indent?.toInt() ?? 0, 0);
         final commonIndent = min(indent, nextIndent);
         children.add(Container(
           width: double.infinity,

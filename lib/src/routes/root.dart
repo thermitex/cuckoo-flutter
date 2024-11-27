@@ -245,11 +245,13 @@ class RootState extends State<Root> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     // Change the icon color according to the current theme.
-    final iconBrightness =
-        context.isDarkMode ? Brightness.light : Brightness.dark;
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarIconBrightness: iconBrightness,
-        systemNavigationBarIconBrightness: iconBrightness));
+    if (Platform.isAndroid) {
+      final iconBrightness =
+          context.isDarkMode ? Brightness.light : Brightness.dark;
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+          statusBarIconBrightness: iconBrightness,
+          systemNavigationBarIconBrightness: iconBrightness));
+    }
 
     return PersistentTabView(
       context,
