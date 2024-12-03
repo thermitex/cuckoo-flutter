@@ -250,7 +250,8 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
         _courseTitle(),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
             child: Center(
                 child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 500.0),
@@ -349,7 +350,8 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
         if (_contentError)
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
               child: Center(
                   child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 500.0),

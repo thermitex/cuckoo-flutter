@@ -109,7 +109,8 @@ class Constants {
   ];
   static const kCourseLoadingFailed =
       'Oops... Looks like some error occurred while loading the course content.';
-  static const kCourseEmptyContent = 'There seems nothing that we can display here - maybe nothing is out yet?';
+  static const kCourseEmptyContent =
+      'There seems nothing that we can display here - maybe nothing is out yet?';
   static const kDownloadFileLoading = 'Downloading file...';
   static const kEventsClearPrompt =
       'Amazing! There are currently no upcoming events for you.';
