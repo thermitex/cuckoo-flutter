@@ -153,7 +153,8 @@ class CourseDetailSection extends StatelessWidget {
       ));
       if (index < section.modules.length - 1) {
         // Add separator
-        final nextIndent = max(section.modules[index + 1].indent?.toInt() ?? 0, 0);
+        final nextIndent =
+            max(section.modules[index + 1].indent?.toInt() ?? 0, 0);
         final commonIndent = min(indent, nextIndent);
         children.add(Container(
           width: double.infinity,

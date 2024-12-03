@@ -682,22 +682,23 @@ class Moodle {
   Future<Uri> _buildLaunchUrl() async {
     // Passport here does not affect the authentication, fixed to be 100
     const String passport = '100';
-    final moodleLaunchUrl = _buildMoodleUrl(entryPoint: 'admin/tool/mobile/launch.php', params: {
-      'service': 'moodle_mobile_app',
-      'passport': passport,
-      'urlscheme': 'cuckoo'
-    });
+    final moodleLaunchUrl = _buildMoodleUrl(
+        entryPoint: 'admin/tool/mobile/launch.php',
+        params: {
+          'service': 'moodle_mobile_app',
+          'passport': passport,
+          'urlscheme': 'cuckoo'
+        });
     final packageinfo = await PackageInfo.fromPlatform();
     // Wrap Moodle launch url with apputil page for app review control
     return Uri(
-      scheme: 'https',
-      host: 'cuckoo-hku.xyz',
-      path: 'apputil/login',
-      queryParameters: {
-        'version': packageinfo.version,
-        'destination': moodleLaunchUrl.toString()
-      }
-    );
+        scheme: 'https',
+        host: 'cuckoo-hku.xyz',
+        path: 'apputil/login',
+        queryParameters: {
+          'version': packageinfo.version,
+          'destination': moodleLaunchUrl.toString()
+        });
   }
 
   /// Build URL for calling Moodle functions.
