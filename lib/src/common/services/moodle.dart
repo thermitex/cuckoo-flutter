@@ -762,7 +762,9 @@ class Moodle {
         lang: lang);
 
     // Issue request
-    return Dio()
+    return Dio(BaseOptions(
+            connectTimeout: const Duration(seconds: 6),
+            receiveTimeout: const Duration(seconds: 10)))
         .postUri(url,
             data: body,
             options: Options(headers: {
