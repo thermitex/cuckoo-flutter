@@ -96,7 +96,7 @@ class MoodleFunctionResponse {
   bool get fail {
     bool errStatus = (response?.statusCode ?? 500) != 200;
     bool exceptionExists =
-        data is Map && data?['exception'] == 'moodle_exception';
+        data is Map && (data?['exception'] ?? '').toString().isNotEmpty;
     return errStatus || exceptionExists;
   }
 

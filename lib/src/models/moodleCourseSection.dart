@@ -15,7 +15,8 @@ class MoodleCourseSection {
   num? hiddenbynumsections;
   bool? uservisible;
   late List<MoodleCourseModule> modules;
-  
-  factory MoodleCourseSection.fromJson(Map<String,dynamic> json) => _$MoodleCourseSectionFromJson(json);
+
+  factory MoodleCourseSection.fromJson(Map<String, dynamic> json) =>
+      _$MoodleCourseSectionFromJson(json);
   Map<String, dynamic> toJson() => _$MoodleCourseSectionToJson(this);
 }

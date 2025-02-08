@@ -8,6 +8,7 @@ import 'package:cuckoo/src/routes/courses/course_detail_grade.dart';
 import 'package:cuckoo/src/routes/courses/course_detail_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /// View type of the course.
 enum CourseViewType { contents, grades }
@@ -242,6 +243,38 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
   }
 
   Widget _courseMainView() {
+    // If content is empty, show a colummn instead of list view
+    final contentEmptyView = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _courseTitle(),
+        Expanded(
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
+            child: Center(
+                child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 500.0),
+              child: CuckooFullPageView(
+                SvgPicture.asset(
+                  'images/illus/page_look_into.svg',
+                  width: 300,
+                  height: 300,
+                ),
+                darkModeImage: SvgPicture.asset(
+                  'images/illus/dark/page_look_into.svg',
+                  width: 300,
+                  height: 300,
+                ),
+                message: Constants.kCourseEmptyContent,
+                bottomOffset: 65.0,
+              ),
+            )),
+          ),
+        ),
+      ],
+    );
+
     if (_contentReady) {
       // Show the list view
       return NotificationListener<ScrollNotification>(
@@ -253,6 +286,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
         },
         child: Builder(builder: (context) {
           if (_type == CourseViewType.contents) {
+            if (_content.isEmpty) return contentEmptyView;
             return ListView.separated(
               itemCount: _content.length + 2,
               itemBuilder: (context, index) {
@@ -270,6 +304,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
               },
             );
           } else {
+            if ((_grades ?? []).isEmpty) return contentEmptyView;
             return ListView.separated(
               itemCount: _grades!.length + 2,
               itemBuilder: (context, index) {
@@ -310,6 +345,30 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                   strokeWidth: 6.0,
                 ),
               ),
+            ),
+          ),
+        if (_contentError)
+          Expanded(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
+              child: Center(
+                  child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500.0),
+                child: CuckooFullPageView(
+                  SvgPicture.asset(
+                    'images/illus/page_error.svg',
+                    width: 300,
+                    height: 300,
+                  ),
+                  darkModeImage: SvgPicture.asset(
+                    'images/illus/dark/page_error.svg',
+                    width: 300,
+                    height: 300,
+                  ),
+                  message: Constants.kCourseLoadingFailed,
+                ),
+              )),
             ),
           ),
         const SizedBox(height: 60.0)
